@@ -53,16 +53,10 @@ class Solution {
         int maxLen = 1;
         int begin = 0;
         boolean[][] dp = new boolean[len][len];
-        for (int i =0; i < len; i++) {
-            dp[i][i] = true;
-        }
         char[] charArray = s.toCharArray();
-        for (int L = 2; L <= len; L++) {
-            for (int i = 0; i < len; i++) {
-                int j = i + L -1;
-                if (j >= len) {
-                    break;
-                }
+        for (int i = len - 1; i >= 0; i--) {
+            dp[i][i] = true;
+            for (int j = i + 1; j < len; j++) {
                 if (charArray[i] != charArray[j]) {
                     dp[i][j] = false;
                 } else {

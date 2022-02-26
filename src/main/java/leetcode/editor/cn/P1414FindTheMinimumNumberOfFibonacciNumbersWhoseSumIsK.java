@@ -95,8 +95,9 @@ public class P1414FindTheMinimumNumberOfFibonacciNumbersWhoseSumIsK {
                     i = j;
                     j = sum;
                 }
-                return result;
+
             }
+            return result;
         }
 
 

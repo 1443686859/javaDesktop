@@ -60,7 +60,7 @@ class Node {
 // Definition for a Node.
 
 
-class Solution {
+class Solution1 {
  /*   public int maxDepth(Node root) {
         int ans = 0;
         if (root == null) {
