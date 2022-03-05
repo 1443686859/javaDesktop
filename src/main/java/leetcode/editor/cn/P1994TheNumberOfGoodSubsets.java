@@ -59,7 +59,7 @@ public class P1994TheNumberOfGoodSubsets{
     //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int numberOfGoodSubsets(int[] nums) {
-
+        return 0;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
