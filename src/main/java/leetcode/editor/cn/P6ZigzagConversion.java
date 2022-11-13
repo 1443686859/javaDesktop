@@ -72,7 +72,7 @@ public class P6ZigzagConversion{
         for (int i = 0; i < numRows; i++) {
             result[i] = new ArrayList<>();
         }
-        int n = s.length();.005
+        int n = s.length();
         for (int i = 0; i < numRows; i++) {
             if (i != 0 && i != numRows - 1) {
                 int preStart = i;
