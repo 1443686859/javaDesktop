@@ -3,7 +3,26 @@ package com.test;
 import java.util.Scanner;
 
 public class Test01 {
+    public volatile int inc = 0;
+    public void increase() {
+        inc++;
+    }
     public static void main(String[] args) {
+        final Test01 test01 =new Test01();
+        for (int i = 0; i < 10000; i++) {
+            new Thread() {
+                public void run() {
+                    for (int i = 0; i < 10; i++) {
+                        test01.increase();;
+                    }
+                }
+            }.start();
+        }
+        while (Thread.activeCount() > 1) {
+            Thread.yield();
+        }
+        System.out.println(test01.inc);
+
         Scanner sc = new Scanner(System.in);
         String str = sc.nextLine();
         String[] strings = str.split(",");

@@ -46,12 +46,12 @@ public class T437_PathSumIii{
         System.out.println(solution.pathSum(root, 3));
     }
     public static class TreeNode {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
+        int val;
+        TreeNode left;
+        TreeNode right;
         TreeNode() {}
-        public TreeNode(int val) { this.val = val; }
-        public TreeNode(int val, TreeNode left, TreeNode right) {
+        TreeNode(int val) { this.val = val; }
+        TreeNode(int val, TreeNode left, TreeNode right) {
             this.val = val;
             this.left = left;
             this.right = right;

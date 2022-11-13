@@ -1,50 +1,45 @@
 package com.test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Test04 {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int length = Integer.parseInt(sc.nextLine());
-        int count = Integer.parseInt(sc.nextLine());
-        List<List<Integer>> arrays = new ArrayList<>();
-        int max = Integer.MIN_VALUE;
-        for (int i = 0; i < count; i++) {
-            String current = sc.nextLine();
-            String[] currents = current.split(",");
-            List<Integer> currentList = new ArrayList<>();
-            for (String currentString : currents) {
-                if (!"".equals(currentString)) {
-                    currentList.add(Integer.parseInt(currentString));
-                }
-            }
-            arrays.add(currentList);
-            max = Math.max(max, currentList.size());
-        }
-        List<Integer> result = new ArrayList<>();
-        int maxCycle = max / length + (max % length == 0 ? 0: 1);
-        for (int i = 0; i < maxCycle; i++) {
-            int start = i * length;
-            for (int j = 0; j < count; j++) {
-                List<Integer> currentList = arrays.get(j);
-                if (start < currentList.size()) {
-                    List<Integer> currentSubList = currentList.subList(start, Math.min(start + length, currentList.size()));
-                    result.addAll(currentSubList);
-                }
-
-            }
-        }
-        StringBuilder resultString = new StringBuilder();
-        for (int i = 0; i < result.size(); i++) {
-
-            if (i == result.size() - 1) {
-                resultString.append(result.get(i));
+        Test04 test04 = new Test04();
+        System.out.println(test04.test("tree"));
+        System.out.println(test04.test("cccaaa"));
+        System.out.println(test04.test("Aabb"));
+    }
+    public String test(String target) {
+        int[][] count = new int[52][3];
+        for (int i = 0; i < target.length(); i++) {
+            if (Character.isLowerCase(target.charAt(i))) {
+                count[target.charAt(i) - 'a'][0] ++;
+                count[target.charAt(i) - 'a'][1] = target.charAt(i) - 'a';
+                count[target.charAt(i) - 'a'][2] = 1;
             } else {
-                resultString.append(result.get(i) + ",");
+                count[target.charAt(i) - 'A' + 26][0] ++;
+                count[target.charAt(i) - 'A' + 26][1] = target.charAt(i) - 'A';
             }
         }
-        System.out.println(resultString.toString());
+        Arrays.sort(count, (pre, after) ->{
+            return after[0] - pre[0];
+        });
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < count.length; i++) {
+            if (count[i][0] != 0) {
+                char currentChar;
+                if (count[i][2] == 1) {
+                   currentChar = (char)('a' +  count[i][1]);
+                } else {
+                    currentChar = (char)('A' + count[i][1]);
+                }
+                for (int j = 0; j < count[i][0]; j++) {
+                    result.append(currentChar);
+                }
+            }
+        }
+        return result.toString();
     }
 }
