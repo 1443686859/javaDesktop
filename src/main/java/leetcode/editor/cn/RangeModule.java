@@ -51,13 +51,14 @@ package leetcode.editor.cn; //如果你的算法题是中文的，后缀就是cn
  * @author  YourName
  * @date 2022-06-21 00:40:09
  */
-public class RangeModule{
+//public class RangeModule1{
 //    public static void main(String[] args) {
 //        Solution solution = new RangeModule().new Solution();
 //   }
+
 ////leetcode submit region begin(Prohibit modification and deletion)
-//class RangeModule {
-//
+class RangeModule {
+
 //    public RangeModule() {
 //
 //    }
@@ -73,7 +74,7 @@ public class RangeModule{
 //    public void removeRange(int left, int right) {
 //
 //    }
-//}
+}
 
 /**
  * Your RangeModule object will be instantiated and called as such:
@@ -84,4 +85,4 @@ public class RangeModule{
  */
 //leetcode submit region end(Prohibit modification and deletion)
 
-}
+//}

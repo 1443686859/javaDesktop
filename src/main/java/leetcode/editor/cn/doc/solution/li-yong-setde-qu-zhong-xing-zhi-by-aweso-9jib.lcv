@@ -1,0 +1,62 @@
+### 解题思路
+
+![OI2{@RR8Q(29G`RH2{S03}D.png](https://pic.leetcode.cn/1685005976-rSoZUx-OI2%7B@RR8Q(29G%60RH2%7BS03%7DD.png)
+
+建一个set集合，每计算一个差值整数数组就往里面填，
+如果此set集合的大小为2就跳出。
+
+### 代码
+
+* cpp
+
+```cpp
+class Solution {
+public:
+    string oddString(vector<string>& words) 
+    {
+        set<vector<int>> all;
+        int i;//i定义在外面用于记录
+        for(i=0;i<words.size();i++)
+        {
+            vector<int> tmp;
+            for(int j=1;j<words[i].size();j++)
+            {
+                tmp.push_back(words[i][j]-words[i][j-1]);
+            }
+            all.insert(tmp);
+            if(all.size()==2)//size到2则出现不同差值整数数组，直接断掉
+            {
+                break;
+            }
+        }
+        if(i==1)//此时的i如果为1，就要再判断到底words[0]为返回值还是words[1]
+        {
+            vector<int> tmp1;//设俩数组记录words[i]与words[i+1]的差值整数数组
+            vector<int> tmp2;//如果这俩数组不同，则words[1]就是要求的返回值，否则返回值为words[0].
+            for(int j=1;j<words[i].size();j++)
+            {
+                tmp1.push_back(words[i][j]-words[i][j-1]);
+            }
+            for(int j=1;j<words[i].size();j++)
+            {
+                tmp2.push_back(words[i+1][j]-words[i+1][j-1]);
+            }
+            int a=0;
+            for(int j=0;j<tmp1.size();j++)
+            {
+                if(tmp1[j]!=tmp2[j])
+                {
+                    a=1;
+                    break;
+                }
+            }
+            if(a==0)
+            {
+                i-=1;
+            }
+        }
+        return words[i];
+    }
+};
+```
+

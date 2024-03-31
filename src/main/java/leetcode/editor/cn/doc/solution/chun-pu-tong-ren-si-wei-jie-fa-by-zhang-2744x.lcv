@@ -1,0 +1,36 @@
+### 解题思路
+
+暴力解法 效率不高 ，就是算出所有元素出现的次数，拿出出现一次的元素，思路很简单，就是效率有点低
+
+### 代码
+
+* javascript
+
+```javascript
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var singleNumber = function(nums) {
+    let obj = {};
+    let arr = [];
+    nums.forEach(item=>{ //遍历数组，计算出每个元素出现的次数
+      if(obj[item]){
+        obj[item]++
+      }else{
+        obj[item] = 1
+      }
+    })
+    for(let k in obj){
+      if(arr.length < 2){
+       if(obj[k] == 1 ){
+          arr.push(k)
+       }
+      }else{
+        break
+      }
+    }
+    return arr
+};
+```
+

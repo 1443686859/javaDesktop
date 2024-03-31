@@ -1,0 +1,74 @@
+# 方法一：广度优先搜索
+
+因为`1 <= chessboard.length, chessboard[i].length <= 8`，数据量非常小
+所以可以直接遍历一遍矩阵
+枚举矩阵中的每个空地，放一个黑棋的情况
+
+使用广度优先搜索，向放置黑棋的位置的八个方向依次各走一遍
+当遇到`出界`或者`不为白棋`的时候，搜索停止
+当且仅当：某一个方向的搜索路径为`两端为黑棋，中间为白棋`的时候
+将中间的所有白棋全部变为黑棋，并且将他们入队，作为下一次广度优先搜索的起点
+
+计算出每个空地放一个黑棋可以翻转白棋的数目
+其中的最大值就是答案
+
+* 
+
+```
+int bfs(char** chessboard, const int n, const int m, int x, int y) { //广度优先搜索
+    const short int dir[8][2] = { {-1,-1},{-1,0},{-1,1},{0,1},{1,1},{1,0},{1,-1},{0,-1} }; //方位数组，表示了8个方向的坐标增量
+    int queue[n * m][2]; //队列，存储放置黑棋的位置坐标
+    chessboard[x][y] = 'X'; //在原来的空地上放黑棋
+    queue[0][0] = x, queue[0][1] = y; //将起点(x, y)入队
+    int front = 0, rear = 0, res = 0; //队首 队尾   返回值
+    while (front <= rear) { //队列不为空
+        for (int i = 0; i < 8; i++) { //依次搜索8个方向
+            int xi = queue[front][0] + dir[i][0];
+            int yi = queue[front][1] + dir[i][1]; //先往该方向走一步
+            while (xi >= 0 && xi < n && yi >= 0 && yi < m && chessboard[xi][yi] == 'O') { //未出界且当前位置为白棋
+                xi += dir[i][0];
+                yi += dir[i][1]; //继续往该方向走一步
+            }
+            if (xi >= 0 && xi < n && yi >= 0 && yi < m && chessboard[xi][yi] == 'X') { //未出界且当前位置为黑棋
+                xi -= dir[i][0]; //说明本轮的搜索路径为：两端为黑棋，中间为白棋
+                yi -= dir[i][1]; //按搜索路径回退一步
+                while (xi != queue[front][0] || yi != queue[front][1]) { //还没有退到起点位置
+                    chessboard[xi][yi] = 'X'; //将路径上的白棋翻为黑棋
+                    res++; //返回值+1
+                    queue[++rear][0] = xi;
+                    queue[rear][1] = yi; //将当前翻为黑棋位置入队
+                    xi -= dir[i][0];
+                    yi -= dir[i][1]; //继续回退一步
+                }
+            }
+        }
+        front++; //继续搜索下一个白棋翻为黑棋的位置，将它作为下一轮广度优先搜索的起点
+    }
+    for (int i = 1; i <= rear; i++) { //状态回溯
+        int xi = queue[i][0];
+        int yi = queue[i][1];
+        chessboard[xi][yi] = 'O'; //将之前所有白棋翻为黑棋的位置，重置为白棋
+    }
+    chessboard[x][y] = '.'; //将空地还原
+    return res;
+}
+
+int flipChess(char** chessboard, int chessboardSize) {
+    int n = chessboardSize, m = strlen(chessboard[0]), ans = 0; //n行m列   答案
+    for (int i = 0; i < n; i++) { //遍历一次矩阵
+        for (int j = 0; j < m; j++) {
+            if (chessboard[i][j] == '.') ans = fmax(ans, bfs(chessboard, n, m, i, j)); //尝试在矩阵的空地位置放黑棋，维护最大值
+        }
+    }
+    return ans;
+}
+```
+
+**复杂度分析**
+- 时间复杂度：O(n²m²max(n,m))
+  对于每一次搜索来说，需要向8个方向搜索，这一部分的时间复杂度是O(max(n,m))
+  每次的空地搜索，最多新增O(nm)个起点，因此一次空地搜索的时间复杂度是O(nmmax(n,m))
+  再加上有O(nm)的空地，因此总的时间复杂度是O(n²m²max(n,m))
+- 空间复杂度：O(nm)，队列`queue`的空间
+
+![image.png](https://pic.leetcode.cn/1687324681-FlUbvE-image.png)

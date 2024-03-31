@@ -1,0 +1,48 @@
+class Solution {
+    public List<String> removeComments(String[] source) {
+        List<String> result = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean isIn = false;
+        for (String s : source) {
+            if (!isIn && current.length() != 0) {
+                result.add(current.toString());
+                current = new StringBuilder();
+            }
+            for (int i = 0; i < s.length(); i++) {
+                if (s.charAt(i) == '/') {
+                    if (i + 1 < s.length()) {
+                        if (s.charAt(i + 1) == '/' && !isIn) {
+                            break;
+                        }
+                        if (s.charAt(i + 1) == '*') {
+                            isIn = true;
+                        }
+                    }
+                } else if (s.charAt(i) == '*') {
+                    if (i + 1 < s.length()) {
+                        if (isIn && s.charAt(i + 1) == '/' && i > 0 && s.charAt(i - 1) != '/') {
+                            isIn = false;
+                            i++;
+                            continue;
+                        }
+                    }
+                }
+                if (isIn) {
+                    continue;
+                }
+                current.append(s.charAt(i));
+            }
+        }
+        if (!isIn && current.length() != 0) {
+            result.add(current.toString());
+        }
+        return result;
+    }
+}
+
+//total_testcases:54
+//total_correct:41
+//input_formatted:["a//*b/*/c","blank","d/*/e/*/f"]
+//expected_output:["a","blank","df"]
+//code_output:["a","blank"]
+//last_testcase:["a//*b/*/c","blank","d/*/e/*/f"]

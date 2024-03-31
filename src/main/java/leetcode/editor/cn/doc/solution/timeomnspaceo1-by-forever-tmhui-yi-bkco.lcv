@@ -1,0 +1,35 @@
+- 思路：齐头并进
+  1. 对每个字符串的每一位差值，进行计数比较。
+  2. 每轮需要六个数字，可以用数组代替（不用给每个数起名了）。总共（字符串长度）轮。
+  3. 数组含义{值1， 出现次数， 最后出现的索引， 值2，..., ...}
+
+* cpp
+
+```cpp
+class Solution {
+public:
+    string oddString(vector<string>& words) {
+        int m = words.size(), n = words[0].size();
+        for (int j = 0; j < n - 1; j++) {
+            int data[6]{ 26, 0, 0, 26, 0, 0 };
+            for (int i = 0; i < m; i++) {
+                int temp = words[i][j + 1] - words[i][j];
+                if (data[0] == 26) data[0] = temp;
+                if (temp == data[0]) {
+                    data[1]++;
+                    data[2] = i;
+                }
+                else if (data[3] == 26) data[3] = temp;
+                if (temp == data[3]) {
+                    data[4]++;
+                    data[5] = i;
+                }
+                if (data[1] > 1 && data[4] == 1) return words[data[5]];
+                if (data[4] > 1 && data[1] == 1) return words[data[2]];
+            }
+        }
+        return "Hello World";
+    }
+};
+```
+

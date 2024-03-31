@@ -1,0 +1,19 @@
+class Solution {
+    public int maxSubarraySumCircular(int[] nums) {
+int maxSum = nums[0];
+        int minSum = nums[0];
+        int total = 0;
+        int curMax = 0;
+        int curMin = 0;
+        for (int i : nums) {
+            curMax = Math.max(curMax + i, i);
+            maxSum = Math.max(curMax, maxSum);
+            curMin = Math.min(curMin + i, i);
+            minSum = Math.min(curMin, minSum);
+            total+= i;
+        }
+        return maxSum > 0 ? Math.max(maxSum, total - minSum) : maxSum;
+    }
+}
+//runtime:5 ms
+//memory:46.2 MB

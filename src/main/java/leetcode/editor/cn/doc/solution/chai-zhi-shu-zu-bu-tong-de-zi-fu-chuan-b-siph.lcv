@@ -1,0 +1,51 @@
+# 思路
+
+首先这道题我的第一反应也是哈希表，但是哈希表的Key是不能放数组或者List的，因为我的第一反应是把差值数组转成字符串作为哈希表的Key，但随之而来就有一个另外的问题，例如字符数组["abm","bcn","alm"]，其中"abm"和"bcn"的差值数组均为[1,11]，而"alm"的差值数组为[11,1]，但转换成字符串之后都是111，没有办法分辨。
+![1.png](https://pic.leetcode.cn/1684977651-yBDgnR-1.png)
+
+但是，我们可以对字符串进行纵向比较，即如果两个字符串的差值数组相同，那么这两个字符串第i(0<=i<=n)位的差值一定等于它们第0位的差值。
+![2.png](https://pic.leetcode.cn/1684977663-uXYllL-2.png)
+
+完成这件事之后就只有比较的工作了，这一部分比较简单就不赘述了，贴个代码。
+
+* []
+
+```Java
+class Solution {
+    public String oddString(String[] words) {
+        int n = words.length;
+        int i = 1;
+        for(i = 1; i < n; i++){
+            if(!check(words[i], words[0])){
+                break;
+            }
+        }
+        
+        for(int j = 1; j < n; j++){
+            if(j != i){
+                if(check(words[j], words[0])){
+                    return words[i];
+                }
+                else{
+                    return words[0];
+                }
+            }
+        }
+        return "";
+    }
+
+    private boolean check(String s1, String s2){
+        int n = s1.length();
+        int m = s1.charAt(0) - s2.charAt(0);
+        for(int i = 1; i < n; i++){
+            if(s1.charAt(i) - s2.charAt(i) != m){
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+贴个结果~
+![3.png](https://pic.leetcode.cn/1684977820-DNZPTN-3.png)

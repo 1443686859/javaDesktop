@@ -43,7 +43,8 @@
 
 package leetcode.editor.cn; //如果你的算法题是中文的，后缀就是cn，如果是英文的就是en
 
-import javafx.util.Pair;
+
+
 
 import java.util.*;
 
@@ -84,29 +85,29 @@ public class FindDuplicateSubtrees{
       }
   }
 class Solution {
-    Map<String, Pair<TreeNode, Integer>> used = new HashMap<>();
-     Set<TreeNode> repeat= new HashSet<>();
-     int index = 0;
-      public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
-            dfs(root);
-            return new ArrayList<>(repeat);
-    }
-    public int dfs(TreeNode node) {
-          if (node == null) {
-              return 0;
-          }
-          int[] current = {node.val, dfs(node.left), dfs(node.right)};
-          String hash = Arrays.toString(current);
-          if (used.containsKey(hash)) {
-              Pair<TreeNode, Integer> pair = used.get(hash);
-              repeat.add(pair.getKey());
-              return pair.getValue();
-          } else {
-              used.put(hash, new Pair<>(node, ++index));
-              return index;
-          }
-
-    }
+//    Map<String, Pair<TreeNode, Integer>> used = new HashMap<>();
+//     Set<TreeNode> repeat= new HashSet<>();
+//     int index = 0;
+//      public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+//            dfs(root);
+//            return new ArrayList<>(repeat);
+//    }
+//    public int dfs(TreeNode node) {
+//          if (node == null) {
+//              return 0;
+//          }
+//          int[] current = {node.val, dfs(node.left), dfs(node.right)};
+//          String hash = Arrays.toString(current);
+//          if (used.containsKey(hash)) {
+//              Pair<TreeNode, Integer> pair = used.get(hash);
+//              repeat.add(pair.getKey());
+//              return pair.getValue();
+//          } else {
+//              used.put(hash, new Pair<>(node, ++index));
+//              return index;
+//          }
+//
+//    }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 

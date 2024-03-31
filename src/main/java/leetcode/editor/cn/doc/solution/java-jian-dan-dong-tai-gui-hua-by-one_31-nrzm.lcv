@@ -1,0 +1,84 @@
+> Problem: [1289. 下降路径最小和  II](https://leetcode.cn/problems/minimum-falling-path-sum-ii/description/)
+
+[TOC]
+
+# 思路
+
+对于第 $i$ 行（$i \gt 0$）的某个元素 $grid[i][x]$ 来说（这里的 $x$ 可以代表任意的下标且满足 $0 \le x \lt n$），我们只需要关心第 $i - 1$ 行的最小值 $min(grid[i-1][x])$ 和「次小值」即可。
+
+> 为了防止 $grid[i][x] = grid[i - 1][x]$ 发生，因此我们要保存「前一行」最小的两个值。
+
+# 复杂度
+
+- 时间复杂度: $O(n^2)$，其中 $n$ 为数组 $grid$ 的长度。
+
+- 空间复杂度: $O(1)$，仅用到了若干变量。
+
+# Code
+
+* []
+
+```Java
+class Solution {
+    public int minFallingPathSum(int[][] grid) {
+        int n = grid.length;
+        
+        for (int i = 1; i < n; i++) {
+            // 预处理计算出第一行最小的两个值
+            // minVal1 第 x 行的「最小值」
+            // minVal2 第 x 行的「次小值」
+            int minVal1 = Integer.MAX_VALUE, minVal2 = Integer.MAX_VALUE;
+            for (int j = 0; j < n; j++) {
+                if (grid[i - 1][j] < minVal1) {
+                    int t = minVal1;
+                    minVal1 = grid[i - 1][j];
+                    minVal2 = t;
+                } else if (grid[i - 1][j] < minVal2) {
+                    minVal2 = grid[i - 1][j];
+                }
+            }
+
+            for (int j = 0; j < n; j++) {
+                grid[i][j] += (grid[i - 1][j] == minVal1? minVal2: minVal1);
+            }
+        }
+        int ans = Integer.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            ans = Math.min(ans, grid[n - 1][i]);
+        }
+        return ans;
+    }
+}
+```
+
+* []
+
+```C#
+public class Solution {
+    public int MinFallingPathSum(int[][] grid) {
+        int n = grid.Length;
+        for (int i = 1; i < n; i++) {
+            int minVal1 = int.MaxValue, minVal2 = int.MaxValue;
+            for (int j = 0; j < n; j++) {
+                if (grid[i - 1][j] < minVal1) {
+                    int t = minVal1;
+                    minVal1 = grid[i - 1][j];
+                    minVal2 = t;
+                } else if (grid[i - 1][j] < minVal2) {
+                    minVal2 = grid[i - 1][j];
+                }
+            }
+            for (int j = 0; j < n; j++) {
+                grid[i][j] += (grid[i - 1][j] == minVal1? minVal2: minVal1);
+            }
+        }
+        int ans = int.MaxValue;
+        for (int i = 0; i < n; i++) {
+            ans = Math.Min(ans, grid[n - 1][i]);
+        }
+
+        return ans;
+    }
+}
+```
+

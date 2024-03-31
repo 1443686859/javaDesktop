@@ -54,7 +54,6 @@
 
 package leetcode.editor.cn; //如果你的算法题是中文的，后缀就是cn，如果是英文的就是en
 
-import sun.security.util.NamedCurve;
 
 import java.util.*;
 

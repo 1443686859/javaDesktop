@@ -52,6 +52,14 @@ public class NextGreaterNodeInLinkedList{
     public static void main(String[] args) {
         Solution solution = new NextGreaterNodeInLinkedList().new Solution();
    }
+    class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {}
+        ListNode(int val) { this.val = val; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
+
 //leetcode submit region begin(Prohibit modification and deletion)
 /**
  * Definition for singly-linked list.
@@ -64,29 +72,23 @@ public class NextGreaterNodeInLinkedList{
  * }
  */
 class Solution {
-    class ListNode {
-        int val;
-        ListNode next;
-        ListNode() {}
-        ListNode(int val) { this.val = val; }
-        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
-    }
+
     public int[] nextLargerNodes(ListNode head) {
-        int count = 0;
         List<Integer> result = new ArrayList<>();
-        ListNode current = head;
-        Deque<Integer> stack = new ArrayDeque<>();
-        while (current != null) {
-            while (!stack.isEmpty() && result.get(stack.peek()) < current.val) {
-                result.set(stack.pop(), current.val);
+        int start = 0;
+        ListNode temp = head;
+        Deque<Integer> deque = new ArrayDeque<>();
+        while (temp != null) {
+            while (!deque.isEmpty() && result.get(deque.peek()) < temp.val) {
+                result.set(deque.pop(), temp.val);
             }
-            stack.push(count);
-            result.add(current.val);
-            count++;
-            current = current.next;
+            deque.push(start);
+            result.add(temp.val);
+            temp = temp.next;
+            start++;
         }
-        while (!stack.isEmpty()) {
-            result.set(stack.pop(), 0);
+        while (!deque.isEmpty()) {
+            result.set(deque.pop(), 0);
         }
         return result.stream().mapToInt(Integer::intValue).toArray();
     }

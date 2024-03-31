@@ -1,0 +1,24 @@
+class Solution {
+    public String addStrings(String num1, String num2) {
+        int inc = 0;
+        StringBuilder result = new StringBuilder();
+        int length1 = num1.length();
+        int length2 = num2.length();
+        while (length2 >= 1 || length1 >= 1) {
+            int n1 = length1 >= 1 ? num1.charAt(length1 - 1) - '0' : 0;
+            int n2 = length2 >= 1 ? num2.charAt(length2 - 1) - '0' : 0;
+            int current = n1 + n2 + inc;
+            inc = current / 10;
+            result.append(current % 10);
+            length1--;
+            length2--;
+        }
+        if (inc != 0) {
+            result.append(inc);
+        }
+        return result.reverse().toString();
+    }
+}
+
+//runtime:1 ms
+//memory:40.2 MB

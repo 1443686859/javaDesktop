@@ -1,0 +1,62 @@
+class Solution {
+    public long repairCars1(int[] ranks, int cars) {
+        PriorityQueue<long[]>  queue = new PriorityQueue<>((a, b) -> {
+           long i1 = (a[1] + 1) * (a[1] + 1) * a[0];
+           long i2 = (b[1] + 1) * (b[1] + 1) * b[0];
+            if (i1 < i2) {
+                return -1;
+            } else if (i1 > i2) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+        for (int i = 0; i < ranks.length; i++) {
+            queue.add(new long[]{ranks[i], 0l});
+        }
+        long ans = 0;
+        while (cars > 0) {
+            long[] c = queue.poll();
+            c[1]++;
+            queue.add(c);
+            ans = Math.max(ans, c[0] * c[1] * c[1]);
+            cars--;
+        }
+        return ans;
+    }
+    public long repairCars(int[] ranks, int cars) {
+        Arrays.sort(ranks);
+        int left = 0;
+        int right = cars;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            long target = 1l * ranks[0] * mid * mid;
+            if (check(ranks, target, cars - mid)) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        long min = 1l * ranks[0] * right * right;
+        long max = 1l * ranks[0] * (right + 1) * (right + 1);
+        while (min <= max) {
+            long mid = min + (max - min) / 2;
+            if (check(ranks, mid, cars - (int)Math.sqrt(mid / ranks[0]))) {
+                max = mid - 1;
+            } else {
+                min = mid + 1;
+            }
+        }
+        return max + 1;
+    }
+    public boolean check(int[] ranks, long target, int sum) {
+        long count = 0;
+        for (int i = 1; i < ranks.length; i++) {
+            count += (int) Math.sqrt(target / ranks[i]);
+        }
+        return count >= sum;
+    }
+}
+
+//runtime:52 ms
+//memory:53 MB

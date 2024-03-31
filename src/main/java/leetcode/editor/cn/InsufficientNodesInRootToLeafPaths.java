@@ -80,33 +80,23 @@ public class TreeNode {
 }
 class Solution {
     public TreeNode sufficientSubset(TreeNode root, int limit) {
-        boolean result = dfs(root, 0, limit);
-        if (result) {
-            return null;
+        if (root.left == null && root.right == null) {
+           // 到了叶子节点
+            return limit - root.val > 0 ? null : root;
         }
-        return root;
-    }
-    public boolean dfs(TreeNode root, int totalSum, int limit) {
-        if (root.left == null  && root.right == null) {
-            return root.val + totalSum < limit;
-        }
-
-        boolean deletedLeft = true;
-        boolean deletedRight = true;
         if (root.left != null) {
-            deletedLeft = dfs(root.left, totalSum + root.val, limit);
+            root.left = sufficientSubset(root.left, limit - root.val);
         }
         if (root.right != null) {
-            deletedRight = dfs(root.right, totalSum + root.val, limit);
+            root.right = sufficientSubset(root.right, limit - root.val);
         }
-        if (deletedLeft) {
-            root.left = null;
+        if (root.right == null && root.left == null) {
+            return  null;
+        } else {
+            return root;
         }
-        if (deletedRight) {
-            root.right = null;
-        }
-        return deletedLeft && deletedRight;
     }
+
 
 }
 //leetcode submit region end(Prohibit modification and deletion)

@@ -1,0 +1,29 @@
+class Solution {
+    public int minTrioDegree(int n, int[][] edges) {
+        int[][] d = new int[n + 1][n + 1];
+        for (int[] e : edges) {
+            d[e[0]][e[1]]++;
+            d[e[1]][e[0]]++;
+            d[e[0]][e[0]]++;
+            d[e[1]][e[1]]++;
+        }
+        int min = Integer.MAX_VALUE;
+        for (int i = 1; i <= n; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                if (d[i][j] == 0) {
+                    continue;
+                }
+                for (int z = j + 1; z <= n; z++) {
+                    if (d[i][z] == 0 || d[j][z] == 0) {
+                        continue;
+                    }
+                    min = Math.min(min, d[i][i] + d[j][j] - 2 * d[i][j] + d[z][z] - 2 * d[i][z] - 2 * d[j][z]);
+                }
+            }
+        }
+        return min == Integer.MAX_VALUE ? -1 : min;
+    }
+}
+
+//runtime:41 ms
+//memory:65.9 MB

@@ -1,0 +1,221 @@
+# 解题思路
+
+这题就是个缝合怪，难度不在与算法思路的如何突破，因为单个点来说不是特别难，而且互相之间还不太相关，可以理解为一次做4个连续中等题。对于我们这种非神选手能否完成纯粹看你前3题弄完剩多少时间，这代码量能打完都厉害了。
+
+# 突破点：如何确认某个点的子数组组合数量
+
+换个方式提问就是给定你下标 $i$ ，求包含这个位置且**质数分数**最高的子数组数量。更具体的就是需要找到一个办法求算一个位置，左边 **小于** 自己的数量，和右边 **小于等于** 自己的数量；
+
+![image.png](https://pic.leetcode.cn/1691987000-sdHyeu-image.png)
+
+用单调栈解决这个问题，但这题稍微复杂点是需要两侧都找出来，一般都是找一侧的单调性，而且两侧单调性还存在差异；
+
+相似题目：
+[2735. 收集巧克力](https://leetcode.cn/problems/collecting-chocolates/description/)  
+[42. 接雨水](https://leetcode.cn/problems/trapping-rain-water/)
+
+# 突破点：如何计算某个数质数分数
+
+质数分数，还是比较好理解的，要计算上面位置左右两侧的长度就要先知道具体值，所以实际写题时这个问题需要前置；
+
+解决也不难，就是质数筛的变形，[滑到方法二：埃氏筛](https://leetcode.cn/problems/count-primes/solutions/507273/ji-shu-zhi-shu-by-leetcode-solution/)
+
+把布尔表换成计数表即可，统计一个位置被多少个质数跳到过就可以了；
+
+相似题目：
+[204. 计数质数](https://leetcode.cn/problems/count-primes/)
+
+# 突破点：如何最大化总值
+
+题目有个 $K$ 值，实际代表就是找出 $k$ 个数出来，然后全部乘起来，由于 $k$ 是固定的，那么肯定里面数字越大越好，所以得先手选数字大的，然后通过前面方法找到这个数字左侧和右侧的组合量得出总组合量，那么就能得到 $maxNum^{left*right}$ ，然后把 $k$ 减去总组合量，继续找下个最大数字；
+
+这个没想起来什么相似题目，但就是个排序题；
+
+# 突破点：快速幂
+
+上面这么多子难题都解了的话，基本也就解了，但好像出题人觉得还不够厉害，决定再加一个，所以上面方法会超时，因为上面最后处理量就是 $k$ 个数相乘，题目写明了要坑我们来着 `1 <= k <= min(n * (n + 1) / 2, 10^9)` ，你直接枚举 $k$ 次相乘必死，所以只能优化这个环节 $maxNum^{left*right}$ ，也就是加速 $n$ 次幂计算问题；
+
+就是手写快速幂了呗；
+
+题目：
+[剑指 Offer 16. 数值的整数次方](https://leetcode.cn/problems/shu-zhi-de-zheng-shu-ci-fang-lcof/description/)
+
+# 总结
+
+1. 先通过质数筛制备质数分数速查表；
+2. 通过使用单调栈统计各个下标左右两侧的最大子数组组合量；
+3. 通过排序从大到小选取数字并记录对应只组合量是否累计小于等于 $k$；
+4. 找出来的数字通过快速幂计算对应总组合量次幂结果；
+5. 过程中注意取余和防止数字越界；
+
+* []
+
+```python
+MAX = 1_00_000
+primes = [0] * (MAX + 1)
+
+for i in range(2, MAX + 1):
+    if primes[i] > 0: continue
+    for j in range(i, MAX + 1, i): primes[j] += 1
+
+class Solution:
+    def maximumScore(self, nums: List[int], k: int) -> int:
+        if k == 0: return 0
+        
+        n = len(nums)
+
+        left, right = [0] * n, [0] * n
+        stack = [(-1, 1_000_000_007)]
+        
+        for i,num in enumerate(nums):
+            while stack[-1][1] < primes[num]:
+                lastIdx, lastPrime = stack[-1]
+                right[lastIdx] = i - lastIdx
+                stack.pop()
+            right[stack[-1][0]] = i - stack[-1][0]
+            left[i] = i - stack[-1][0]
+            stack.append((i, primes[num]))
+            
+        
+        while stack[-1][1] < 1_000_000_007:
+            lastIdx, lastPrime = stack[-1]
+            right[lastIdx] = n - lastIdx
+            stack.pop()
+            
+        ans = 1
+
+        numsSort = sorted(list(enumerate(nums)), key=lambda it:-it[1])
+        for i,num in numsSort:
+            count = left[i] * right[i]
+            # print(num, count)
+
+            # 直写幂，超时
+            # ans *= num ** min(count, k)
+            # ans %= 1_000_000_007
+
+            # 枚举幂，超时
+            # for _ in range(min(count, k)):
+            #     ans *= num
+            #     ans %= 1_000_000_007
+
+            # 手写快速幂
+            ans = self.pow(num, min(count, k), ans)
+
+            if count >= k: break
+            k -= count
+        
+        return ans
+
+    def pow(self, num: int, powNum: int, base: int) -> int:
+        while powNum:
+            if powNum & 1 == 1: base = base * num % 1_000_000_007
+            num = num * num % 1_000_000_007
+            powNum >>= 1
+        return base
+```
+
+# 竞速优化
+
+1. 预处理质数分数速查表；
+2. 单调栈添加哨兵，右到左方向优化；
+3. 二分答案范围 + 尾数截断；
+
+* []
+
+```java
+class Solution {
+    static final int MAX = 1_000_000_007;
+    static final int MAX_PRIME = 1_00_000;
+    static final int[] primes = new int[MAX_PRIME + 1];
+    static {
+        for (int i = 2; i <= MAX_PRIME; i++) {
+            if (primes[i] > 0) continue;
+            for (int j = i; j <= MAX_PRIME; j += i) primes[j]++;
+        }
+        primes[0] = MAX;
+    }
+
+    public int maximumScore(List<Integer> list, int k) {
+        if (k == 0) return 0;
+        
+        final int n = list.size();
+        
+        int[] nums = new int[n + 1];
+        int[] total = new int[n + 1];
+        int[] totalMul = new int[n + 1];
+        int[] index = new int[n + 1];
+        
+        int head = 0, count;
+
+        index[0] = n;
+
+        for (int i = 0; i < n; i++) nums[i] = list.get(i);
+
+        for (int i = n - 1; i >= 0; i--) {
+            count = primes[nums[i]];
+            while (primes[nums[index[head]]] <= count) total[index[head]] = index[head--] - i;
+            totalMul[i] = total[index[head]] = index[head] - i;
+            index[++head] = i;
+        }
+        
+        while (head > 0) total[index[head]] = index[head--] + 1;
+            
+        for (int i = 0; i < n; i++) {
+            total[i] *= totalMul[i];
+            index[i] = i;
+        }
+
+        int left = 0, right = n - 1, low, high, mid, key, target;
+        long sum = 0l, curRes = 0l;
+        while (left < right) {
+            low = left; high = right; mid = (left + right) >> 1;
+            key = index[mid]; index[mid] = index[low]; index[low] = key;
+            target = nums[key];
+
+            curRes = total[index[low]];
+            while(low < high){
+                while(low < high && nums[index[high]] <= target) high--;
+                index[low] = index[high];
+                while(low < high && nums[index[low]] > target) curRes += total[index[low++]];
+                index[high] = index[low];
+            }
+            index[low] = key;
+            
+            if (sum + curRes < k) {
+                left = low + 1;
+                sum += curRes;
+            } else right = low;
+        }
+
+        sum += total[index[right]];
+
+        int minIdx = 0;
+        long ans = 1;
+
+        for (int i = 1; i <= right; i++) {
+            if (nums[index[i]] < nums[index[minIdx]] || nums[index[i]] == nums[index[minIdx]] && total[index[i]] > total[index[minIdx]]) minIdx = i;
+        }
+        total[index[minIdx]] -= sum - k;
+        
+        for (int i = 0; i <= right; i++) {
+            ans = pow(nums[index[i]], total[index[i]], ans);
+        }
+        
+        return (int)ans;
+    }
+
+    private long pow(long num, long powNum, long base) {
+        while (powNum > 0) {
+            if ((powNum & 1) == 1) base = base * num % 1_000_000_007;
+            num = num * num % 1_000_000_007;
+            powNum >>= 1;
+        }
+        return base;
+    }
+}
+```
+
+![image.png](https://pic.leetcode.cn/1691996401-NyGmEo-image.png)
+
+# 完
+

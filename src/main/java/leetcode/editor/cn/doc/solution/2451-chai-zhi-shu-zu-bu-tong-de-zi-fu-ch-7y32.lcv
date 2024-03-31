@@ -1,0 +1,41 @@
+### 解题思路
+
+差值数组相同的两个字符串逐位相减后，每一位的差值相等，因此可以让相邻的字符串逐位相减，找到逐位相减后每位差值不同的字符串对，根据字符串对的位置找出不同的字符串。当不同的字符串在数组开头或末端时，只会有一对相邻字符串逐位相减后不同；当不同的字符串位于中间位置时，会有两对相邻字符串相减后不同。
+
+例如words = ["adc","wzy","abc"], ['w','z,'y']-['a','d','c'] = [22, 22, 22],['a','b,'c']-['w','z,'y'] = [-22,-24,-22]，可以得出差值数组不同的字符串是"abc"。
+
+### 代码
+
+* cpp
+
+```cpp
+class Solution {
+public:
+    string oddString(vector<string>& words) {
+        int n= words[0].size();
+        int diffIndex=-1, diffPost = -1; //diffIndex记录第一对不同字符串的索引，diffPost记录第二对不同的字符串
+        for(int i=1;i<words.size();++i){
+            int diff = words[i][0]-words[i-1][0];
+            for(int j=1;j<n;++j){
+                if(words[i][j]-words[i-1][j]!=diff){ // 不同
+                    if(diffIndex==-1){  // 第一次出现不同，记录索引
+                        diffIndex=i; 
+                    }else{
+                        diffPost=i; // 第二次出现不同，记录索引（不能覆盖第一次）
+                    }
+                    break;
+                }
+            }
+            if(diffPost!=-1 || (diffIndex!=-1 && i>=diffIndex+1)){ // diffPost只可能出现在diffIndex+1的位置
+                break;
+            }
+        }
+        if(diffPost==-1){
+            return diffIndex==1? words[0]:words[diffIndex]; // 开头或结尾
+        }else{
+            return words[diffIndex]; //在中间
+        }
+    }
+};
+```
+

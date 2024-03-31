@@ -1,0 +1,34 @@
+class Solution {
+    public int maximumTastiness(int[] price, int k) {
+        Arrays.sort(price);
+        int max = price[price.length - 1] - price[0];
+        int min = 0;
+        while (min <= max) {
+            int mid = (max + min) / 2;
+            if (check(price, mid, k)) {
+                min = mid + 1;
+            } else {
+                max = mid - 1;
+            }
+        }
+        return min - 1;
+    }
+    public boolean check(int[] arr, int mid, int k) {
+        int start = arr[0];
+        int count = 1;
+        for (int i = 1; i < arr.length; i++) {
+            if (start + mid <= arr[i]) {
+                start = arr[i];
+                count++;
+            }
+            if (count == k) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+}
+
+//runtime:45 ms
+//memory:54.1 MB

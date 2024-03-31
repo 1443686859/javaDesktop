@@ -1,0 +1,82 @@
+class Solution {
+    int[][] count;
+    int[] result;
+    int[] parentA;
+    public int[] sumOfDistancesInTree(int n, int[][] edges) {
+        result = new int[n];
+        List<Integer>[] map = new List[n];
+        for (int i = 0; i < n; i++) {
+            map[i] = new ArrayList<>();
+        }
+        for (int[] edge : edges) {
+            map[edge[0]].add(edge[1]);
+            map[edge[1]].add(edge[0]);
+        }
+        count = new int[n][2];
+        parentA = new int[n];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(count[i], - 1);
+        }
+        getCount(map, -1, 0);
+        Arrays.fill(result, -1);
+        result[0] = count[0][0];
+        int countResult = 1;
+        if (countResult == n) {
+            return result;
+        }
+        while (countResult <= n) {
+            for (int i = 1; i < n; i++) {
+                if (result[parentA[i]] != -1) {
+                    result[i] = result[parentA[i]] + (map.length - 2 * count[i][1]);
+                    countResult++;
+                    if (countResult > n) {
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    public int[] getCount(List<Integer>[] map, int parent, int current) {
+        if (count[current][0] != -1) {
+            return count[current];
+        }
+        int[] currentResult = new int[2];
+        currentResult[1] = 1;
+        parentA[current] = parent;
+        for (int i = 0; i < map[current].size(); i++) {
+            if (parent != map[current].get(i)) {
+                int[] currentArray = getCount(map, current, map[current].get(i));
+                currentResult[0] += currentArray[0] + currentArray[1];
+                currentResult[1] += currentArray[1];
+            }
+        }
+        count[current] = currentResult;
+        return currentResult;
+    }
+
+    public void getResult(List<Integer>[] map, int parent, int current) {
+        if (parent == -1) {
+            result[current] = count[0][0];
+        } else {
+            result[current] = result[parentA[current]] + (map.length - 2 * count[current][1]);
+        }
+        for (int i = 0; i < map[current].size(); i++) {
+            if (parent != map[current].get(i)) {
+                getResult(map, current, map[current].get(i));
+            }
+        }
+
+    }
+
+
+}
+
+//total_testcases:74
+//total_correct:28
+//input_formatted:6
+[[5,3],[5,2],[4,5],[2,0],[1,0]]
+//expected_output:[10,14,8,12,12,8]
+//code_output:[10,14,8,12,-1,8]
+//last_testcase:6
+[[5,3],[5,2],[4,5],[2,0],[1,0]]

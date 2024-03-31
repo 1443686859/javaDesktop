@@ -1,0 +1,68 @@
+> Problem: [1289. 下降路径最小和  II](https://leetcode.cn/problems/minimum-falling-path-sum-ii/description/)
+
+[TOC]
+
+# 思路
+
+> 使用动态规划，dp[i][j]为在i行j列时得到的最小路径和
+
+# 解题方法
+
+> 首先初始化dp[0]，之后每一行从第一行进行转移，并且与上一行不在同一列
+
+# 复杂度
+
+- 时间复杂度:
+
+> 时间复杂度, $O(n^3)$
+
+- 空间复杂度:
+
+> 空间复杂度$O(n^2)$
+
+# Code
+
+* []
+
+```Java
+
+class Solution {
+
+
+
+  public int minFallingPathSum(int[][] grid) {
+    int m = grid.length;
+    int[][] dp = new int[m][m];
+
+    for (int i = 0; i < m; i++) {
+      dp[0][i] = grid[0][i];
+    }
+    for (int i = 1; i < m; i++) {
+      for (int j = 0; j < m; j++) {
+        dp[i][j] = grid[i][j] + findMinValue(dp, i - 1, j);
+      }
+    }
+    return findMinValue(dp,grid.length-1,grid.length+1);
+  }
+
+  /**
+   * 找到grid第i行但不是在第j列最小的值
+   *
+   * @param grid
+   * @param i
+   * @param j
+   * @return
+   */
+  private int findMinValue(int[][] grid, int i, int j) {
+    int min = Integer.MAX_VALUE;
+    for (int k = 0; k < grid[i].length ; k++) {
+      if (min > grid[i][k] && k!=j) {
+        min = grid[i][k];
+      }
+    }
+    return min;
+  }
+
+}
+```
+

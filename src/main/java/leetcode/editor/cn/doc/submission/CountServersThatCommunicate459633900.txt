@@ -1,0 +1,61 @@
+class Solution {
+    public int countServers(int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+        int[] d = new int[n * m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                d[i * n + j] = i * n + j;
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    for (int z = i - 1; z >= 0; z--) {
+                        if (grid[z][j] == 1)
+                        merge(d, i * n + j,  z * n +j);
+                    }
+                    for (int z = j - 1; z >= 0; z--) {
+                        if (grid[i][z] == 1)
+                        merge(d, i * n + j,  i * n + z);
+                    }
+                }
+            }
+        }
+        int result = 0;
+        int[] count = new int[n * m];
+        for (int i = 0; i < n * m; i++) {
+            int target = findP(d, i);
+            count[target]++;
+        }
+
+        for (int i : count) {
+            if (i > 1){
+                result += i;
+            }
+        }
+        return result;
+    }
+    public void merge(int[] d, int index, int current) {
+        int p1 = findP(d, index);
+        int p2 = findP(d, current);
+        if (p1 != p2) {
+            d[p1] = d[p2];
+        }
+    }
+    public int findP(int[] d, int index) {
+        if (index == d[index]) {
+            return index;
+        } else {
+            d[index] = findP(d, d[index]);
+        }
+        return d[index];
+    }
+}
+
+//total_testcases:55
+//total_correct:3
+//input_formatted:[[1,0,0,1,0],[0,0,0,0,0],[0,0,0,1,0]]
+//expected_output:3
+//code_output:5
+//last_testcase:[[1,0,0,1,0],[0,0,0,0,0],[0,0,0,1,0]]

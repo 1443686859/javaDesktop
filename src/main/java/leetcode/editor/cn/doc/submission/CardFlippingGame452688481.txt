@@ -1,0 +1,29 @@
+class Solution {
+    public int flipgame(int[] fronts, int[] backs) {
+        int result = Integer.MAX_VALUE;
+        for (int i = 0; i < fronts.length; i++) {
+            if (fronts[i] == backs[i]) {
+                continue;
+            }
+            boolean current = true;
+            for (int j = 0; j < fronts.length; j++) {
+                current &= (fronts[i] != fronts[j]) || (fronts[i] != backs[j]);
+            }
+            if (current) {
+                result = Math.min(result, fronts[i]);
+            }
+            current = true;
+            for (int j = 0; j < fronts.length; j++) {
+                current &= (backs[i] != fronts[j]) || (backs[i] != backs[j]);
+            }
+            if (current) {
+                result = Math.min(result, backs[i]);
+            }
+        }
+        return result == Integer.MAX_VALUE ? 0 : result;
+
+    }
+}
+
+//runtime:38 ms
+//memory:41.9 MB

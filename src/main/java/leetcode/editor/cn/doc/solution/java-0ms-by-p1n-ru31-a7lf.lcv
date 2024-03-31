@@ -1,0 +1,26 @@
+**取距离差总和**
+
+* 
+
+```
+class Solution {
+    public String oddString(String[] word) {
+		int[] difference=new int[word.length];
+		
+		for(int i=0;i<word.length;i++) {
+			int sum=0;
+			char[] letter=word[i].toCharArray();
+			for(int j=1,k=26;j<letter.length;j++,k++) sum+=(letter[j]-letter[j-1])*k;
+			difference[i]=sum;
+		}
+		
+		for(int i=1;i<difference.length-1;i++)
+			if(difference[i-1]!=difference[i] && difference[i]!=difference[i+1])
+				return word[i];
+		if(difference[0]!=difference[1]) return word[0];
+		else if(difference[difference.length-1]!=difference[0]) return word[difference.length-1];
+		else return "";
+	}
+}
+```
+

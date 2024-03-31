@@ -48,10 +48,7 @@
 
 package leetcode.editor.cn; //如果你的算法题是中文的，后缀就是cn，如果是英文的就是en
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author  YourName
@@ -60,29 +57,28 @@ import java.util.Map;
 public class CountUniqueCharactersOfAllSubstringsOfAGivenString{
     public static void main(String[] args) {
         Solution solution = new CountUniqueCharactersOfAllSubstringsOfAGivenString().new Solution();
+        System.out.println(solution.uniqueLetterString("ABA"));
    }
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int uniqueLetterString(String s) {
-        Map<Character, List<Integer>> map = new HashMap<>();
+        List<Integer>[] result = new List[26];
+        Arrays.setAll(result, e -> new ArrayList<>());
         for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (!map.containsKey(c)) {
-                List<Integer> currentList = new ArrayList<>();
-                currentList.add(-1);
-                map.put(c, currentList);
-            }
-            map.get(c).add(i);
+            result[s.charAt(i) - 'A'].add(i);
         }
-        int result = 0;
-        for (Map.Entry<Character, List<Integer>> entry : map.entrySet()) {
-            List<Integer> list = entry.getValue();
-            list.add(s.length());
-            for (int i = 1; i < list.size() - 1; i++) {
-                result += (list.get(i) - list.get(i - 1)) * (list.get(i + 1) - list.get(i));
+        int count = 0;
+        for (int i = 0; i < 26; i++) {
+            int pre = -1;
+            if (result[i].size() > 0) {
+                result[i].add(s.length());
+                for (int j = 1; j < result[i].size(); j++) {
+                    count += (result[i].get(j - 1) - pre) * (result[i].get(j) - result[i].get(j - 1));
+                    pre = result[i].get(j - 1);
+                }
             }
         }
-        return result;
+        return count;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)

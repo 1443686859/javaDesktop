@@ -1,0 +1,45 @@
+class Solution {
+    public boolean canChange(String start, String target) {
+        int index = 0;
+        int index1 = 0;
+        while (index < target.length()) {
+            if (target.charAt(index) == '_') {
+                index++;
+                continue;
+            }
+            if (target.charAt(index) == 'L') {
+                while (index1 < start.length() && start.charAt(index1) == '_') {
+                    index1++;
+                }
+                if (index1 == start.length() || start.charAt(index1) != 'L') {
+                    return false;
+                }
+                index++;
+                index1++;
+            } else {
+                if (index1 > index || index1 == index && start.charAt(index1) != 'R') {
+                    return false;
+                }
+                while (index1 < start.length() && start.charAt(index1) == '_') {
+                    index1++;
+                }
+                if (index1 == start.length() || start.charAt(index1) != 'R') {
+                    return false;
+                }
+                index++;
+                index1++;
+            }
+
+        }
+        return true;
+    }
+}
+
+//total_testcases:131
+//total_correct:120
+//input_formatted:"_LL__R__R_"
+"L___L___RR"
+//expected_output:false
+//code_output:true
+//last_testcase:"_LL__R__R_"
+"L___L___RR"

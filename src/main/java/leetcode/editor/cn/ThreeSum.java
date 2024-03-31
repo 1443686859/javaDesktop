@@ -55,29 +55,28 @@ class Solution {
         Arrays.sort(nums);
         List<List<Integer>> result = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            if (i > 0 && nums[i - 1] == nums[i]) {
-                continue;
-            }
-            int third = n - 1;
-            int target = -nums[i];
-            for (int j = i + 1; j < n; j++) {
-                if (j > i + 1 && nums[j] == nums[j - 1]) {
-                    continue;
-                }
-                while (j < third && nums[third] + nums[j] > target) {
-                    third--;
-                }
-                if (j == third) {
-                    break;
-                }
-                if (nums[j] + nums[third] == target) {
-                    List<Integer> tempResult = new ArrayList<>();
-                    tempResult.add(nums[i]);
-                    tempResult.add(nums[j]);
-                    tempResult.add(nums[third]);
-                    result.add(tempResult);
-                }
-            }
+          if (i > 0 && nums[i - 1] == nums[i]) {
+              continue;
+          }
+          if (nums[i] > 0) {
+              continue;
+          }
+          int target = - nums[i];
+          int right = n - 1;
+          for (int j = i + 1; j < n; j++) {
+              if (j > i + 1 && nums[j - 1] == nums[j]) {
+                  continue;
+              }
+              while (j < right && nums[j] + nums[right] > target) {
+                  right --;
+              }
+              if (j == right) {
+                  break;
+              }
+              if (nums[j] + nums[right] == target) {
+                  result.add(Arrays.asList(nums[i], nums[j], nums[right]));
+              }
+          }
         }
         return result;
     }

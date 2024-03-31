@@ -1,0 +1,66 @@
+> Problem: [822. 翻转卡片游戏](https://leetcode.cn/problems/card-flipping-game/description/)
+
+# 思路
+
+- 
+
+  ##### > 简单来说就是：把所有正反相同的数（num）找到，并把两正反数组中和 sum 相同的所有数都排除，（就是num这个数已经失去参赛资格了），剩下的数都满足资格，找出最小的即可
+
+---
+
+# 解题方法
+
+#### 注意题目中说:(我们可以先翻转任意张卡片，然后选择其中一张卡片)==>即两数组的排序是所有可能
+
+#### ( 如果选中的那张卡片背面的数字 x 与任意一张卡片的正面的数字都不同，那么这个数字是我们想要的数字。)====>
+
+#### 若一张卡片的正面和背面的数字 num 相同，在选中的卡片无论正反（有这个条件：先翻转任意张卡片）再出现 num ，则 num 不会是我们想要的数
+
+# 复杂度
+
+- 时间复杂度:
+
+> $O(n^2)$
+
+- 空间复杂度:
+
+> $O(1)$
+
+# Code
+
+* []
+
+```C
+
+int flipgame(int* fronts, int frontsSize, int* backs, int backsSize){
+    int sum=2000;
+    for(int i=0,k=0;i<frontsSize;++i)
+    {
+        if(fronts[i]==backs[i])
+        {
+            int num=fronts[i];
+            fronts[i]=backs[i]=2001;
+            for(int j=0;j<frontsSize;++j)
+            {
+                if(fronts[j]==num)
+                {
+                    fronts[j]=2001;
+                }
+                if(backs[j]==num)
+                {
+                    backs[j]=2001;
+                }
+            }
+        }        
+    }
+    for(int i=0;i<frontsSize;++i)
+    {
+        sum=sum<fronts[i]?sum:fronts[i];
+        sum=sum<backs[i]?sum:backs[i];
+    }
+    if(sum==2000)
+        sum=0;
+    return sum;
+}
+```
+

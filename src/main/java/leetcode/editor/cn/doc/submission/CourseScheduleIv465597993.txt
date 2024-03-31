@@ -1,0 +1,52 @@
+class Solution {
+    boolean[][] result;
+    boolean[][] array;
+    boolean[] v;
+    public List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+        result = new boolean[numCourses][numCourses];
+        array = new boolean[numCourses][numCourses];
+        int[] count = new int[numCourses];
+        for (int[] p : prerequisites) {
+            array[p[0]][p[1]] = true;
+            count[p[1]]++;
+        }
+        for (int i = 0; i < numCourses; i++) {
+            if (count[i] == 0) {
+                v = new boolean[numCourses];
+                dfs(i);
+            }
+        }
+
+        List<Boolean> ans = new ArrayList<>();
+        for (int[] q : queries) {
+            ans.add(result[q[1]][q[0]]);
+        }
+        return ans;
+    }
+    public void dfs(int pre) {
+        boolean[] s = result[pre];
+        for (int i = 0; i < array.length; i++) {
+            if (array[pre][i] && !v[i]) {
+                for (int j = 0; j < result.length; j ++) {
+                    result[i][j] = s[j];
+                }
+                result[i][pre] = true;
+                v[i] = true;
+                dfs(i);
+                v[i] = false;
+            }
+        }
+    }
+
+}
+
+//total_testcases:68
+//total_correct:7
+//input_formatted:4
+[[2,3],[2,1],[0,3],[0,1]]
+[[0,1],[0,3],[2,3],[3,0],[2,0],[0,2]]
+//expected_output:[true,true,true,false,false,false]
+//code_output:[false,false,true,false,false,false]
+//last_testcase:4
+[[2,3],[2,1],[0,3],[0,1]]
+[[0,1],[0,3],[2,3],[3,0],[2,0],[0,2]]

@@ -1,0 +1,61 @@
+class Solution {
+    int[][] count;
+    int[] result;
+    int[] parentA;
+    public int[] sumOfDistancesInTree(int n, int[][] edges) {
+        result = new int[n];
+        List<Integer>[] map = new List[n];
+        for (int i = 0; i < n; i++) {
+            map[i] = new ArrayList<>();
+        }
+        for (int[] edge : edges) {
+            map[edge[0]].add(edge[1]);
+            map[edge[1]].add(edge[0]);
+        }
+        count = new int[n][2];
+        parentA = new int[n];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(count[i], - 1);
+        }
+        getCount(map, -1, 0);
+        getResult(map, -1, 0);
+        return result;
+    }
+    public int[] getCount(List<Integer>[] map, int parent, int current) {
+        if (count[current][0] != -1) {
+            return count[current];
+        }
+        int[] currentResult = new int[2];
+        currentResult[1] = 1;
+        parentA[current] = parent;
+        for (int i = 0; i < map[current].size(); i++) {
+            if (parent != map[current].get(i)) {
+                int[] currentArray = getCount(map, current, map[current].get(i));
+                currentResult[0] += currentArray[0] + currentArray[1];
+                currentResult[1] += currentArray[1];
+            }
+        }
+        count[current] = currentResult;
+        return currentResult;
+    }
+
+    public void getResult(List<Integer>[] map, int parent, int current) {
+        if (parent == -1) {
+            result[current] = count[0][0];
+        } else {
+            result[current] = result[parentA[current]] + (map.length - 2 * count[current][1]);
+        }
+
+        for (int i = 0; i < map[current].size(); i++) {
+            if (parent != map[current].get(i)) {
+                getResult(map, current, map[current].get(i));
+            }
+        }
+
+    }
+
+
+}
+
+//runtime:55 ms
+//memory:63.2 MB

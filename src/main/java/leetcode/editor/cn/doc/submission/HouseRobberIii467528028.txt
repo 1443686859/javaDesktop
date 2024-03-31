@@ -1,0 +1,58 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    Map<TreeNode, Integer> robMap;
+    Map<TreeNode, Integer> unRobMap;
+    public int rob(TreeNode root) {
+        robMap = new HashMap<>();
+        unRobMap = new HashMap<>();
+        dfs(root);
+        return Math.max(robMap.get(root), unRobMap.get(root));
+    }
+    public void dfs(TreeNode root) {
+        if (robMap.containsKey(root) && unRobMap.containsKey(root)) {
+            return;
+        }
+        if (root.left == null && root.right == null) {
+            robMap.put(root, root.val);
+            unRobMap.put(root, 0);
+            return ;
+        }
+        int unRob = 0;
+        int rob = 0;
+        if (root.left != null) {
+            dfs(root.left);
+            unRob += robMap.get(root.left);
+            rob += unRobMap.get(root.left);
+        }
+        if (root.right != null) {
+            dfs(root.right);
+            unRob += robMap.get(root.right);
+            rob += unRobMap.get(root.right);
+        }
+        robMap.put(root, rob + root.val);
+        unRobMap.put(root, unRob);
+
+    }
+}
+
+//total_testcases:124
+//total_correct:60
+//input_formatted:[4,1,null,2,null,3]
+//expected_output:7
+//code_output:6
+//last_testcase:[4,1,null,2,null,3]

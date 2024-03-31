@@ -1,0 +1,83 @@
+### 解题思路
+
+对数组排序，便于跳过重复元素。
+
+锚定一个 $i$ 对应的元素 $nums[i]$，该位置必须指向负值，如果是正值，则不可能产生结果，并且需要跳过重复元素，防止重复计算。
+
+定义双指针 $l = i + 1, r = nums.len() - 1$，向中间收拢，如果 $nums[i] + nums[l] + nums[r]$ 的和：
+
+* $== 0$，加入结果集，同时继续收拢指针 $l$ 和 $r$，同时跳过重复元素；
+* $> 0$，递减指针 $r$，偏向更小的元素，重新计算累加和是否为 $0$；
+* $< 0$，递增指针 $l$，偏向更大的元素，重新计算累加和是否为 $0$；
+
+![Screenshot 2023-07-09 at 14.29.11.png](https://pic.leetcode.cn/1688884499-bLNioj-Screenshot%202023-07-09%20at%2014.29.11.png)
+
+![Screenshot 2023-07-09 at 14.22.59.png](https://pic.leetcode.cn/1688884506-iJEuOP-Screenshot%202023-07-09%20at%2014.22.59.png)
+
+### 代码
+
+* []
+
+```Rust
+impl Solution {
+    pub fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut ret = Vec::new();
+        nums.sort_unstable();
+        for i in 0..nums.len() {
+            if nums[i] > 0 { break; }
+            if i > 0 && nums[i] == nums[i - 1] { continue; }
+            let (mut l, mut r) = (i + 1, nums.len() - 1);
+            while l < r {
+                let sum = nums[i] + nums[l] + nums[r];
+                if sum == 0 {
+                    ret.push(vec![nums[i], nums[l], nums[r]]);
+                    while r < nums.len() - 1 && nums[r] == nums[r - 1] { r -= 1; }
+                    while l < nums.len() - 1 && nums[l] == nums[l + 1] { l += 1; }
+                }
+                if sum > 0 { r -= 1; } else { l += 1; }
+            }
+        }
+        ret
+    }
+}
+```
+
+* []
+
+```Java
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> ret = new ArrayList<>();
+        Arrays.sort(nums);
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > 0) {
+                break;
+            }
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            int l = i + 1, r = n - 1;
+            while (l < r) {
+                int sum = nums[l] + nums[r] + nums[i];
+                if (sum == 0) {
+                    ret.add(Arrays.asList(nums[i], nums[l], nums[r]));
+                    while (r > 0 && nums[r] == nums[r - 1]) {
+                        r--;
+                    }
+                    while (l < n - 1 && nums[l] == nums[l + 1]) {
+                        l++;
+                    }
+                }
+                if (sum > 0) {
+                    r--;
+                } else {
+                    l++;
+                }
+            }
+        }
+        return ret;
+    }
+}
+```
+

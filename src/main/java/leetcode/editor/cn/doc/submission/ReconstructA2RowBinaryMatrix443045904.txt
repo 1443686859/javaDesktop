@@ -1,0 +1,39 @@
+class Solution {
+    public List<List<Integer>> reconstructMatrix(int upper, int lower, int[] colsum) {
+        int n = colsum.length;
+        List<List<Integer>> result = new ArrayList<>();
+        result.add(new ArrayList<>());
+        result.add(new ArrayList<>());
+        for (int i = 0; i < n; i++) {
+            if (colsum[i] == 0) {
+                result.get(0).add(0);
+                result.get(1).add(0);
+            } else if (colsum[i] == 2) {
+                result.get(0).add(1);
+                result.get(1).add(1);
+                upper--;
+                lower--;
+            } else {
+                if (upper >= lower) {
+                    result.get(0).add(1);
+                    result.get(1).add(0);
+                    upper--;
+                } else {
+                    result.get(0).add(0);
+                    result.get(1).add(1);
+                    lower--;
+                }
+            }
+            if (upper < 0 || lower < 0) {
+                break;
+            }
+        }
+        if (upper != 0 || lower != 0) {
+            return new ArrayList<>();
+        }
+        return result;
+    }
+}
+
+//runtime:16 ms
+//memory:59.6 MB

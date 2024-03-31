@@ -1,0 +1,40 @@
+class Solution {
+    public List<List<Integer>> reconstructMatrix(int upper, int lower, int[] colsum) {
+        int n = colsum.length;
+        int[][] result = new int[2][n];
+        for (int i = 0; i < n; i++) {
+            if (colsum[i] == 0) {
+               result[0][i] = 0;
+               result[1][i] = 0;
+            } else if (colsum[i] == 2) {
+                result[0][i] = 1;
+                result[1][i] = 1;
+                upper--;
+                lower--;
+            } else {
+                if (upper >= lower) {
+                    result[0][i] = 1;
+                    result[1][i] = 0;
+                    upper--;
+                } else {
+                    result[0][i] = 0;
+                    result[1][i] = 1;
+                    lower--;
+                }
+            }
+            if (upper < 0 || lower < 0) {
+                break;
+            }
+        }
+        if (upper != 0 || lower != 0) {
+            return new ArrayList<>();
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        ans.add(Arrays.stream(result[0]).boxed().collect(Collectors.toList()));
+        ans.add(Arrays.stream(result[1]).boxed().collect(Collectors.toList()));
+        return ans;
+    }
+}
+
+//runtime:13 ms
+//memory:57.3 MB

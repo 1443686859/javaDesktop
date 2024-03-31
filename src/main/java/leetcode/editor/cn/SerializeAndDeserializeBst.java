@@ -34,10 +34,10 @@
 
 package leetcode.editor.cn; //如果你的算法题是中文的，后缀就是cn，如果是英文的就是en
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /*
   @author  YourName
@@ -47,22 +47,24 @@ public class SerializeAndDeserializeBst{
     public static void main(String[] args) {
 //        Solution solution = new SerializeAndDeserializeBst().new Solution();
    }
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode(int x) { val = x; }
+    }
 //leetcode submit region begin(Prohibit modification and deletion)
 
 //  Definition for a binary tree node.
-  public class TreeNode {
-      int val;
-      TreeNode left;
-      TreeNode right;
-      TreeNode(int x) { val = x; }
-  }
-public class Codec {
-    List<Integer> list = new ArrayList<>();
+
+public class Solution {
+    List<Integer> list;
     // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
-        serialize(root);
-        String result = list.toString();
-        return result.substring(1, result.length() - 1);
+        list = new ArrayList<>();
+        postOrder(root);
+        List<String> collect = list.stream().map(it -> it.toString()).collect(Collectors.toList());
+        return String.join(",", collect);
     }
     public void postOrder(TreeNode root) {
         if (root == null) {
@@ -78,7 +80,7 @@ public class Codec {
         if (data.isEmpty()) {
             return null;
         }
-        String[] arr = data.split(", ");
+        String[] arr = data.split(",");
         Deque<Integer> stack = new ArrayDeque<Integer>();
         int length = arr.length;
         for (int i = 0; i < length; i++) {
@@ -87,23 +89,17 @@ public class Codec {
         return construct(Integer.MIN_VALUE, Integer.MAX_VALUE, stack);
     }
     TreeNode construct(int lower, int upper, Deque<Integer> stack) {
-        if (stack.isEmpty() || lower > stack.peek() || upper < stack.peek()) {
+        if (stack.isEmpty() || upper < stack.peek() || lower > stack.peek()) {
             return null;
         }
-        int val = stack.pop();
-        TreeNode root = new TreeNode(val);
-        root.right = construct(val, upper, stack);
-        root.left = construct(lower, val, stack);
+        int current = stack.pop(); // 中间值
+        TreeNode root = new TreeNode(current);
+        root.right = construct(root.val, upper, stack);
+        root.left = construct(lower, root.val, stack);
         return root;
     }
 }
 
-// Your Codec object will be instantiated and called as such:
-// Codec ser = new Codec();
-// Codec deser = new Codec();
-// String tree = ser.serialize(root);
-// TreeNode ans = deser.deserialize(tree);
-// return ans;
 //leetcode submit region end(Prohibit modification and deletion)
 
 }

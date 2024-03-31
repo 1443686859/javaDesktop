@@ -1,0 +1,23 @@
+JS 排序 + 栈
+
+* 
+
+```
+var singleNumber = function(nums) {
+    nums.sort();
+    const stack = [nums[0]];
+    let i = 1;
+    while(i < nums.length) {
+        const cur = stack[stack.length - 1];
+        if(cur === nums[i]) {
+            stack.pop();
+        } else {
+            stack.push(nums[i]);
+        }
+        i++;
+    }
+    return stack;
+};
+```
+
+[刷题视频](https://xiaochen1024.com/series/6196129fc1553b002e57bef5)

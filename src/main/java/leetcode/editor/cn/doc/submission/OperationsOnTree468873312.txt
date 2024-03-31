@@ -1,0 +1,85 @@
+class LockingTree {
+int[] p;
+int[] lock;
+List<Integer>[] map;
+int n;
+    public LockingTree(int[] parent) {
+        n = parent.length;
+        p = parent;
+        lock = new int[n];
+        map = new List[n];
+        Arrays.setAll(map, e -> new ArrayList<>());
+        for (int i = 0; i < n; i++) {
+            if (p[i] != -1) {
+                map[p[i]].add(i);
+            }
+        }
+    }
+    
+    public boolean lock(int num, int user) {
+        if (num < n && lock[num] == 0) {
+            lock[num] = user;
+            return true;
+        }
+            return false;
+
+    }
+    
+    public boolean unlock(int num, int user) {
+        if (num < n && lock[num] == user) {
+            lock[num] = 0;
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean upgrade(int num, int user) {
+        if (lock[num] != 0) {
+            return false;
+        }
+        boolean parent = false;
+        int temp = p[num];
+        while (temp != -1) {
+            if (lock[temp] != 0) {
+                parent = true;
+                break;
+            }
+            temp = p[temp];
+        }
+        if (parent) {
+            return false;
+        }
+        Deque<Integer> deque = new ArrayDeque<>();
+        for (int i : map[num]) {
+            deque.addLast(i);
+        }
+        int count = 0;
+        while (!deque.isEmpty()) {
+            int current = deque.poll();
+            if (lock[current] != 0) {
+                lock[current] = 0;
+                count++;
+            }
+            for (int i : map[current]) {
+                deque.addLast(i);
+            }
+        }
+        if (count == 0) {
+            return false;
+        }
+        lock[num] = user;
+        return true;
+    }
+
+}
+
+/**
+ * Your LockingTree object will be instantiated and called as such:
+ * LockingTree obj = new LockingTree(parent);
+ * boolean param_1 = obj.lock(num,user);
+ * boolean param_2 = obj.unlock(num,user);
+ * boolean param_3 = obj.upgrade(num,user);
+ */
+
+//runtime:114 ms
+//memory:47.8 MB

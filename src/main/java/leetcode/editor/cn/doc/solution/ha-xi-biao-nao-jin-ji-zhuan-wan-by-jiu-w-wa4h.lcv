@@ -1,0 +1,37 @@
+### 解题思路
+
+还是看了提示，才写出的代码
+1 要是同时出现在 正反两面的数字，一定不可以参与 选择，用 set 记录下来
+2 其余的数字，找到其中最小值即为答案，这里可以这样理解，以最小值的视角来看，如果正面牌有和它大小一样的数字，强制翻转，最小值既是答案
+
+### 代码
+
+* java
+
+```java
+class Solution {
+    public int flipgame(int[] fronts, int[] backs) {
+       int n = fronts.length;
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            if (fronts[i] == backs[i]) {
+                set.add(fronts[i]);
+            }
+        }
+
+        int ans = Integer.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            if (!set.contains(fronts[i])) {
+                ans = Math.min(ans, fronts[i]);
+            }
+
+            if (!set.contains(backs[i])) {
+                ans = Math.min(ans, backs[i]);
+            }
+        }
+
+        return ans == Integer.MAX_VALUE ? 0 : ans;
+    } 
+}
+```
+

@@ -41,7 +41,9 @@
 
 package leetcode.editor.cn; //如果你的算法题是中文的，后缀就是cn，如果是英文的就是en
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 /**
@@ -54,22 +56,19 @@ public class OnlineStockSpan{
    }
 //leetcode submit region begin(Prohibit modification and deletion)
 class StockSpanner {
-        List<Integer> resultList;
-        List<Integer> number;
+        int index;
+        Deque<int[]> deque;
     public StockSpanner() {
-        resultList = new ArrayList<>();
-        number = new ArrayList<>();
+        deque = new ArrayDeque<>();
+        index = 0;
     }
-    
+
     public int next(int price) {
-        int result = 1;
-        int index = number.size() - 1;
-        while (index >= 0 && number.get(index) <= price) {
-            result += resultList.get(index);
-            index -= resultList.get(index);
+        while (!deque.isEmpty() && deque.peek()[1] <= price) {
+            deque.poll();
         }
-        resultList.add(result);
-        number.add(price);
+        int result = deque.isEmpty() ? index + 1 : index - deque.peek()[0];
+        deque.offerFirst(new int[]{index++, price});
         return result;
     }
 }

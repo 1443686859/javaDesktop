@@ -55,24 +55,25 @@ public class SmallestNumberInInfiniteSet{
    }
 //leetcode submit region begin(Prohibit modification and deletion)
 class SmallestInfiniteSet {
-        PriorityQueue<Integer> queue;
     int min;
+     PriorityQueue<Integer> queue;
         public SmallestInfiniteSet() {
-        min = 1;
-        queue = new PriorityQueue<>();
-    }
+            queue = new PriorityQueue<>();
+            min = 1;
+        }
+
     
     public int popSmallest() {
-            if (!queue.isEmpty()) {
-                return queue.poll();
-            } else {
-                return min++;
-            }
+        if (!queue.isEmpty()) {
+            return queue.poll();
+        } else {
+            return min++;
+        }
     }
     
     public void addBack(int num) {
         if (num < min && !queue.contains(num)) {
-           queue.offer(num);
+            queue.add(num);
         }
     }
 }

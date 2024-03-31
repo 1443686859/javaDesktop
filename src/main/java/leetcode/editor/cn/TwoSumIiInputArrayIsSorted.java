@@ -60,15 +60,16 @@ public class TwoSumIiInputArrayIsSorted{
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int[] twoSum(int[] numbers, int target) {
-        Map<Integer, Integer> indexCount = new HashMap<>();
-        int[] result = new int[2];
-        for (int i = 0; i < numbers.length; i++) {
-            if (indexCount.containsKey(target - numbers[i])) {
-                return new int[]{indexCount.get(target - numbers[i]), numbers[i]};
+        int left = 0;
+        int right = numbers.length - 1;
+        while (left < right && numbers[left] + numbers[right] != target) {
+            if (numbers[left] + numbers[right] < target) {
+                left++;
+            } else if (numbers[left] + numbers[right] > target) {
+                right--;
             }
-            indexCount.put(numbers[i], i);
         }
-        return result;
+        return new int[]{left + 1, right + 1};
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)

@@ -1,0 +1,99 @@
+位运算中异或运算具有交换律，也就是
+```A^B^C=A^C^B```
+
+我们还知道 **一个数字和自己异或，结果是0**，也就是
+```A^A=0；```
+
+**任何数字和0异或结果还是他自己**
+```A^0=A；```
+
+<br> </br>
+
+有了上面的3个公式，这题就很容易解了，假如数组的元素是
+```[a，e，f，h，b，f，h，e]```
+
+我们看到这个数组中只有a和b出现了一次，其他的元素都出现了2次。如果我们把数组中的所有元素全部都异或一遍,也就是下面这样
+
+```a^e^f^h^b^f^h^e```
+
+因为异或具有交换律，我们可以把它整理成
+
+```a^b^(f^f)^(h^h)^(e^e)```
+
+结果就是```a^b^0^0^0=a^b```
+
+<br> </br>
+
+因为a和b是不相等的，所以他俩的异或结果不可能是0，只要不为0，那么这个结果转化为二进制的时候肯定有1。关于异或运算有下面几个规律
+
+```1^1=0;```
+
+```1^0=1;```
+
+```0^1=1;```
+
+```0^0=0;```
+
+我们看到结果为1的要么是0和1异或，要么是1和0异或。也就是说我们可以根据a和b某一位是否是0和1来把数组分为两组，并且a和b都不在同一组
+
+<br> </br>
+
+举个例子，比如数组
+
+```[12，13，14，17，14，12]```
+
+那么他们异或的结果就是```13^17```
+
+![image.png](https://pic.leetcode-cn.com/1610356633-AukocR-image.png)
+
+们看到异或结果最右边的1，也就是红色部分，根据这个位置是0还是1把原数组分为两组，那么13和17肯定不在同一组。那么每组就变成了只有一个数字出现一次，其他数字都出现两次。然后我们就可以使用[494，位运算解只出现一次的数字](https://mp.weixin.qq.com/s?__biz=MzU0ODMyNDk0Mw==&mid=2247489764&idx=1&sn=0d649b8f63c56ff72e15d5f77ef45bf1&chksm=fb418bc4cc3602d266020667e0bc4f6df3cad0f3e2b8c9a0ba0ed04f518fe08a75e07ab1bfdb&scene=21#wechat_redirect)的方式来解了。代码如下
+
+* 
+
+```
+public int[] singleNumber(int[] nums) {
+    int bitmask = 0;
+    //把数组中的所有元素全部都异或一遍
+    for (int num : nums) {
+        bitmask ^= num;
+    }
+    //因为异或运算的结果不一定都是2的n次幂，
+    //在二进制中可能会有多个1，为了方便计算
+    //我们只需保留其中的任何一个1，其他的都
+    //让他变为0，这里保留的是最右边的1
+    bitmask &= -bitmask;
+    int[] rets = {0, 0};
+    for (int num : nums) {
+        //然后再把数组分为两部分，每部分在
+        //分别异或
+        if ((num & bitmask) == 0) {
+            rets[0] ^= num;
+        } else {
+            rets[1] ^= num;
+        }
+    }
+    return rets;
+}
+```
+
+看一下运行结果
+![image.png](https://pic.leetcode-cn.com/1610356822-wzxItH-image.png)
+
+<br> </br>
+
+上面的位运算bitmask &= -bitmask;表示的是把bitmask二进制中最右边的1保留，其他位置全部变为0，随便找个数据打印一下
+
+![image.png](https://pic.leetcode-cn.com/1610356763-bmMsBr-image.png)
+
+再来看一下运算结果
+
+![image.png](https://pic.leetcode-cn.com/1610356773-Qhugif-image.png)
+
+<br> </br>
+
+我把部分算法题整理成了PDF文档，截止目前总共有**900多页**，大家可以下载阅读
+**链接**：https://pan.baidu.com/s/1hjwK0ZeRxYGB8lIkbKuQgQ
+**提取码**：6666
+
+#### 如果觉得有用就给个赞吧，还可以关注我的[LeetCode主页](https://leetcode-cn.com/u/sdwwld/)查看更多的详细题解
+

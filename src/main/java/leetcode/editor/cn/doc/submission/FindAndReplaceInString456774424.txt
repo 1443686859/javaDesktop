@@ -1,0 +1,36 @@
+class Solution {
+    public String findReplaceString(String s, int[] indices, String[] sources, String[] targets) {
+        int[][] index = new int[indices.length][2];
+        for (int i = 0; i < index.length; i++) {
+            index[i][0] = indices[i];
+            index[i][1] = i;
+        }
+        Arrays.sort(index, (a, b) -> {
+            return a[0] - b[0];
+        });
+        int pre = 0;
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (pre < index.length && i == index[pre][0]) {
+                if (s.substring(i, i + sources[index[pre][1]].length()).equals(sources[index[pre][1]])) {
+                    result.append(targets[index[pre][1]]);
+                    i += sources[index[pre][1]].length() - 1;
+                } else {
+                    result.append(s.charAt(i));
+                }
+                pre++;
+            } else {
+                result.append(s.charAt(i));
+            }
+        }
+        return result.toString();
+     }
+}
+
+//runtime_error:java.lang.StringIndexOutOfBoundsException: begin 2, end 6, length 5
+  at line 4602, java.base/java.lang.String.checkBoundsBeginEnd
+  at line 2705, java.base/java.lang.String.substring
+  at line 15, Solution.findReplaceString
+  at line 54, __DriverSolution__.__helper__
+  at line 93, __Driver__.main
+//last_testcase:"abcde" [2,2] ["cdef","bc"] ["f","fe"]
