@@ -59,6 +59,10 @@ public class FindTheCountOfNumbersWhichAreNotSpecial{
    }
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
+        static int[] sum = new int[0];
+        static {
+
+        }
     public int nonSpecialCount(int l, int r) {
         int count = 0;
         for (int i = l; i <= r; i++) {
