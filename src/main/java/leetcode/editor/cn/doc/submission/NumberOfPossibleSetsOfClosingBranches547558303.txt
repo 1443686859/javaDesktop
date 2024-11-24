@@ -1,0 +1,65 @@
+class Solution {
+    public int numberOfSets(int n, int maxDistance, int[][] roads) {
+        int max = 1 << n;
+        int count = 0;
+        int[][] d = new int[n][n];
+        for (int[] t : d) {
+            Arrays.fill(t, Integer.MAX_VALUE / 2);
+        }
+        for (int[] road : roads) {
+            d[road[0]][road[1]] = Math.min(road[2], d[road[0]][road[1]]);
+            d[road[1]][road[0]] =  Math.min(road[2], d[road[1]][road[0]]);
+        }
+        for (int i = 0; i < max; i++) {
+            int mask = i;
+            if (check(mask, n, maxDistance,  d)) {
+                count++;
+            }
+        }
+        return count;
+    }
+    public boolean check(int mask, int n, int maxDistance, int[][] g) {
+        int[][] d = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            if ((mask & (1 << i)) == 1) {
+                System.arraycopy(g[i], 0, d[i], 0, n);
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (((1 << i) & mask) == 0) {
+                continue;
+            }
+            for (int j = 0; j < n; j++) {
+                if (((1 << j) & mask) == 0) {
+                    continue;
+                }
+                for (int z = 0; z < n; z ++) {
+                    if (((1 << z) & mask) == 0) {
+                        continue;
+                    }
+                    d[j][z] = Math.min(d[j][z], d[j][i] + d[i][z]);
+                }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (d[i][j] > maxDistance) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+
+//total_testcases:533
+//total_correct:74
+//input_formatted:3
+5
+[[0,1,20],[0,1,10],[1,2,2],[0,2,2]]
+//expected_output:7
+//code_output:5
+//last_testcase:3
+5
+[[0,1,20],[0,1,10],[1,2,2],[0,2,2]]

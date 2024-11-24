@@ -1,0 +1,16 @@
+class Solution {
+    public int distanceTraveled(int mainTank, int additionalTank) {
+        int base = 0;
+        while (mainTank / 5 > 0 && additionalTank > 0) {
+            int temp = mainTank / 5;
+            base += (temp * 5) * 10;
+            mainTank -= temp * 5;
+            mainTank += temp > additionalTank ? additionalTank : temp;
+            additionalTank -= temp;
+        }
+        return mainTank != 0 ? (base + mainTank * 10) : base;
+    }
+}
+
+//runtime:3 ms
+//memory:42.8 MB

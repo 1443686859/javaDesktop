@@ -1,0 +1,39 @@
+class Solution {
+    int mod = 1_000_000_007;
+    int[][] memo;
+    public int countOfPairs(int[] nums) {
+        int max = 0;
+        for (int i : nums) {
+            max = Math.max(max, i);
+        }
+        memo = new int[nums.length][max + 1];
+        for (int[] m : memo) {
+            Arrays.fill(m, -1);
+        }
+        return dfs(0,nums.length - 1,nums);
+    }
+    public int dfs(int pre, int index, int[] nums) {
+        if (index < 0) {
+            return 1;
+        }
+        if (memo[index][pre] != -1) {
+            return memo[index][pre];
+        }
+        int result = 0;
+        if (index == nums.length - 1) {
+            for (int i = 0; i <= nums[index]; i++) {
+                result = (result + dfs(i, index - 1, nums)) % mod;
+            }
+        } else {
+            int max = pre - Math.max(0, nums[index + 1] - nums[index]);
+            for (int i = 0; i <= max; i++) {
+                result = (result + dfs(i, index - 1, nums)) % mod;
+            }
+        }
+        memo[index][pre] = result;
+        return result;
+    }
+}
+
+//runtime:155 ms
+//memory:44 MB

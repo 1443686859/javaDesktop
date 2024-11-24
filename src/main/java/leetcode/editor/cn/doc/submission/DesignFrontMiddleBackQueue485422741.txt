@@ -1,0 +1,82 @@
+class FrontMiddleBackQueue {
+        Deque<Integer> left;
+        Deque<Integer> right;
+
+    public FrontMiddleBackQueue() {
+        left = new ArrayDeque<>();
+        right = new ArrayDeque<>();
+    }
+    
+    public void pushFront(int val) {
+        left.addFirst(val);
+        if (left.size() - right.size() > 1) {
+            right.addFirst(left.removeLast());
+        }
+    }
+    
+    public void pushMiddle(int val) {
+        if (left.size() != right.size()) {
+            right.addFirst(left.removeLast());
+        }
+        left.addLast(val);
+    }
+    
+    public void pushBack(int val) {
+        right.addLast(val);
+        if (left.size() < right.size()) {
+            left.addFirst(right.removeFirst());
+        }
+    }
+    
+    public int popFront() {
+        if (left.isEmpty()) {
+            return -1;
+        }
+        int result = left.removeFirst();
+        if (left.size() < right.size()) {
+            left.addLast(right.removeFirst());
+        }
+        return result;
+    }
+    
+    public int popMiddle() {
+        if (left.isEmpty()) {
+            return -1;
+        }
+        int result = left.removeLast();
+        if (left.size() < right.size()) {
+            left.addLast(right.removeFirst());
+        }
+        return result;
+    }
+    
+    public int popBack() {
+        if (left.isEmpty()) {
+            return -1;
+        }
+        if (right.size() != left.size()) {
+            right.addFirst(left.removeLast());
+        }
+        return right.removeLast();
+    }
+}
+
+/**
+ * Your FrontMiddleBackQueue object will be instantiated and called as such:
+ * FrontMiddleBackQueue obj = new FrontMiddleBackQueue();
+ * obj.pushFront(val);
+ * obj.pushMiddle(val);
+ * obj.pushBack(val);
+ * int param_4 = obj.popFront();
+ * int param_5 = obj.popMiddle();
+ * int param_6 = obj.popBack();
+ */
+
+//total_testcases:95
+//total_correct:53
+//input_formatted:["FrontMiddleBackQueue","popMiddle","pushMiddle","pushMiddle","popBack","pushMiddle","pushBack","popFront","popFront","pushMiddle","pushMiddle","pushMiddle","popMiddle","pushMiddle","popMiddle","pushMiddle"]
+[[],[],[5422],[532228],[],[206486],[351927],[],[],[73577],[785914],[765630],[],[208060],[],[592866]]
+//expected_output:[null,-1,null,null,5422,null,null,206486,532228,null,null,null,765630,null,208060,null]
+//code_output:[null,-1,null,null,5422,null,null,532228,206486,null,null,null,765630,null,208060,null]
+//last_testcase:["FrontMiddleBackQueue","popMiddle","pushMiddle","pushMiddle","popBack","pushMiddle","pushBack","popFront","popFront","pushMiddle","pushMiddle","pushMiddle","popMiddle","pushMiddle","popMiddle","pushMiddle"]
+[[],[],[5422],[532228],[],[206486],[351927],[],[],[73577],[785914],[765630],[],[208060],[],[592866]]

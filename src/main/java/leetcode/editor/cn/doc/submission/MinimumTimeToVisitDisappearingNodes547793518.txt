@@ -1,0 +1,40 @@
+class Solution {
+    public int[] minimumTime(int n, int[][] edges, int[] disappear) {
+        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>((a,b)-> a[0] - b[0]);
+        List<int[]>[] g = new List[n];
+        int[] ans = new int[n];
+        Arrays.fill(ans, - 1);
+        ans[0] = 0;
+        Arrays.setAll(g, e -> new ArrayList<>());
+        for (int[] e : edges) {
+            g[e[0]].add(new int[]{e[1], e[2]});
+            g[e[1]].add(new int[]{e[0], e[2]});
+        }
+        priorityQueue.add(new int[]{0, 0});
+        while(!priorityQueue.isEmpty()) {
+            int[] temp = priorityQueue.poll();
+            if (temp[0] < disappear[temp[1]]) {
+                if (ans[temp[1]] == - 1) {
+                    ans[temp[1]] = temp[0];
+                }
+
+                for (int[] e : g[temp[1]]) {
+                    priorityQueue.add(new int[]{e[1] + temp[0], e[0]});
+                }
+            }
+        }
+        return ans;
+    }
+}
+
+//runtime:N/A
+//memory:N/A
+//total_testcases:533
+//total_correct:16
+//input_formatted:1
+[[0,0,1],[0,0,7],[0,0,4],[0,0,7],[0,0,8],[0,0,6],[0,0,8],[0,0,2],[0,0,6]]
+[14]
+//expected_output:[0]
+//code_output:
+//runtime_error:
+//last_testcase:1 [[0,0,1],[0,0,7],[0,0,4],[0,0,7],[0,0,8],[0,0,6],[0,0,8],[0,0,2],[0,0,6]] [14]

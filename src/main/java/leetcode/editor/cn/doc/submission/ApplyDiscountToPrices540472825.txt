@@ -1,0 +1,35 @@
+class Solution {
+    public String discountPrices(String sentence, int discount) {
+        String[] strings = sentence.split(" ");
+        List<String> temp = new ArrayList<>();
+        for (String s : strings) {
+            if (s.startsWith("$")) {
+                StringBuilder stringBuilder = new StringBuilder();
+                boolean isDigit = true;
+                for (int i = 1; i < s.length(); i++) {
+                    if (!Character.isDigit(s.charAt(i))) {
+                        isDigit = false;
+                    }
+                    stringBuilder.append(s.charAt(i));
+                }
+                String result = stringBuilder.toString();
+                if (isDigit) {
+                     result = String.format("%.2f", Integer.parseInt(stringBuilder.toString()) *(100d - discount) / 100);
+                }
+                temp.add("$" + result);
+            } else {
+                temp.add(s);
+            }
+        }
+        return String.join(" ", temp);
+    }
+}
+
+//runtime_error:java.lang.NumberFormatException: For input string: ""
+  at line 67, java.base/java.lang.NumberFormatException.forInputString
+  at line 671, java.base/java.lang.Integer.parseInt
+  at line 777, java.base/java.lang.Integer.parseInt
+  at line 17, Solution.discountPrices
+  at line 56, __DriverSolution__.__helper__
+  at line 89, __Driver__.main
+//last_testcase:"$76111 ab $6 $" 48

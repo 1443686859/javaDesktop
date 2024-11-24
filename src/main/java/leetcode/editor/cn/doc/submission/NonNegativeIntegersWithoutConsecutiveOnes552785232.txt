@@ -1,0 +1,33 @@
+class Solution {
+    public int findIntegers(int n) {
+        int size =64 - Long.numberOfLeadingZeros(n);
+        int[] s = new int[size];
+        for (int i = 0; i < size; i++) {
+            s[size - 1 - i] = (n >> 1) & 1;
+        }
+        return dfs(s, 0, false, false);
+    }
+    public int dfs(int[] s, int index, boolean max, boolean isPreOne) {
+        if (index == s.length) {
+            return 1;
+        }
+        int result = 0;
+        if (isPreOne) {
+            result += dfs(s, index + 1, max & (s[index] == 0), false);
+        } else {
+            result += dfs(s, index + 1, max & (s[index] == 0), false);
+            result += dfs(s, index + 1, max & (s[index] == 1), true);
+        }
+        return result;
+    }
+}
+
+//runtime:N/A
+//memory:N/A
+//total_testcases:527
+//total_correct:370
+//input_formatted:4
+//expected_output:4
+//code_output:5
+//runtime_error:
+//last_testcase:4

@@ -1,0 +1,64 @@
+class Solution {
+        class TrieNode {
+            TrieNode[] child;
+            int index;
+            TrieNode() {
+                child = new TrieNode[26];
+                index = Integer.MAX_VALUE;
+            }
+        }
+        TrieNode root;
+    public int[] stringIndices(String[] wordsContainer, String[] wordsQuery) {
+        int n = wordsQuery.length;
+        int[] ans = new int[n];
+        root = new TrieNode();
+        for (int i = 0; i < wordsContainer.length; i++) {
+            insert(wordsContainer, i);
+        }
+        for (int i = 0; i < n; i++) {
+            ans[i] = search(wordsQuery[i]);
+        }
+        return ans;
+    }
+    public void insert(String[] words, int index) {
+            String word = words[index];
+            int start = word.length() - 1;
+            TrieNode temp = root;
+            while (start >= 0) {
+                int cIndex = word.charAt(start) - 'a';
+                if (temp.child[cIndex] == null) {
+                    temp.child[cIndex] = new TrieNode();
+                }
+                if (temp.index != Integer.MAX_VALUE) {
+                    if (word.length() < words[temp.index].length()) {
+                        temp.index = index;
+                    }
+                } else {
+                    temp.index = index;
+                }
+                temp = temp.child[cIndex];
+                start--;
+            }
+    }
+    public int search(String current) {
+        TrieNode temp = root;
+        int index = current.length() - 1;
+        int result = 0;
+        while (temp != null && index >= 0) {
+            int cIndex = current.charAt(index) - 'a';
+            result = temp.index;
+            temp = temp.child[cIndex];
+            index--;
+        }
+        return result;
+    }
+}
+
+//total_testcases:816
+//total_correct:803
+//input_formatted:["a","b"]
+["a","b"]
+//expected_output:[0,1]
+//code_output:[0,0]
+//last_testcase:["a","b"]
+["a","b"]

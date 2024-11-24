@@ -1,0 +1,44 @@
+class Solution {
+        int[][] memo;
+        int sum;
+        int t;
+    public int findTargetSumWays(int[] nums, int target) {
+        sum = 0;
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            sum += nums[i];
+        }
+        t = target;
+        int[][] dp = new int[n + 1][2 * sum + 2];
+        dp[0][sum] = 1;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 2 * sum + 1; j >= 0; j--) {
+                dp[i][j] = (j - nums[i - 1] >= 0 ? dp[i - 1][j - nums[i - 1]] : 0) + (j + nums[i - 1] <= 2 * sum + 1 ? dp[i - 1][j + nums[i - 1]] : 0);
+            }
+        }
+        return dp[n][target + sum];
+//        return get(nums, nums.length - 1, sum);
+    }
+    public int get(int[] nums,int index, int target) {
+        if (index == -1 && target - t == sum) {
+            return 1;
+        }
+        if (index == -1) {
+            return 0;
+        }
+        if (memo[index + 1][target] != -1) {
+            return memo[index + 1][target];
+        }
+        int result = get(nums, index - 1, target - nums[index]);
+        result += get(nums, index - 1, target + nums[index]);
+        memo[index + 1][target] = result;
+        return result;
+    }
+
+}
+
+//runtime_error:java.lang.ArrayIndexOutOfBoundsException: Index 1958 out of bounds for length 1918
+  at line 19, Solution.findTargetSumWays
+  at line 56, __DriverSolution__.__helper__
+  at line 89, __Driver__.main
+//last_testcase:[2,107,109,113,127,131,137,3,2,3,5,7,11,13,17,19,23,29,47,53] 1000

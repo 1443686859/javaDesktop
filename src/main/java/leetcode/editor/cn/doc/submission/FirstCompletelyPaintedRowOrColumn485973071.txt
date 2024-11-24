@@ -1,0 +1,37 @@
+class Solution {
+    public int firstCompleteIndex(int[] arr, int[][] mat) {
+        int[][] a = new int[arr.length][2];
+        for (int i = 0; i < arr.length; i++) {
+            a[i]  =new int[2];
+            a[i][0] = arr[i];
+            a[i][1] = i;
+        }
+        Arrays.sort(a, (pre, after) -> {return pre[0] - after[0];});
+        int[][] count = new int[mat.length][mat[0].length];
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[0].length; j++) {
+                count[i][j] = a[mat[i][j] - 1][1];
+            }
+        }
+        int[] col = new int[mat[0].length];
+        int[] row = new int[mat.length];
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[0].length; j++) {
+                col[j] = Math.max(col[j], count[i][j]);
+                row[i] = Math.max(row[i], count[i][j]);
+            }
+        }
+        int result = mat.length * mat[0].length;
+        for (int i : row) {
+            result = Math.min(result, i);
+        }
+        for (int j : col) {
+            result = Math.min(result,j);
+        }
+        return result;
+    }
+
+}
+
+//runtime:60 ms
+//memory:62.6 MB

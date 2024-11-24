@@ -1,0 +1,54 @@
+class Solution {
+    public long findMaximumNumber(long k, int x) {
+        long right = (k + 1) << x;
+        this.k = x;
+        long left = 0;
+        while (left <= right) {
+            long mid = (left + right) / 2;
+            if (countDigitOne(mid) <= k) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return right;
+    }
+    long[][] memo;
+    long num;
+    int k;
+    private long countDigitOne(long num) {
+        this.num = num;
+        int max = 64 - Long.numberOfLeadingZeros(num);
+        memo = new long[max][max + 1];
+        for (long[] m : memo) {
+            Arrays.fill(m, -1);
+        }
+        return dfs(max - 1, 0, true);
+    }
+    private long dfs(int i, int cnt1, boolean isLimit) {
+        if (i < 0) {
+            return cnt1;
+        }
+        if (!isLimit && memo[i][cnt1] != -1) {
+            return memo[i][cnt1];
+        }
+        int up = isLimit ? (int)(num >> i & 1) : 1;
+        int result = 0;
+        for (int d = 0; d <= up; d++) {
+            result += dfs(i - 1, cnt1 + (d == 1 && (i + 1) % k == 0 ? 1 : 0), isLimit && d== up);
+        }
+        if (!isLimit) {
+            memo[i][cnt1] = result;
+        }
+        return result;
+    }
+}
+
+//total_testcases:932
+//total_correct:502
+//input_formatted:3278539330613
+5
+//expected_output:851568447023
+//code_output:104913258579648
+//last_testcase:3278539330613
+5

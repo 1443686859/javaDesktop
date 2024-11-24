@@ -1,0 +1,17 @@
+class Solution {
+    public int maxNumOfMarkedIndices(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        int i = 0;
+        for (int j = (n + 1) / 2; j < n; j++) {
+            if (nums[i] * 2 <= nums[j]) { // 找到一个匹配
+                i++;
+            }
+        }
+        return i * 2;
+    }
+}
+
+
+//runtime:28 ms
+//memory:55.3 MB

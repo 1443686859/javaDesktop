@@ -1,0 +1,30 @@
+class Solution {
+    public int maxNumOfMarkedIndices(int[] nums) {
+        Arrays.sort(nums);
+        int left = 1;
+        int result = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int target = 2 * nums[i];
+            int right = nums.length - 1;
+            while (left <= right) {
+                int mid = (left + right) / 2;
+                if (nums[mid] >= target) {
+                   left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+            if (right < nums.length && nums[right] >= target) {
+                result += 2;
+            }
+        }
+        return result;
+    }
+}
+
+//total_testcases:68
+//total_correct:38
+//input_formatted:[1,78,27,48,14,86,79,68,77,20,57,21,18,67,5,51,70,85,47,56,22,79,41,8,39,81,59,74,14,45,49,15,10,28,16,77,22,65,8,36,79,94,44,80,72,8,96,78,39,92,69,55,9,44,26,76,40,77,16,69,40,64,12,48,66,7,59,10]
+//expected_output:64
+//code_output:70
+//last_testcase:[1,78,27,48,14,86,79,68,77,20,57,21,18,67,5,51,70,85,47,56,22,79,41,8,39,81,59,74,14,45,49,15,10,28,16,77,22,65,8,36,79,94,44,80,72,8,96,78,39,92,69,55,9,44,26,76,40,77,16,69,40,64,12,48,66,7,59,10]

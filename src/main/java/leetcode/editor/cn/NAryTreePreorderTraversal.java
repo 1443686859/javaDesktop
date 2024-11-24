@@ -53,6 +53,7 @@ import java.util.List;
 public class NAryTreePreorderTraversal{
     public static void main(String[] args) {
         Solution solution = new NAryTreePreorderTraversal().new Solution();
+        System.out.println(solution.countPrefixSuffixPairs(new String[]{"b", "ab"}));
    }
     class Node {
         public int val;
@@ -82,13 +83,83 @@ class Solution {
         Deque<Node> stack = new ArrayDeque<>();
         stack.push(root);
         while (!stack.isEmpty()) {
-            Node current = stack.pop();
+            Node current = stack.pollFirst();
             res.add(current.val);
             for (int i = current.children.size() - 1; i >= 0; i--) {
-                stack.push(current.children.get(i));
+                stack.addFirst(current.children.get(i));
             }
         }
         return res;
+    }
+    public int countPrefixSuffixPairs(String[] words) {
+        int count = 0;
+        for (int i = 0; i < words.length; i++) {
+            for (int j = i + 1; j < words.length; j++) {
+                if (check(words[i], words[j])) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    public boolean check(String pre, String after) {
+        if (pre.length() > after.length()) {
+            return false;
+        }
+        int index = 0;
+        for (int i = after.length() - pre.length(); i < after.length() && index < pre.length(); i++) {
+            if (pre.charAt(index) != after.charAt(i)) {
+                break;
+            }
+            index++;
+        }
+        return index == pre.length() && after.startsWith(pre);
+    }
+    ChildNode root;
+    public int longestCommonPrefix(int[] arr1, int[] arr2) {
+        root = new ChildNode();
+        for (int i = 0; i < arr1.length; i++) {
+            insert(arr1[i]);
+        }
+        int max = 0;
+        for (int i : arr2) {
+            max = Math.max(max, search(i, root));
+        }
+        return max;
+    }
+    class ChildNode {
+        ChildNode[] child;
+        public ChildNode() {
+            child = new ChildNode[10];
+        }
+    }
+    public void insert(int current) {
+        String s = current + "";
+        ChildNode temp = root;
+        for (int i = 0; i < s.length(); i++) {
+            int c = s.charAt(i) - '0';
+            if (temp.child[c] == null) {
+                temp.child[c] = new ChildNode();
+            }
+            temp = temp.child[c];
+        }
+    }
+    public int search(int current, ChildNode root) {
+
+        String s = current + "";
+        int result = 0;
+        ChildNode temp = root;
+        for (int i = 0; i < s.length(); i++) {
+            int c = s.charAt(i) - '0';
+            if (temp == null || temp.child[c] == null) {
+                break;
+            }
+            temp = temp.child[c];
+            result++;
+        }
+
+        return result;
+
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)

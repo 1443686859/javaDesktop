@@ -71,24 +71,17 @@ class Solution {
             return b - a;
         });
         int n = stations.length;
-        int current = 0;
-        int index = 0;
-        int remain = startFuel;
         int ans = 0;
-        while (current < target) {
-            if (remain == 0) {
-                if (!queue.isEmpty()) {
-                    remain += queue.poll();
-                    ans++;
-                } else {
-                    return -1;
-                }
+        for (int i = 0; i <= n; i++) {
+            int t = i < n ? stations[i][0] : target;
+            while (!queue.isEmpty() && startFuel < t) {
+                startFuel += queue.poll();
+                ans ++;
             }
-            current += remain;
-            remain = 0;
-            while (index < n && stations[index][0] <= current) {
-                queue.add(stations[index++][1]);
+            if (startFuel < t) {
+                return - 1;
             }
+            queue.offer(i < n ? stations[i][1] : 0);
         }
         return ans;
     }

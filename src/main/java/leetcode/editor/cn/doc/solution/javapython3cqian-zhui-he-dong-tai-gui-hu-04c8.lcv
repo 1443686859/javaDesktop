@@ -1,0 +1,118 @@
+> [1997. 访问完所有房间的第一天](https://leetcode.cn/problems/first-day-where-you-have-been-in-all-the-rooms/)
+
+[TOC]
+
+# 题目
+
+你需要访问 `n` 个房间，房间从 `0` 到 `n - 1` 编号。同时，每一天都有一个日期编号，从 `0` 开始，依天数递增。你每天都会访问一个房间。
+
+最开始的第 `0` 天，你访问 `0` 号房间。给你一个长度为 `n` 且 **下标从 0 开始** 的数组 `nextVisit` 。在接下来的几天中，你访问房间的 **次序** 将根据下面的 **规则** 决定：
+
+- 假设某一天，你访问 `i` 号房间。
+- 如果算上本次访问，访问 `i` 号房间的次数为 **奇数** ，那么 **第二天** 需要访问 `nextVisit[i]` 所指定的房间，其中 `0 <= nextVisit[i] <= i` 。
+- 如果算上本次访问，访问 `i` 号房间的次数为 **偶数** ，那么 **第二天** 需要访问 `(i + 1) mod n` 号房间。
+
+请返回你访问完所有房间的第一天的日期编号。题目数据保证总是存在这样的一天。由于答案可能很大，返回对 `10^9 + 7` 取余后的结果。
+
+# 题目分析
+
+> 参考 [灵茶山艾府题解 —— 《前缀和优化DP》](https://leetcode.cn/problems/first-day-where-you-have-been-in-all-the-rooms/solutions/979221/qian-zhui-he-you-hua-dp-by-endlesscheng-j10b/?envType=daily-question&envId=2024-03-28)
+
+## 思路分析
+
+这道题是一个路径转移策略。当我们到达房间 `i` 时：
+
+- 如果到达这个房间的次数为奇数次，那么就会访问 `nextVisit[i]` ，而  `0 <= nextVisit[i] <= i` ，也就是说会放 `i` 的左侧移动；
+- 如果到达这个房间的次数为偶数次，那么就会访问 `i + 1`，即往右侧移动。
+
+那么我们如果从 `0 -> n-1` 的移动时，如果我们到达了房间 `i` ，那么 `i` 之间的所有房间 `[0, i-1]` 一定是访问了偶数次。【但凡有一个奇数次都应该往回走而不是往前走】
+
+而我们首次访问一个房间 `i` 的次数一定是奇数次（访问次数为 `1`），它将回退到 `j = nextVisit[i]` 的位置，然后再次到达房间 `i` 后（访问次数为 `2`），**才可以转移到下一个房间 `i + 1`**。
+
+因此我们可以记从访问完一个房间需要的天数为 `f[i]`（这里的访问完一个房间是指可以转移到下一个房间），则有状态转移方程：
+
+![1711608302-vqBewK-1711608301413957.png](https://pic.leetcode.cn/1711608302-vqBewK-1711608301413957.png)
+
+局部的元素和 `∑f[k]` 可以通过前缀和的方式求解，我们记 `preSum[i + 1] = ∑f[i], i ∈[0. i)`，表示 `[0, i]` 的状态前缀和。同时我们注意到 **这些状态的累加就是访问完`[0,i]`这些个房间的天数的累加**，因此 `preSum[i+1]` 表示访问完 `[0,i]` 房间需要的天数。
+
+![1711608313-LHDyTb-image-20240328143904342.png](https://pic.leetcode.cn/1711608313-LHDyTb-image-20240328143904342.png)
+
+对于最后一个房间 `n - 1`，**当我们首次访问到它时，访问就已经结束了，无需再二次访问，即 `preSum[n] = preSum[n-1] + 1`**。
+
+**注意：**`preSum` 统计的是消耗的天数，而我们要返回的是实际的日期，日期从 `0` 开始，因此最终的日期就是 `preSum[n] - 1  = preSum[n-1]`。【从日期 `0` 到 日期 `x` 共有 `x + 1` 天，即日期和消耗的天数相差 `1`】
+
+# 代码
+
+**注意：**
+
+`Java/C++` 为避免数据溢出，需要在更新 `preSum[i]` 的时候就进行取模处理。而之所以要再加上 `MOD` ，是为了避免出现负数。如：
+
+`preSum[i]` 本来是 `MOD + 3`，由于取模变成了 `3`；而 `preSum[j] = 4`，本来 `preSum[i] - preSum[j] = MOD + 3 - 4 = MOD - 1`，现在就变成了 `3 - 4 = -1`，因此需要再将 `MOD` 加上得到正确结果。【即 `preSum` 应该是递增的，只需要出现负数是因为取模的原因】
+
+* []
+
+```Java
+class Solution {
+    private final int MOD = 1000000007;
+
+    public int firstDayBeenInAllRooms(int[] nextVisit) {
+        int n = nextVisit.length;
+        long[] preSum = new long[n + 1];    // preSum[i]表示f[0. i)的状态和，等价于从编号0到编号i-1房间需要耗费的天数
+        for(int i = 0; i < n - 1; i++){
+            int j = nextVisit[i];   // 获取回退的房间号j
+            // f = 2 + preSum[i] - preSum[j] 表示首次到达房间i -> 回退到房间j -> 再次到达房间i 经历的天数
+            // preSum[i + 1] = preSum[i] + f 更新前缀和
+            // + MOD 再 % MOD 避免产生负数
+            preSum[i + 1] = (preSum[i] + 2 + preSum[i] - preSum[j] + MOD) % MOD;
+        }
+        // 当到达编号n-2房间后，再经过1天就可以到达n-1房间，因此preSum[n] = preSum[n-1] + 1
+        // 由于日期编号是从0开始，因此到达最后一个房间的日期就是preSum[n-1] + 1 - 1
+        return (int)preSum[n -1];
+    }
+}
+```
+
+* []
+
+```Python
+class Solution:
+    def firstDayBeenInAllRooms(self, nextVisit: List[int]) -> int:
+        MOD = 1000000007
+
+        n = len(nextVisit)
+        pre_sum = [0] * (n + 1)     # pre_sum[i]表示f[0. i)的状态和，等价于从编号0到编号i-1房间需要耗费的天数
+        for i in range(n - 1):
+            j = nextVisit[i];   # 获取回退的房间号j
+            # f = 2 + pre_sum[i] - pre_sum[j] 表示首次到达房间i -> 回退到房间j -> 再次到达房间i 经历的天数
+            # pre_sum[i + 1] = pre_sum[i] + f 更新前缀和
+            # + MOD 再 % MOD 避免产生负数
+            pre_sum[i + 1] = (pre_sum[i] + 2 + pre_sum[i] - pre_sum[j] + MOD) % MOD
+        # 当到达编号n-2房间后，再经过1天就可以到达n-1房间，因此pre_sum[n] = pre_sum[n-1] + 1
+        # 由于日期编号是从0开始，因此到达最后一个房间的日期就是pre_sum[n-1] + 1 - 1
+        return pre_sum[n -1]
+```
+
+* []
+
+```C++
+class Solution {
+private:
+    const int MOD = 1000000007;
+public:
+    int firstDayBeenInAllRooms(vector<int>& nextVisit) {
+        int n = nextVisit.size();
+        vector<long long> preSum(n + 1);    // preSum[i]表示f[0. i)的状态和，等价于从编号0到编号i-1房间需要耗费的天数
+        for(int i = 0; i < n - 1; i++){
+            int j = nextVisit[i];   // 获取回退的房间号j
+            // f = 2 + preSum[i] - preSum[j] 表示首次到达房间i -> 回退到房间j -> 再次到达房间i 经历的天数
+            // preSum[i + 1] = preSum[i] + f 更新前缀和
+            // + MOD 再 % MOD 避免产生负数
+            preSum[i + 1] = (preSum[i] + 2 + preSum[i] - preSum[j] + MOD) % MOD;
+        }
+        // 当到达编号n-2房间后，再经过1天就可以到达n-1房间，因此preSum[n] = preSum[n-1] + 1
+        // 由于日期编号是从0开始，因此到达最后一个房间的日期就是preSum[n-1] + 1 - 1
+        return preSum[n -1];
+    }
+};
+```
+

@@ -1,0 +1,26 @@
+class Solution {
+        int MOD = 1_000_000_007;
+    public int minNonZeroProduct(int p) {
+        long max = (1L << p) - 1;
+        long base = fastPow((max - 1), (max / 2));
+        return (int)((base * max) % MOD);
+    }
+    public long fastPow(long base, long pow) {
+        long result = 1;
+        while (pow != 0) {
+            if ((pow & 1) != 0) {
+                result = (result % MOD * base % MOD) % MOD;
+            }
+            pow >>= 1;
+            base = (base % MOD * base % MOD) % MOD;
+        }
+        return result;
+    }
+}
+
+//total_testcases:60
+//total_correct:34
+//input_formatted:35
+//expected_output:112322054
+//code_output:515256220
+//last_testcase:35

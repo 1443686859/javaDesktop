@@ -1,0 +1,44 @@
+class Solution {
+        long[] array;
+    public long maxTaxiEarnings(int n, int[][] rides) {
+        Arrays.sort(rides, (a, b) -> {
+            if (a[0] != b[0]) {
+                return a[0] - b[0];
+            } else {
+                return a[1] - b[1];
+            }
+        });
+        array = new long[n + 1];
+        long[] ans = new long[rides.length];
+        long result = 0;
+        for (int i = 0; i < rides.length; i++) {
+            long preMax = getMax(rides[i][0]);
+            ans[i] = preMax + rides[i][1] - rides[i][0] + rides[i][2];
+            add(rides[i][1], ans[i]);
+            result = Math.max(result, ans[i]);
+        }
+        return result;
+
+    }
+
+    private int lowBit(int x) {
+        return x & -x;
+    }
+    private long getMax(int end) {
+        long ans = array[end];
+        while (end >= 1) {
+            ans = Math.max(ans, array[end]);
+            end -= lowBit(end);
+        }
+        return ans;
+    }
+    private void add(int index, long val) {
+        while (index < array.length) {
+            array[index] = Math.max(array[index], val);
+            index += lowBit(index);
+        }
+    }
+}
+
+//runtime:71 ms
+//memory:60.5 MB

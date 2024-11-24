@@ -1,0 +1,45 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode reverseOddLevels(TreeNode root) {
+        int level = 0;
+        Deque<TreeNode> deque = new ArrayDeque<>();
+        deque.add(root);
+        while (!deque.isEmpty()) {
+            int size = deque.size();
+            List<TreeNode> currentList = new ArrayList<>();
+            List<Integer> current = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode currentNode = deque.poll();
+                currentList.add(currentNode);
+                current.add(currentNode.val);
+                if (currentNode.left != null)
+                deque.add(currentNode.left);
+                if (currentNode.right != null)
+                deque.add(currentNode.right);
+            }
+            if ((level & 1) != 0) {
+                for (int i = 0; i < current.size(); i++) {
+                    currentList.get(i).val = current.get(current.size() - 1 - i);
+                }
+            }
+            level++;
+        }
+        return root;
+    }
+}
+//runtime:13 ms
+//memory:48.9 MB

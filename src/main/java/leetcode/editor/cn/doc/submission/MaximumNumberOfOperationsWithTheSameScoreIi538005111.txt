@@ -1,0 +1,29 @@
+class Solution {
+    public int maxOperations(int[] nums) {
+        return Math.max(Math.max(get(nums, nums[0] + nums[nums.length - 1], 1, nums.length - 2), get(nums, nums[0] + nums[1], 2, nums.length - 1)),
+                get(nums, nums[nums.length - 1] + nums[nums.length -2], 0, nums.length - 3)) + 1;
+    }
+    public int get(int[] nums, int target, int left, int right) {
+        if (left >= right) {
+            return 0;
+        }
+        int result = 0;
+        if (nums[left] + nums[right] == target) {
+            result = Math.max(result, 1 + get(nums, target, left + 1, right - 1));
+        }
+        if (nums[left] + nums[left + 1] == target) {
+            result = Math.max(result, 1 + get(nums, target, left + 2, right));
+        }
+        if (nums[left] + nums[right - 1] == target) {
+            result = Math.max(result, 1 + get(nums, target, left , right - 2));
+        }
+        return result;
+    }
+}
+
+//total_testcases:549
+//total_correct:447
+//input_formatted:[1,7,4,5]
+//expected_output:1
+//code_output:2
+//last_testcase:[1,7,4,5]

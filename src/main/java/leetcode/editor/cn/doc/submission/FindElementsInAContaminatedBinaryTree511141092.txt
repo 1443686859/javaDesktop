@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class FindElements {
+    TreeNode r;
+    boolean[] used = new boolean[1000];
+    public FindElements(TreeNode root) {
+        r = root;
+        dfs(r, 0);
+    }
+    public void dfs(TreeNode root, int target) {
+        if (root == null) {
+            return ;
+        }
+        root.val = target;
+        used[root.val] = true;
+        dfs(root.left, 2 * target + 1);
+        dfs(root.right, 2 * target + 2);
+    }
+    
+    public boolean find(int target) {
+        return used[target];
+    }
+
+}
+
+/**
+ * Your FindElements object will be instantiated and called as such:
+ * FindElements obj = new FindElements(root);
+ * boolean param_1 = obj.find(target);
+ */
+
+//runtime_error:java.lang.ArrayIndexOutOfBoundsException: Index 1348 out of bounds for length 1000
+  at line 28, FindElements.dfs
+  at line 30, FindElements.dfs
+  at line 29, FindElements.dfs
+  at line 30, FindElements.dfs
+  at line 29, FindElements.dfs
+  at line 29, FindElements.dfs
+  at line 29, FindElements.dfs
+  at line 30, FindElements.dfs
+  at line 29, FindElements.dfs
+  at line 30, FindElements.dfs
+  at line 29, FindElements.dfs
+  at line 21, FindElements.<init>
+  at line 76, __Driver__.__helperConstructor__
+  at line 79, __Driver__.__helper__
+  at line 106, __Driver__.main
+//last_testcase:["FindElements","find","find","find","find","find","find","find","find","find","find","find","find","find","find","find","find","find","find","find","find","find","find","find","find","find"] [[[-1,-1,-1,-1,-1,-1,-1,-1,null,-1,-1,-1,null,-1,-1,null,null,-1,-1,-1,-1,null,-1,null,-1,-1,-1,null,null,-1,-1,-1,null,null,null,null,-1,-1,-1,null,null,-1,-1,-1,-1,-1,-1,null,null,null,null,-1,null,null,null,-1,-1,null,-1,-1,-1,null,-1,null,null,-1,null,null,-1,null,null,null,null,null,null,-1,-1,null,null,null,null,-1,-1,null,null,null,null,-1,null,null,null,null,null,null,-1,-1,null,-1]],[20],[1],[49],[29],[22],[11],[10],[42],[30],[24],[33],[25],[34],[33],[3],[37],[6],[44],[34],[49],[39],[5],[48],[28],[49]]

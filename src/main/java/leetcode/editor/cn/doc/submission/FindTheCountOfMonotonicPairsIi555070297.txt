@@ -1,0 +1,46 @@
+class Solution {
+        int mod = 1_000_000_007;
+        int[][] memo;
+    public int countOfPairs(int[] nums) {
+        int max = 0;
+        for (int i : nums) {
+            max = Math.max(max, i);
+        }
+        memo = new int[nums.length][max + 1];
+        for (int[] m : memo) {
+            Arrays.fill(m, -1);
+        }
+        return dfs(0,nums.length - 1,nums);
+    }
+    public int dfs(int pre, int index, int[] nums) {
+        if (index < 0) {
+            return 1;
+        }
+        if (memo[index][pre] != -1) {
+            return memo[index][pre];
+        }
+        int result = 0;
+        if (index == nums.length - 1) {
+            for (int i = 0; i <= nums[index]; i++) {
+                result = (result + dfs(i, index - 1, nums)) % mod;
+            }
+        } else {
+            for (int i = 0; i <= Math.min(nums[index], pre); i++) {
+                if (pre - i >= Math.max(0, nums[index + 1] - nums[index]))
+                result = (result + dfs(i, index - 1, nums)) % mod;
+            }
+        }
+        memo[index][pre] = result;
+        return result;
+    }
+}
+
+//runtime:N/A
+//memory:N/A
+//total_testcases:801
+//total_correct:668
+//input_formatted:[83,111,114,127,142,142,187,201,220,229,230,302,309,330,361,370,384,436,446,507,516,522,523,528,557,561,572,588,605,633,647,658,663,670,711,738,760,772,788,790,803,851,876,906,995]
+//expected_output:848237344
+//code_output:
+//runtime_error:
+//last_testcase:[83,111,114,127,142,142,187,201,220,229,230,302,309,330,361,370,384,436,446,507,516,522,523,528,557,561,572,588,605,633,647,658,663,670,711,738,760,772,788,790,803,851,876,906,995]

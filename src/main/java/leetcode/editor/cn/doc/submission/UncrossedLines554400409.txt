@@ -1,0 +1,53 @@
+class Solution {
+    public int maxUncrossedLines(int[] nums1, int[] nums2) {
+        int n = nums1.length;
+        List<Integer>[] count = new List[n];
+        Arrays.setAll(count, e-> new ArrayList<>());
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            List<Integer> list = count[i];
+            for (int j = 0; j < nums2.length; j++) {
+                max = Math.max(max, nums2[j]);
+                if (nums1[i] == nums2[j]) {
+                    list.add(j);
+                }
+            }
+        }
+        int[] pre = new int[n + 1];
+        int result = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = count[i].size() - 1; j >= 0; j--) {
+                int temp = count[i].get(j);
+                int preMax=  max(pre, temp)  + 1;
+                update(pre, temp + 1, preMax);
+                result = Math.max(preMax, result);
+            }
+        }
+        return result;
+    }
+    public void update(int[] pre, int index, int value) {
+        int max = pre.length;
+        while (index < max) {
+            pre[index] = Math.max(pre[index], value);
+            index += lowbit(index);
+        }
+    }
+    public int lowbit(int x) {
+        return x & - x;
+    }
+    public int max(int[] pre, int index) {
+        int max = 0;
+        while (index > 0) {
+            max = Math.max(pre[index], max);
+            index -= lowbit(index);
+        }
+        return max;
+    }
+}
+
+//runtime_error:java.lang.ArrayIndexOutOfBoundsException: Index 3 out of bounds for length 2
+  at line 41, Solution.max
+  at line 21, Solution.maxUncrossedLines
+  at line 56, __DriverSolution__.__helper__
+  at line 89, __Driver__.main
+//last_testcase:[2] [2,3,2,2]

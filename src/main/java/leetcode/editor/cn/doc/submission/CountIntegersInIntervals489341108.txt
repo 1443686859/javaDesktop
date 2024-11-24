@@ -1,0 +1,81 @@
+ static
+class CountIntervals {
+
+        List<int[]> list;
+        int count;
+
+    public CountIntervals() {
+        count = 0;
+        list = new ArrayList<>();
+    }
+    
+    public void add(int left, int right) {
+        int pre = 0;
+        int after = list.size() - 1;
+        while (pre <= after) {
+            int mid = (pre + after) / 2;
+            if (list.get(mid)[1] < left) {
+                pre = mid + 1;
+            } else {
+                after = mid - 1;
+            }
+        }
+        int index = after + 1;
+        if (index == list.size()) {
+            list.add(new int[]{left, right});
+            count += right - left + 1;
+            return ;
+        }
+        if (list.get(index)[0] > right) {
+            List<int[]> preL = list.subList(0, index);
+            List<int[]> temp = list.subList(index, list.size());
+            List<int[]> result = new ArrayList<>();
+            result.addAll(preL);
+            count += right - left + 1;
+            result.add(new int[]{left, right});
+            result.addAll(temp);
+            list = result;
+        } else {
+            count -= list.get(index)[1] - list.get(index)[0] + 1;
+            list.get(index)[0] = Math.min(list.get(index)[0], left);
+            list.get(index)[1] = Math.max(list.get(index)[1], right);
+            count += list.get(index)[1] - list.get(index)[0] + 1;
+            while (index + 1 < list.size() && list.get(index)[1] >= list.get(index + 1)[0]) {
+                int[] next = list.get(index + 1);
+                count -= list.get(index)[1] - list.get(index)[0] + 1;
+                count -= list.get(index + 1)[1] - list.get(index + 1)[0] + 1;
+                list.get(index)[0] = Math.min(list.get(index)[0], next[0]);
+                list.get(index)[1] = Math.max(list.get(index)[1], next[1]);
+                count += list.get(index)[1] - list.get(index)[0] + 1;
+                list.remove(index + 1);
+            }
+            while (index - 1 >= 0 && list.get(index)[0] <= list.get(index - 1)[1]) {
+                int[] next = list.get(index + 1);
+                count -= list.get(index)[1] - list.get(index)[0] + 1;
+                count -= list.get(index - 1)[1] - list.get(index - 1)[0] + 1;
+                list.get(index)[0] = Math.min(list.get(index)[0], next[0]);
+                list.get(index)[1] = Math.max(list.get(index)[1], next[1]);
+                count += list.get(index)[1] - list.get(index)[0] + 1;
+                list.remove(index - 1);
+                index--;
+            }
+        }
+
+    }
+    
+    public int count() {
+        return count;
+    }
+}
+
+/**
+ * Your CountIntervals object will be instantiated and called as such:
+ * CountIntervals obj = new CountIntervals();
+ * obj.add(left,right);
+ * int param_2 = obj.count();
+ */
+
+//total_correct:0
+//compile_error:Line 2: error: modifier static not allowed here [in CountIntervals.java]
+class CountIntervals {
+^

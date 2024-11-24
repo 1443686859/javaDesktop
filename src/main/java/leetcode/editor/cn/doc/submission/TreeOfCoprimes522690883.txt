@@ -1,0 +1,70 @@
+class Solution {
+        boolean[][] array;
+    public int[] getCoprimes(int[] nums, int[][] edges) {
+        int n = nums.length;
+        if (n == 1) {
+            return new int[]{-1};
+        }
+        generate();
+        List<Integer>[] grap = new List[n];
+        Arrays.setAll(grap, e -> new ArrayList<>());
+        for (int[] edge : edges) {
+            grap[edge[0]].add(edge[1]);
+            grap[edge[1]].add(edge[0]);
+        }
+        int[][] index = new int[51][2];
+        for (int i = 0; i < 51;i ++) {
+            Arrays.fill(index[i], - 1);
+        }
+        int[] result = new int[n];
+        Arrays.fill(result , -1);
+        index[nums[0]] = new int[]{0, 0};
+        dfs(grap, nums, -1, 0,  index, 0, result, index[1]);
+        return result;
+    }
+    public void dfs(List<Integer>[] grap, int[] nums, int parent, int current, int[][] index, int currentIndex, int[] result, int[] old) {
+        int tempIndex = -1;
+        for (int i = 2; i < 51; i++) {
+            if (array[nums[current]][i] && index[i][0] != -1 && (result[current] == -1 || index[i][0] > index[tempIndex][0]) && currentIndex != index[i][0]) {
+                result[current] = index[i][1];
+                tempIndex = i;
+            }
+        }
+        if (old[0] != -1 && (tempIndex == -1 || tempIndex != -1 && index[tempIndex][0] < old[0])) {
+            result[current] = old[1];
+        }
+        for (int i : grap[current]) {
+            if (parent != i) {
+                int[] temp1 = new int[]{index[1][0], index[1][1]};
+                int[] temp = new int[]{index[nums[i]][0], index[nums[i]][1]};
+                index[nums[i]][0] = currentIndex + 1;
+                index[nums[i]][1] = i;
+                dfs(grap, nums, current, i, index, currentIndex + 1, result, temp1);
+                index[nums[i]] = temp;
+            }
+        }
+    }
+
+    public void generate() {
+        array = new boolean[51][51];
+        Arrays.fill(array[1], true);
+        for (int i = 2; i <= 50; i++) {
+            array[i][1] = true;
+            for (int j = 2; j <= 50; j++) {
+                array[i][j] = gcd(i, j) == 1;
+            }
+        }
+    }
+    public int gcd(int a, int b) {
+        return a % b == 0 ? b : gcd(b, a % b);
+    }
+}
+
+//total_testcases:37
+//total_correct:36
+//input_formatted:[1,1]
+[[0,1]]
+//expected_output:[-1,0]
+//code_output:[0,0]
+//last_testcase:[1,1]
+[[0,1]]

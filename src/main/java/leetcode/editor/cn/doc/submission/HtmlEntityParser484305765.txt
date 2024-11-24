@@ -1,0 +1,18 @@
+class Solution {
+    public String entityParser(String text) {
+        text = text.replaceAll("&quot;", "\"");
+        text = text.replaceAll("&apos;", "'");
+        text = text.replaceAll("&amp;", "&");
+        text = text.replaceAll("&gt;", ">");
+        text = text.replaceAll("&lt;", "<");
+        text = text.replaceAll("&frasl;", "/");
+        return text;
+    }
+}
+
+//total_testcases:160
+//total_correct:159
+//input_formatted:"&amp;gt;"
+//expected_output:"&gt;"
+//code_output:">"
+//last_testcase:"&amp;gt;"

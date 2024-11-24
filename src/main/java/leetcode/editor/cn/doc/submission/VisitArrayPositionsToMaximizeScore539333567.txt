@@ -1,0 +1,23 @@
+class Solution {
+    public long maxScore(int[] nums, int x) {
+        int n = nums.length;
+        long[][] dp = new long[n][2];
+        int index = nums[0] & 1;
+        dp[0][index] = nums[0];
+        for (int i = 1; i < n; i++) {
+            index = nums[i] & 1;
+            dp[i][index] = Math.max(dp[i - 1][index] + nums[i], dp[i - 1][index ^ 1] + nums[i] - x);
+            dp[i][index ^ 1] = Math.max(dp[i - 1][index] + nums[i] - x, dp[i - 1][index ^ 1]);
+        }
+        return Math.max(dp[n - 1][1], dp[n - 1][0]);
+    }
+}
+
+//total_testcases:744
+//total_correct:640
+//input_formatted:[8,50,65,85,8,73,55,50,29,95,5,68,52,79]
+74
+//expected_output:470
+//code_output:486
+//last_testcase:[8,50,65,85,8,73,55,50,29,95,5,68,52,79]
+74

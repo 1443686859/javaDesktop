@@ -1,0 +1,59 @@
+class Solution {
+    public int findLUSlength(String[] strs) {
+        int max = 0;
+        Set<String> set = new HashSet<>();
+        for (String string : strs) {
+            set.add(string);
+            max = Math.max(max, string.length());
+        }
+        return set.size() == strs.length ? max : -1;
+    }
+
+    public int findLUSlength1(String[] strs) {
+        Arrays.sort(strs, (a, b) -> {
+            return b.length() - a.length();
+        });
+        int result = -1;
+        for (int i = 0; i < strs.length - 1; i++) {
+            boolean flag = false;
+            for (int j = 0; j < strs.length; j++) {
+                if (i == j) {
+                    continue;
+                }
+                if (check(strs[j], strs[i])) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag) {
+                result = Math.max(result, strs[i].length());
+            }
+
+        }
+
+        return result;
+    }
+    public boolean check(String pre, String after) {
+        int startIndex1 = 0;
+        int startIndex2 = 0;
+        while (startIndex1 < pre.length() && startIndex2 < after.length()) {
+            if (pre.charAt(startIndex1) != after.charAt(startIndex2)) {
+                startIndex2++;
+            } else {
+                startIndex2++;
+                startIndex1++;
+            }
+        }
+        if (startIndex1 == pre.length()) {
+            return true;
+        }
+        return false;
+    }
+}
+
+//total_testcases:100
+//total_correct:20
+//input_formatted:["aabbcc", "aabbcc","cb"]
+//expected_output:2
+//code_output:-1
+//last_testcase:["aabbcc", "aabbcc","cb"]

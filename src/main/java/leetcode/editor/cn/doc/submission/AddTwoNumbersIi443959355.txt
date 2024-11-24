@@ -1,0 +1,64 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode result = null;
+        ArrayDeque<ListNode> pre = new ArrayDeque<>();
+        while (l1 != null) {
+            pre.push(l1);
+            l1 = l1.next;
+        }
+        ArrayDeque<ListNode> after = new ArrayDeque<>();
+        while (l2 != null) {
+            after.push(l2);
+            l2 = l2.next;
+        }
+        int inc = 0;
+        while (!pre.isEmpty() && !after.isEmpty()) {
+            ListNode listNode1 = pre.poll();
+            ListNode listNode2 = after.poll();
+            int current = listNode2.val + listNode1.val + inc;
+            inc = current / 10;
+            listNode1.val = current % 10;
+            listNode1.next = result;
+            result = listNode1;
+        }
+        while (!pre.isEmpty()) {
+            ListNode listNode1 = pre.poll();
+            int current = listNode1.val + inc;
+            inc = current / 10;
+            listNode1.val = current % 10;
+            listNode1.next = result;
+            result = listNode1;
+        }
+        while (!after.isEmpty()) {
+            ListNode listNode2 = after.poll();
+            int current = listNode2.val + inc;
+            inc = current / 10;
+            listNode2.val = current % 10;
+            listNode2.next = result;
+            result = listNode2;
+        }
+        return result;
+    }
+
+
+
+}
+
+//total_testcases:1563
+//total_correct:1113
+//input_formatted:[5]
+[5]
+//expected_output:[1,0]
+//code_output:[0]
+//last_testcase:[5]
+[5]

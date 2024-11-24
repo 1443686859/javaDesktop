@@ -1,0 +1,30 @@
+class Solution {
+    public String maximumBinaryString(String binary) {
+        int index = 0;
+        StringBuilder result = new StringBuilder();
+        while (index < binary.length() && binary.charAt(index) == '1') {
+            result.append('1');
+            index++;
+        }
+        int oneCount = 0;
+        int zeroCount = 0;
+        for (int i = index; i < binary.length(); i++) {
+            if (binary.charAt(i) == '0') {
+                zeroCount++;
+            } else {
+                oneCount++;
+            }
+        }
+        if (zeroCount > 1) {
+            result.append(String.valueOf(1).repeat(zeroCount - 1));
+            result.append(0);
+            result.append(String.valueOf(1).repeat(oneCount));
+        } else {
+            result.append(binary.substring(index));
+        }
+        return result.toString();
+    }
+}
+
+//runtime:33 ms
+//memory:44.6 MB

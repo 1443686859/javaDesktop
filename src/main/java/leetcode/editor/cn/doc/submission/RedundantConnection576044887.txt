@@ -1,0 +1,20 @@
+class Solution {
+    public int[] findRedundantConnection(int[][] edges) {
+        boolean[] used = new boolean[edges.length + 1];
+        for (int[] e : edges) {
+            if (used[e[0]] && used[e[1]]) {
+                return new int[]{e[0], e[1]};
+            }
+            used[e[0]] = true;
+            used[e[1]] = true;
+        }
+        return null;
+    }
+}
+
+//total_testcases:39
+//total_correct:10
+//input_formatted:[[3,4],[1,2],[2,4],[3,5],[2,5]]
+//expected_output:[2,5]
+//code_output:[2,4]
+//last_testcase:[[3,4],[1,2],[2,4],[3,5],[2,5]]

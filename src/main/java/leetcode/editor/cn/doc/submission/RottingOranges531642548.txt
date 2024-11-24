@@ -1,0 +1,50 @@
+class Solution {
+    public int orangesRotting(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        boolean[][] used = new boolean[m][n];
+        Deque<int[]> deque = new ArrayDeque<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 2) {
+                    used[i][j] = true;
+                    deque.addLast(new int[]{i, j});
+                    grid[i][j] = 0;
+                }
+            }
+        }
+        int[][] d = new int[][]{{-1,0}, {1,0}, {0,1},{1,0}};
+        int count = 0;
+        while (!deque.isEmpty()) {
+            int size = deque.size();
+            for (int i = 0; i < size; i++) {
+                int[] current = deque.pollFirst();
+                for (int[] ne : d) {
+                    int nx = current[0] + ne[0];
+                    int ny = current[1] + ne[1];
+                    if (nx >= 0 && nx < m && ny >= 0 && ny < n && !used[nx][ny] && grid[nx][ny] == 1) {
+                        used[nx][ny] = true;
+                        deque.addLast(new int[]{nx, ny});
+                        grid[nx][ny] = 0;
+                    }
+                }
+            }
+            count++;
+        }
+        for (int i = 0; i < m ;i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    return -1;
+                }
+            }
+        }
+        return count - 1;
+    }
+}
+
+//total_testcases:306
+//total_correct:189
+//input_formatted:[[0]]
+//expected_output:0
+//code_output:-1
+//last_testcase:[[0]]

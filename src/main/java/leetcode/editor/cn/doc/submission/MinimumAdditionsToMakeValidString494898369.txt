@@ -1,0 +1,53 @@
+class Solution {
+    public int addMinimum(String word) {
+        ArrayDeque<Character> deque = new ArrayDeque<>();
+        int count = 0;
+        for (int i = 0; i < word.length(); i++) {
+             char c = word.charAt(i);
+             if (c == 'a') {
+                 if (!deque.isEmpty()) {
+                     if (deque.getLast() == 'b') {
+                         count++;
+                     } else {
+                         count += 2;
+                     }
+                     deque.clear();
+                 }
+             }
+             if (c == 'b') {
+                 if (!deque.isEmpty()) {
+                     if (deque.getLast() == 'b') {
+                         count++;
+                     }
+                 } else {
+                     count++;
+                 }
+             }
+             if (c == 'c') {
+                 if (deque.isEmpty()) {
+                     count += 2;
+                 } else if (deque.getLast() != 'b') {
+                     count ++;
+                 }
+                 deque.clear();
+                 continue;
+             }
+             deque.addLast(c);
+        }
+        if (!deque.isEmpty()) {
+            if (deque.getLast() == 'b') {
+                count++;
+            } else {
+                count += 2;
+            }
+        }
+        return count;
+    }
+}
+
+//total_testcases:1523
+//total_correct:830
+//input_formatted:"aaaabb"
+//expected_output:9
+//code_output:8
+//last_testcase:"aaaabb"

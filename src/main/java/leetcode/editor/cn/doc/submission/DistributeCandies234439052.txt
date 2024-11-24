@@ -1,0 +1,16 @@
+class Solution {
+    public int distributeCandies(int[] candyType) {
+        boolean[] hashTable = new boolean[200020];
+        int typeNum = 0;
+        for (int num : candyType) {
+            if(hashTable[num + 100000] == false) {
+                typeNum++;
+                hashTable[num + 100000] = true;
+            }
+        }
+        return Math.min(typeNum, candyType.length / 2);
+    }
+}
+
+//runtime:5 ms
+//memory:39.8 MB

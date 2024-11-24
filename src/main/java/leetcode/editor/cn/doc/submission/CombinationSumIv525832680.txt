@@ -1,0 +1,26 @@
+class Solution {
+        Map<Integer, Integer> memo ;
+    public int combinationSum4(int[] nums, int target) {
+        memo = new HashMap<>();
+       return dfs(nums, target);
+    }
+    public int dfs(int[] nums, int rest) {
+        if (rest == 0) {
+           return 1;
+        }
+        int result = 0;
+        if (memo.containsKey(rest)) {
+            return memo.get(rest);
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (rest >= nums[i]) {
+                result += dfs(nums, rest - nums[i]);
+            }
+        }
+        memo.put(rest, result);
+        return result;
+    }
+}
+
+//runtime:1 ms
+//memory:40.2 MB

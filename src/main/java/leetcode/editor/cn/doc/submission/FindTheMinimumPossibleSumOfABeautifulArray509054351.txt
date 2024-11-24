@@ -1,0 +1,23 @@
+class Solution {
+    public int minimumPossibleSum(int n, int target) {
+        int index = n;
+        long result = 1L * n * (1 + index) / 2;
+        index = Math.max(index + 1, target);
+        for (int i = 1; i <= target / 2; i++) {
+            if (target - i <= n && i != target - i) {
+                result -= target - i;
+                result += index++;
+            }
+        }
+        return (int)result;
+    }
+}
+
+//total_testcases:575
+//total_correct:568
+//input_formatted:39636
+49035
+//expected_output:156198582
+//code_output:1156198589
+//last_testcase:39636
+49035

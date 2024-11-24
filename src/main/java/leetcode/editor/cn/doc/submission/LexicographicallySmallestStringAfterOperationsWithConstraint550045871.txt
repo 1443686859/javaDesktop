@@ -1,0 +1,34 @@
+class Solution {
+    public String getSmallestString(String s, int k) {
+        char[] temp = s.toCharArray();
+        for (int i = 0; i < temp.length; i++) {
+            if (k == 0) {
+                break;
+            }
+            if (temp[i] == 'a') {
+                continue;
+            }
+            int index = temp[i] - 'a';
+            if (index + k >= 26) {
+                int count = 26 - index;
+                k -= count;
+                temp[i] = 'a';
+            } else {
+                int count = Math.min(k, index);
+                index -= count;
+                k -=count;
+                temp[i] = (char)('a' + index);
+            }
+        }
+        return new String(temp);
+    }
+}
+
+//total_testcases:600
+//total_correct:250
+//input_formatted:"kb"
+16
+//expected_output:"aa"
+//code_output:"ab"
+//last_testcase:"kb"
+16

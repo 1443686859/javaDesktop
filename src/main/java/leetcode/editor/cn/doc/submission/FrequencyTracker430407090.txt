@@ -1,0 +1,60 @@
+class FrequencyTracker {
+
+    Map<Integer, Integer> countMap;
+    Map<Integer, Integer> map ;
+    public FrequencyTracker() {
+        map = new HashMap<>();
+        countMap = new HashMap<>();
+    }
+
+    public void add(int number) {
+        if (countMap.containsKey(number)) {
+            int currentFrequency = countMap.get(number);
+            int preCount = map.get(currentFrequency);
+            map.put(currentFrequency,  preCount - 1);
+            if (map.get(currentFrequency) == 0) {
+                map.remove(currentFrequency);
+            }
+            countMap.put(number, currentFrequency + 1);
+            map.put(currentFrequency + 1, map.getOrDefault(currentFrequency + 1, 0) + 1);
+        } else {
+            countMap.put(number,1);
+            map.put(1, map.getOrDefault(1, 0) + 1);
+        }
+    }
+
+    public void deleteOne(int number) {
+        if (countMap.containsKey(number)) {
+            int currentFrequency = countMap.get(number);
+            int preCount = map.get(currentFrequency);
+            map.put(currentFrequency,  preCount - 1);
+            if (map.get(currentFrequency) == 0) {
+                map.remove(currentFrequency);
+            }
+            countMap.put(number, currentFrequency - 1);
+            if (countMap.get(number) == 0) {
+                countMap.remove(number);
+            }
+        }
+    }
+
+    public boolean hasFrequency(int frequency) {
+        return map.containsKey(frequency);
+    }
+}
+
+/**
+ * Your FrequencyTracker object will be instantiated and called as such:
+ * FrequencyTracker obj = new FrequencyTracker();
+ * obj.add(number);
+ * obj.deleteOne(number);
+ * boolean param_3 = obj.hasFrequency(frequency);
+ */
+//total_testcases:1117
+//total_correct:368
+//input_formatted:["FrequencyTracker","hasFrequency","add","hasFrequency","hasFrequency","add","add","add","deleteOne","deleteOne","hasFrequency","add","hasFrequency","hasFrequency"]
+[[],[1],[3],[1],[1],[6],[2],[6],[6],[6],[2],[2],[2],[1]]
+//expected_output:[null,false,null,true,true,null,null,null,null,null,false,null,true,true]
+//code_output:[null,false,null,true,true,null,null,null,null,null,false,null,true,false]
+//last_testcase:["FrequencyTracker","hasFrequency","add","hasFrequency","hasFrequency","add","add","add","deleteOne","deleteOne","hasFrequency","add","hasFrequency","hasFrequency"]
+[[],[1],[3],[1],[1],[6],[2],[6],[6],[6],[2],[2],[2],[1]]

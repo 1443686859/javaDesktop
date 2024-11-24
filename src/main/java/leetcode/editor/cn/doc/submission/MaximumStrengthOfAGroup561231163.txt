@@ -1,0 +1,22 @@
+class Solution {
+    public long maxStrength(int[] nums) {
+        long[] dp = new long[2];
+        Arrays.sort(nums);
+        dp[0] = Math.max(nums[0], 0);
+        dp[1] = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            long[] temp = new long[2];
+            temp[0] = Math.max(dp[0], Math.max(dp[0] * nums[i], dp[1] * nums[i]));
+            temp[1] = Math.min(dp[1], Math.min(dp[0] * nums[i], dp[1] * nums[i]));
+            dp = temp;
+        }
+        return dp[0];
+    }
+}
+
+//total_testcases:2012
+//total_correct:1660
+//input_formatted:[2,2,7,0,-4,9,4]
+//expected_output:1008
+//code_output:0
+//last_testcase:[2,2,7,0,-4,9,4]

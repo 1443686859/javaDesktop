@@ -1,0 +1,38 @@
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0) {
+            return 0;
+        }
+        int n = coins.length;
+        int[][] dp = new int[n + 1][amount + 1];
+        for (int i = 1; i <= n; i++) {
+            int c = coins[i - 1];
+            Arrays.fill(dp[i], - 1);
+            dp[i][0] = 0;
+            for (int j = 1; j <= amount; j++) {
+                if (j >= c) {
+                    if (i > 1 && dp[i][j - c] != -1) {
+                        dp[i][j] = dp[i][j] == -1 ? dp[i][j - c] + 1 : Math.min(dp[i][j], dp[i][j - c] + 1);
+                    } else if (i == 1) {
+                        dp[i][j] = dp[i][j - c] == - 1 ? -1 : dp[i][j - c] + 1;
+                    }
+                }
+                if (i > 1 && dp[i][j] == - 1) {
+                    dp[i][j] = dp[i - 1][j];
+                }
+
+            }
+        }
+
+        return dp[n][amount];
+    }
+}
+
+//total_testcases:189
+//total_correct:63
+//input_formatted:[2,5,10,1]
+27
+//expected_output:4
+//code_output:27
+//last_testcase:[2,5,10,1]
+27

@@ -1,0 +1,23 @@
+class Solution {
+    public int minimumRounds(int[] tasks) {
+        Map<Integer, Integer> countMap = new HashMap<>();
+        for (int i : tasks) {
+            countMap.merge(i,1, Integer::sum);
+        }
+        int count = 0;
+        for (int i : countMap.values()) {
+            if (i % 3 == 1) {
+                return - 1;
+            }
+            count += i / 3 + (i % 3 != 0 ? 1 : 0);
+        }
+        return count;
+    }
+}
+
+//total_testcases:79
+//total_correct:58
+//input_formatted:[5,5,5,5]
+//expected_output:2
+//code_output:-1
+//last_testcase:[5,5,5,5]

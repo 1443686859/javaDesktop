@@ -1,0 +1,36 @@
+dp[i]指的是，离开第i个房间所需要的天数。
+例如在nextVisit={0,1}时，
+dp[0] = 2;
+dp[1] = 4;
+分两种情况判断：
+
+为了不单独处理下标为0的情况，对dp的下标做了+1处理
+
+1. nextVisit仍然是当前位置，那dp[i+1] = dp[i]+2，即在离开前一个房间的基础上，访问本房间2次即可；
+
+       dp[i+1] = dp[i] + 2
+
+2. 访问的是前面的某个位置j，则需要重新走一遍 j->i-1，即dp[i] - dp[j], 再加上第一次离开 i-1需要的天数dp[i],+2则是两次访问房间 i。
+
+       dp[i+1] = dp[i] * 2 - dp[nextVisit[i]] + 2; 
+
+因为我们返回的是第一次访问最后一个房间的**天数下标**，因此只需要返回**离开第i-1个房间所需要的天数d**即可，不需要再将天数d+1。
+
+* 
+
+```
+public int firstDayBeenInAllRooms(int[] nextVisit) {
+        long[] dp = new long[nextVisit.length+1];
+        int mod = 1000000007;
+        for (int i = 0; i < nextVisit.length; i++) {
+
+            if (nextVisit[i] == i) {
+                dp[i+1] = (dp[i] + 2+mod) % mod;
+            } else {
+                dp[i+1] = (2 * dp[i] - dp[nextVisit[i]] + 2 + mod) % mod;
+            }
+        }
+        return (int)dp[dp.length-2];
+    }
+```
+

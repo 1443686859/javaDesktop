@@ -1,0 +1,47 @@
+class Solution {
+    public int latestTimeCatchTheBus(int[] buses, int[] passengers, int capacity) {
+        Arrays.sort(buses);
+        Arrays.sort(passengers);
+        int left = 0;
+        int max = 0;
+        for (int i = 0; i < buses.length; i++) {
+            if (passengers[left] <= buses[i]) {
+                int right = Math.min(passengers.length - 1, left + capacity - 1);
+                int tempLeft = left;
+                while (left <= right) {
+                    int mid = left + (right - left) / 2;
+                    if (passengers[mid] <= buses[i]) {
+                        left = mid + 1;
+                    } else {
+                        right = mid - 1;
+                    }
+                }
+                int target = left - 1;
+                int tempResult = passengers[target];
+                if (passengers[target] == buses[i] || target == tempLeft + capacity - 1) {
+                    while (target >= tempLeft && passengers[target] == tempResult) {
+                        tempResult--;
+                        target--;
+                    }
+                    if (target < tempLeft || passengers[target] != tempResult) {
+                        max = Math.max(max, tempResult);
+                    }
+                } else {
+                    max = Math.max(max, buses[i]);
+                }
+            }
+        }
+        return max;
+    }
+}
+
+//total_testcases:64
+//total_correct:14
+//input_formatted:[3]
+[4]
+1
+//expected_output:3
+//code_output:0
+//last_testcase:[3]
+[4]
+1

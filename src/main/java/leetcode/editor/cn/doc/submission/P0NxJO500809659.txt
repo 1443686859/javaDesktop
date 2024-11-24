@@ -1,0 +1,27 @@
+class Solution {
+    public int magicTower(int[] nums) {
+        PriorityQueue<Integer> min = new PriorityQueue<>((a,b) -> a -b);
+        min.add(0);
+        int sum = 0;
+        int result = 0;
+        int rest = 0;
+        for (int i : nums) {
+            sum += i;
+            if (sum < 0) {
+                int current = min.poll();
+                sum -= current;
+                rest += current;
+                result++;
+            }
+            min.add(i);
+        }
+        return sum + rest < 0 ? - 1 : result;
+    }
+}
+
+//total_testcases:51
+//total_correct:31
+//input_formatted:[-9635,71923,-37495,8366,54303,-86422,-48303,-47858,98424]
+//expected_output:2
+//code_output:3
+//last_testcase:[-9635,71923,-37495,8366,54303,-86422,-48303,-47858,98424]

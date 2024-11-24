@@ -1,0 +1,36 @@
+class Solution {
+    int mod = (int)1e9 + 7;
+    public int numFactoredBinaryTrees(int[] arr) {
+        Map<Integer, Integer> resultMap = new HashMap<>();
+        int max = 2;
+        Arrays.sort(arr);
+        for (int i = 0; i < arr.length; i++) {
+            resultMap.put(arr[i], 1);
+            max = Math.max(max, arr[i]);
+        }
+        for (int i = 0; i < arr.length; i++) {
+            int left = resultMap.get(arr[i]);
+            for (int j = 0; j < arr.length; j++) {
+                int current = arr[i] * arr[j];
+                if (current <= max && resultMap.containsKey(current)) {
+                    long currentResult = 1l * resultMap.get(current);
+                    int right = resultMap.get(arr[j]);
+                    currentResult = (currentResult + (1l * left * right) % mod) % mod;
+                    resultMap.put(current, (int) currentResult);
+                }
+            }
+        }
+        long ans = 0;
+        for (Map.Entry<Integer, Integer> entry : resultMap.entrySet()) {
+            ans = (ans + entry.getValue()) % mod;
+        }
+        return (int) ans;
+    }
+}
+
+//total_testcases:48
+//total_correct:32
+//input_formatted:[45,42,2,18,23,1170,12,41,40,9,47,24,33,28,10,32,29,17,46,11,759,37,6,26,21,49,31,14,19,8,13,7,27,22,3,36,34,38,39,30,43,15,4,16,35,25,20,44,5,48]
+//expected_output:777
+//code_output:612
+//last_testcase:[45,42,2,18,23,1170,12,41,40,9,47,24,33,28,10,32,29,17,46,11,759,37,6,26,21,49,31,14,19,8,13,7,27,22,3,36,34,38,39,30,43,15,4,16,35,25,20,44,5,48]

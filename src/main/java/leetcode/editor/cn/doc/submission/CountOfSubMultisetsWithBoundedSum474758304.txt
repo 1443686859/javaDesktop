@@ -1,0 +1,21 @@
+class Solution {
+    public int countSubMultisets(List<Integer> nums, int l, int r) {
+        int MOD = 1000000007;
+        int[] c = new int[20001];
+        for (int x : nums) ++c[x];
+        int[] f = new int[r + 1];
+        f[0] = 1 + c[0];
+        for (int x = 1; x <= 20000; ++x) {
+            if (c[x] == 0) continue;
+            for (int j = r; j >= (c[x] + 1) * x; --j)
+                f[j] = (f[j] - f[j - (c[x] + 1) * x] + MOD) % MOD;
+            for (int j = x; j <= r; ++j) 
+                f[j] = (f[j] + f[j - x]) % MOD;
+        }
+        int ans = 0;
+        while (l <= r) ans = (ans + f[l++]) % MOD;
+        return ans;
+    }
+}
+//runtime:74 ms
+//memory:43.5 MB

@@ -1,0 +1,27 @@
+class Solution {
+    public int minDays(int n) {
+        int[] result = new int[n + 1];
+        Arrays.fill(result, Integer.MAX_VALUE);
+        result[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            result[i] = Math.min(result[i - 1] + 1, result[i]);
+            if ((i & 1) == 0) {
+                result[i] = Math.min(result[i / 2] + 1, result[i]);
+            }
+            if (i % 3 == 0) {
+                result[i] = Math.min(result[i - 2 * (i / 3)] + 1, result[i]);
+            }
+        }
+        return result[n];
+    }
+}
+
+//runtime:N/A
+//memory:N/A
+//total_testcases:176
+//total_correct:116
+//input_formatted:61455274
+//expected_output:29
+//code_output:
+//runtime_error:
+//last_testcase:61455274

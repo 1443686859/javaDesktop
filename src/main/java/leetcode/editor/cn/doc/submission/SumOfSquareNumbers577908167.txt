@@ -1,0 +1,41 @@
+class Solution {
+    public boolean judgeSquareSum(int c) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i <= c; i++) {
+            if (2 * i * i == c) {
+                return true;
+            }
+            if (i * i == c) {
+                return true;
+            }
+            if (i * i < c) {
+                list.add(i * i);
+            } else {
+                break;
+            }
+        }
+        int left = 0;
+        int right = list.size() - 1;
+        while (left < right) {
+            int sum = list.get(left) + list.get(right);
+            if (sum == c) {
+                return true;
+            } else if (sum > c) {
+                right--;
+            } else {
+                left++;
+            }
+        }
+        return false;
+    }
+}
+
+//runtime:N/A
+//memory:N/A
+//total_testcases:127
+//total_correct:100
+//input_formatted:2147483646
+//expected_output:false
+//code_output:
+//runtime_error:
+//last_testcase:2147483646

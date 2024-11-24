@@ -1,0 +1,35 @@
+class Solution {
+    public long totalCost(int[] costs, int k, int candidates) {
+        if (k + 2 * candidates > costs.length) {
+            Arrays.sort(costs);
+            long result = 0;
+            for (int i = 0; i < k; i++) {
+                result += costs[i];
+            }
+            return result;
+        }
+        PriorityQueue<Integer> pre = new PriorityQueue<>();
+        PriorityQueue<Integer> suf = new PriorityQueue<>();
+
+        for (int i = 0; i < candidates; i++) {
+            pre.add(costs[i]);
+            suf.add(costs[costs.length - 1 - i]);
+        }
+        int left = candidates;
+        int right = costs.length - 1 - candidates;
+        long result = 0;
+        while (k-- > 0) {
+            if (pre.peek() <= suf.peek()) {
+                result += pre.poll();
+                pre.add(costs[left++]);
+            } else {
+                result += suf.poll();
+                suf.add(costs[right--]);
+            }
+        }
+        return result;
+    }
+}
+
+//runtime:22 ms
+//memory:53.7 MB

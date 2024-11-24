@@ -62,32 +62,22 @@ public class FindPivotIndex{
         Solution solution = new FindPivotIndex().new Solution();
         System.out.println(solution.pivotIndex(new int[]{1,7,3,6,5,6}));
    }
-//leetcode submit region begin(Prohibit modification and deletion)
+//leetcode submit region begin(Prohibit modification and deletion) 
 class Solution {
     public int pivotIndex(int[] nums) {
         int n = nums.length;
-        int[] sum = new int[n];
-        sum[0] = nums[0];
-        for (int i = 1; i < n; i++) {
-            sum[i] = sum[i - 1] + nums[i];
+        int sum = 0;
+        for (int i : nums) {
+            sum += i;
         }
+        int temp = 0;
         int result = -1;
-        int left = 0;
-        int right = 0;
         for (int i = 0; i < n; i++) {
-            right = sum[n - 1];
-            right -= sum[i];
-            left = sum[i] - nums[i];
-            if (i == 0) {
-                left = 0;
-            }
-            if (i == n - 1) {
-                right = 0;
-            }
-            if (left == right) {
+            if (2 * temp == sum - nums[i]) {
                 result = i;
                 break;
             }
+            temp += nums[i];
         }
         return result;
     }

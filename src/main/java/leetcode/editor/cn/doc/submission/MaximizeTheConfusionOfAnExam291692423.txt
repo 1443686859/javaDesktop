@@ -1,0 +1,19 @@
+class Solution {
+    public int maxConsecutiveAnswers(String answerKey, int k) {
+        char[] cnt = new char[128];
+        int i = 0, max = 0, n = answerKey.length();
+        char[] A = answerKey.toCharArray();
+        for (int j = 0; j < n; j++) {
+            cnt[A[j]]++;
+            // 获取目前最长的数目
+            max = Math.max(max, cnt[A[j]]);
+            while (j + 1 - i - max > k) {
+                cnt[A[i]]--;
+                i++;
+            }
+        }
+        return n - i;
+    }
+}
+//runtime:5 ms
+//memory:41.6 MB

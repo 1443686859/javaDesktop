@@ -1,0 +1,27 @@
+class Solution {
+    public long maxArrayValue(int[] nums) {
+        int n = nums.length;
+        int index = n - 1;
+        long ans = 0;
+        while (index > 0) {
+            int i = index;
+            long sum = nums[i];
+            while (i > 0 && nums[i - 1] <= sum) {
+                sum += nums[i - 1];
+                i--;
+            }
+            index = i;
+            index--;
+            ans = Math.max(ans, sum);
+
+        }
+        return ans;
+    }
+}
+
+//total_testcases:1023
+//total_correct:971
+//input_formatted:[77]
+//expected_output:77
+//code_output:0
+//last_testcase:[77]

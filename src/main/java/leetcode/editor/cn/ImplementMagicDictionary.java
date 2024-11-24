@@ -60,7 +60,10 @@ package leetcode.editor.cn; //如果你的算法题是中文的，后缀就是cn
  */
 public class ImplementMagicDictionary{
 //    public static void main(String[] args) {
-//        Solution solution = new ImplementMagicDictionary().new Solution();
+//        MagicDictionary magicDictionary = new MagicDictionary();
+//        magicDictionary.buildDict(new String[]{"hello","hallo","leetcode"});
+//        System.out.println(magicDictionary.search("hell"));
+//
 //   }
 //leetcode submit region begin(Prohibit modification and deletion)
 class MagicDictionary {
@@ -88,34 +91,28 @@ class MagicDictionary {
     }
     
     public boolean search(String searchWord) {
-        return dfs(root, searchWord, 0, false);
+        return dfs(root, false, 0, searchWord.toCharArray());
     }
-
-    public boolean dfs(Trie current, String currentString, int currentPos, boolean isModifed) {
-        if (currentPos == currentString.length()) {
-            return current.isEnd && isModifed;
+    private boolean dfs(Trie pre, boolean isModified, int index, char[] array) {
+        if (index == array.length) {
+            return isModified && pre.isEnd;
         }
-        int currentIndex = currentString.charAt(currentPos) - 'a';
-        if (current.child[currentIndex] != null) {
-            // 此层节点为可选节点， 修改可以发生在 pos 之后，跳过当前节点如果为true 则表示可以成功替换后面字符，如果为false则表示 修改只能发生在这层节点
-            if (dfs(current.child[currentIndex], currentString, currentPos + 1, isModifed)) {
-                return true;
+        int i = array[index] - 'a';
+            if (pre.child[i] != null && dfs(pre.child[i], isModified, index + 1, array)) {
+                 return true;
             }
-        }
-        if (!isModifed) {
-            for (int i = 0; i < 26; i++) {
-                // 失联替换
-                if (i != currentIndex && current.child[i] != null) {
-                    if (dfs(current.child[i], currentString, currentPos + 1, true)) {
-                       // 回溯
-                        return true;
-                    }
+        if (!isModified) {
+            for (int a = 0; a < 26; a++) {
+                if (i != a && pre.child[a] != null && dfs(pre.child[a], true, index + 1, array)) {
+                    return true;
                 }
             }
         }
-        return false;
 
+        return false;
     }
+
+
 }
 
 /**

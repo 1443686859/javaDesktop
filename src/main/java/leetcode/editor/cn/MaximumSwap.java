@@ -37,36 +37,35 @@ import java.util.List;
 public class MaximumSwap{
     public static void main(String[] args) {
         Solution solution = new MaximumSwap().new Solution();
+        System.out.println(solution.maximumSwap(2736));
    }
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int maximumSwap(int num) {
-        List<Integer> currentList = new ArrayList<>();
+        List<Integer> result = new ArrayList<>();
         while (num != 0) {
-            currentList.add(num % 10);
+            result.add(num % 10);
             num /= 10;
         }
-        Collections.reverse(currentList);
-        for (int i = 0; i < currentList.size(); i++) {
-            int max = -1;
-            int resultIndex = -1;
-            for (int j = i + 1; j < currentList.size(); j++) {
-                if (currentList.get(j) > currentList.get(i) && max < currentList.get(j)) {
-                    max =currentList.get(j);
-                    resultIndex = j;
-                }
+        for (int i = result.size() - 1; i >= 0; i--) {
+            int maxIndex = i;
+            for (int j = i - 1; j >= 0; j--) {
+               if (result.get(maxIndex) <= result.get(j)) {
+                   maxIndex = j;
+               }
             }
-            if (max != -1) {
-                currentList.set(resultIndex, currentList.get(i));
-                currentList.set(i, max);
+            if (maxIndex != i && result.get(maxIndex) > result.get(i)) {
+                int temp = result.get(i);
+                result.set(i, result.get(maxIndex));
+                result.set(maxIndex, temp);
                 break;
             }
         }
-        int result = 0;
-        for (int i = 0; i < currentList.size(); i++) {
-            result = result * 10 + currentList.get(i);
+        int ans = 0;
+        for (int i = result.size() - 1; i >= 0; i--) {
+            ans = ans * 10 + result.get(i);
         }
-        return result;
+        return ans;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)

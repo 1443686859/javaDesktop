@@ -1,0 +1,42 @@
+class Solution {
+    public int[] maxSumOfThreeSubarrays(int[] nums, int k) {
+        int n = nums.length;
+        int[] sum = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            sum[i + 1] = sum[i] + nums[i];
+        }
+        int[] pre = new int[n];
+        for (int i = k - 1; i < n - k; i++) {
+            if (i == k - 1) {
+                pre[i] = 0;
+            } else {
+                pre[i] = (sum[pre[i - 1] + k] - sum[pre[i - 1]] < sum[i + k] - sum[i]) ? i : pre[i - 1];
+            }
+        }
+        int[] after = new int[n];
+        for (int i = n - k; i >= k - 1; i--) {
+            after[i] = i == n - k ? i : (sum[after[i + 1] + k] - sum[after[i + 1]] <= sum[i + k] - sum[i] ? i : after[i + 1]);
+        }
+        int ans = 0;
+        int[] result = new int[3];
+        for (int i = k; i < n - 2 * k; i++) {
+            int currentPre = sum[pre[i - k] + k] - sum[pre[i - k]];
+            int currentAfter = sum[after[i + k] + k] - sum[after[i + k]];
+            int current = sum[i + k] - sum[i];
+            if (ans < currentPre + current + currentAfter) {
+                result = new int[]{pre[i - k], i, after[i + k]};
+                ans = currentPre + current + currentAfter;
+            }
+        }
+        return result;
+    }
+}
+
+//total_testcases:43
+//total_correct:18
+//input_formatted:[7,13,20,19,19,2,10,1,1,19]
+3
+//expected_output:[1,4,7]
+//code_output:[0,3,7]
+//last_testcase:[7,13,20,19,19,2,10,1,1,19]
+3

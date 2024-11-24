@@ -65,38 +65,19 @@ public class DefuseTheBomb{
 class Solution {
     public int[] decrypt(int[] code, int k) {
         int n = code.length;
-        int[] sum = new int[n];
-        sum[0] = code[0];
-        for (int i = 1; i < n; i++) {
-            sum[i] = sum[i - 1] + code[i];
+        int r = k > 0 ? k + 1 : n;
+        k = Math.abs(k);
+        int base = 0;
+        for (int i = r - k; i < r; i++) {
+            base += code[i];
         }
-        if (k > 0) {
-            for (int i = 0; i < n; i++) {
-                if (i + k < n) {
-                    code[i] = sum[i + k] - sum[i];
-                } else {
-                    code[i] = sum[n - 1] - sum[i];
-                    code[i] += sum[i + k - n];
-                }
-            }
-            return code;
-        } else if (k == 0) {
-            return new int[n];
-        } else {
-            for (int i = 0; i < n; i++) {
-                if (i + k >= 0) {
-                    code[i] = sum[i - 1] - (i + k == 0 ? 0 : sum[i + k - 1]);
-                } else {
-                    if (i > 0) {
-                        code[i] = sum[i - 1];
-                    } else {
-                        code[i]= 0;
-                    }
-                    code[i] += sum[n - 1] - sum[n - 1 + (i + k)];
-                }
-            }
-            return code;
+        int[] result = new int[n];
+        for (int i = 0; i < n; i++) {
+            result[i] = base;
+            base += code[r % n] - code[(r - k) % n];
+            r++;
         }
+        return result;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)

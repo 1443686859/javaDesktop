@@ -1,0 +1,119 @@
+ class BookMyShow {
+        int M;
+        int[] base;
+        int[] sum;
+        int[] h;
+        int currentRow;
+
+    public BookMyShow(int n, int m) {
+        base = new int[n];
+        sum = new int[n + 1];
+        h = new int[n + 1];
+        M = m;
+        currentRow = 0;
+        for (int i = 0; i < n; i++) {
+            addSum(i + 1, m);
+            updateMax(i + 1, m);
+        }
+
+    }
+    public int lowbit(int x) {
+        return x & -x;
+    }
+    public void addSum(int x, int val) {
+        base[x - 1] += val;
+        while (x < sum.length) {
+            sum[x] += val;
+            x += lowbit(x);
+        }
+    }
+    public int preSum(int x) {
+        int result = 0;
+        while (x > 0) {
+            result += sum[x];
+            x -= lowbit(x);
+        }
+        return result;
+    }
+    public int preMax(int x) {
+        int result = Integer.MIN_VALUE;
+        while (x > 0)  {
+            result = Math.max(result, h[x]);
+            x -= lowbit(x);
+        }
+        return result;
+    }
+    public void updateMax(int x, int val) {
+        base[x - 1] = val;
+        while (x < h.length) {
+            h[x] = base[x - 1];
+            int lx = lowbit(x);
+            for (int j = 1; j < lx; j *= 2) {
+                h[x] = Math.max(h[x], h[x - j]);
+            }
+            x += lx;
+        }
+    }
+    
+    public int[] gather(int k, int maxRow) {
+        if (preMax(maxRow + 1) < k) {
+            return new int[0];
+        }
+        int left = 1;
+        int right = maxRow + 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (preMax(mid) >= k) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        int[] result = new int[]{left - 1, M - base[left - 1]};
+        addSum(left, -k);
+        updateMax(left, base[left - 1]);
+        return result;
+    }
+    
+    public boolean scatter(int k, int maxRow) {
+        if (preSum(maxRow + 1) < k) {
+            return false;
+        }
+        int left = 1;
+        int right = maxRow + 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (preSum(mid) >= k) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        for (; currentRow < left - 1; currentRow++) {
+            k -= base[currentRow];
+            addSum(currentRow + 1, - base[currentRow]);
+            updateMax(currentRow + 1,0);
+        }
+        addSum(left, -k);
+        updateMax(left, base[left - 1]);
+        return true;
+
+    }
+
+}
+
+/**
+ * Your BookMyShow object will be instantiated and called as such:
+ * BookMyShow obj = new BookMyShow(n, m);
+ * int[] param_1 = obj.gather(k,maxRow);
+ * boolean param_2 = obj.scatter(k,maxRow);
+ */
+
+//total_testcases:97
+//total_correct:76
+//input_formatted:["BookMyShow","scatter","gather","gather","gather"]
+[[3,999999999],[1000000000,2],[999999999,2],[999999999,2],[999999999,2]]
+//expected_output:[null,true,[2,0],[],[]]
+//code_output:[null,false,[0,0],[1,0],[2,0]]
+//last_testcase:["BookMyShow","scatter","gather","gather","gather"]
+[[3,999999999],[1000000000,2],[999999999,2],[999999999,2],[999999999,2]]

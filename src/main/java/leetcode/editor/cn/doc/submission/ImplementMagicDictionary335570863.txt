@@ -1,0 +1,64 @@
+class MagicDictionary {
+
+class Trie {
+            boolean isEnd;
+            Trie[] child = new Trie[26];
+        }
+        Trie root ;
+    public MagicDictionary() {
+        root = new Trie();
+    }
+    
+    public void buildDict(String[] dictionary) {
+        for (String current : dictionary) {
+            Trie temp = root;
+            for (int i = 0; i < current.length(); i++) {
+                char currentChar = current.charAt(i);
+                if (temp.child[currentChar - 'a'] == null) {
+                    temp.child[currentChar - 'a'] = new Trie();
+                }
+                temp = temp.child[currentChar - 'a'];
+            }
+            temp.isEnd = true;
+        }
+    }
+    
+    public boolean search(String searchWord) {
+        return dfs(root, searchWord, 0, false);
+    }
+    
+    public boolean dfs(Trie current, String currentString, int currentPos, boolean isModifed) {
+        if (currentPos == currentString.length()) {
+            return current.isEnd && isModifed;
+        }
+        int currentIndex = currentString.charAt(currentPos) - 'a';
+        if (current.child[currentIndex] != null) {
+            // 此层节点为可选节点， 修改可以发生在 pos 之后，跳过当前节点如果为true 则表示可以成功替换后面字符，如果为false则表示 修改只能发生在这层节点
+            if (dfs(current.child[currentIndex], currentString, currentPos + 1, isModifed)) {
+                return true;
+            }
+        }
+        if (!isModifed) {
+            for (int i = 0; i < 26; i++) {
+                // 失联替换
+                if (i != currentIndex && current.child[i] != null) {
+                                        if (dfs(current.child[i], currentString, currentPos + 1, true)) {
+                       // 回溯
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+
+    }
+}
+
+/**
+ * Your MagicDictionary object will be instantiated and called as such:
+ * MagicDictionary obj = new MagicDictionary();
+ * obj.buildDict(dictionary);
+ * boolean param_2 = obj.search(searchWord);
+ */
+//runtime:30 ms
+//memory:45.3 MB

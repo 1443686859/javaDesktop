@@ -1,0 +1,26 @@
+class Solution {
+    public int[] secondGreaterElement(int[] nums) {
+        Deque<Integer> pre = new ArrayDeque<>();
+        Deque<Integer> current = new ArrayDeque<>();
+        int n = nums.length;
+        int[] ans = new int[n];
+        Arrays.fill(ans, -1);
+        for (int i = 0; i < nums.length; i++) {
+            while (!pre.isEmpty() && nums[pre.peek()] < nums[i]) {
+                ans[pre.poll()] = nums[i];
+            }
+            while (!current.isEmpty() && nums[current.peek()] < nums[i]) {
+                pre.addLast(current.poll());
+            }
+            current.push(i);
+        }
+        return ans;
+    }
+}
+
+//total_testcases:51
+//total_correct:19
+//input_formatted:[272,238,996,406,763,164,102,948,217,760,609,700,848,637,748,718,469,449,502,703,292,86,91,551,699,293,244,406,22,968,434,805,910,927,623,79,108,541,411]
+//expected_output:[406,406,-1,948,848,217,217,-1,609,968,848,748,910,718,805,805,703,703,551,805,699,551,699,968,805,968,968,434,434,-1,910,927,-1,-1,-1,541,411,-1,-1]
+//code_output:[406,406,-1,948,848,217,217,-1,848,968,848,748,910,968,805,805,968,968,968,805,968,968,968,968,805,968,968,434,434,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+//last_testcase:[272,238,996,406,763,164,102,948,217,760,609,700,848,637,748,718,469,449,502,703,292,86,91,551,699,293,244,406,22,968,434,805,910,927,623,79,108,541,411]

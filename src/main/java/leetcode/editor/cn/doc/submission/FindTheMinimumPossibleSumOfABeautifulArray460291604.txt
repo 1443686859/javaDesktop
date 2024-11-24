@@ -1,0 +1,30 @@
+class Solution {
+    public long minimumPossibleSum(int n, int target) {
+long ans = 0;
+        ans = (n + 1) * n / 2;
+        int left = 1;
+        int right = n;
+        int next = n + 1;
+
+        while (left < right) {
+            if (target - right >= left && target - right < right) {
+                ans -= right;
+                while (target - next >= left && target - next < right) {
+                    next++;
+                }
+                ans += next;
+                next++;
+            }
+            right --;
+        }
+        return ans;
+    }
+}
+//total_testcases:574
+//total_correct:571
+//input_formatted:63623
+82276
+//expected_output:2948940321
+//code_output:801456673
+//last_testcase:63623
+82276

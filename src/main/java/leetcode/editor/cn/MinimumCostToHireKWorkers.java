@@ -39,7 +39,7 @@
 // 1 <= quality[i], wage[i] <= 10⁴ 
 // 
 //
-// Related Topics 贪心 数组 排序 堆（优先队列） 👍 216 👎 0
+// Related Topics 贪心 数组 排序 堆（优先队列） 👍 343 👎 0
 
 package leetcode.editor.cn; //如果你的算法题是中文的，后缀就是cn，如果是英文的就是en
 
@@ -48,7 +48,7 @@ import java.util.PriorityQueue;
 
 /**
  * @author  YourName
- * @date 2022-09-11 15:03:18
+ * @date 2024-05-02 17:27:31
  */
 public class MinimumCostToHireKWorkers{
     public static void main(String[] args) {
@@ -57,31 +57,26 @@ public class MinimumCostToHireKWorkers{
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public double mincostToHireWorkers(int[] quality, int[] wage, int k) {
-        PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> {
-            return b - a;
-        });
-        Integer[] index = new Integer[quality.length];
-        for (int i = 0; i < quality.length; i++) {
+        PriorityQueue<Integer> queue = new PriorityQueue<>((a,b) ->  b - a);
+        int n = quality.length;
+        Integer[] index = new Integer[n];
+        for (int i = 0; i < n; i++) {
             index[i] = i;
         }
-        Arrays.sort(index, (a, b) -> {
-            return quality[b] * wage[a] - quality[a] * wage[b];
-        });
-        int total = 0;
-        double result = 1e9;
-        for (int i = 0; i < k - 1; i++) {
-            total += quality[index[i]];
-            queue.offer(quality[index[i]]);
+        Arrays.sort(index, (pre, after) -> {return wage[pre] * quality[after] - wage[after] * quality[pre];});
+        int sum = 0;
+        double result = Double.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            sum += quality[index[i]];
+            queue.add(quality[index[i]]);
+            if (i >= k - 1) {
+                result = Math.min(result, sum * 1.0 * wage[index[i]]/ quality[index[i]]);
+            }
+            if (queue.size() >= k) {
+                sum -= queue.poll();
+            }
         }
-        for (int i = k - 1; i < quality.length; i++) {
-            int idx = index[i];
-            total += quality[idx];
-            queue.offer(quality[idx]);
-            double currentTotalC = ((double) wage[idx] / quality[idx]) * total;
-            result = Math.min(currentTotalC, result);
-            total -= queue.poll();
-        }
-    return result;
+        return result;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)

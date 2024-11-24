@@ -1,0 +1,44 @@
+class SnapshotArray {
+        List<String> list;
+        String[] base;
+        int count;
+
+    public SnapshotArray(int length) {
+        list = new ArrayList<>();
+        base = new String[length];
+        count = 0;
+    }
+    
+    public void set(int index, int val) {
+        base[index] = val + "";
+    }
+    
+    public int snap() {
+        list.add(String.join(",", base));
+        return count ++;
+    }
+    
+    public int get(int index, int snap_id) {
+        String target = list.get(snap_id);
+        String[] array = target.split(",");
+        return Integer.parseInt(array[index]);
+    }
+}
+
+/**
+ * Your SnapshotArray object will be instantiated and called as such:
+ * SnapshotArray obj = new SnapshotArray(length);
+ * obj.set(index,val);
+ * int param_2 = obj.snap();
+ * int param_3 = obj.get(index,snap_id);
+ */
+
+//runtime_error:java.lang.NumberFormatException: For input string: "null"
+  at line 67, java.base/java.lang.NumberFormatException.forInputString
+  at line 661, java.base/java.lang.Integer.parseInt
+  at line 777, java.base/java.lang.Integer.parseInt
+  at line 24, SnapshotArray.get
+  at line 72, __Driver__.__helperSelectMethod__
+  at line 93, __Driver__.__helper__
+  at line 114, __Driver__.main
+//last_testcase:["SnapshotArray","snap","snap","get","set","snap","set"] [[4],[],[],[3,1],[2,4],[],[1,4]]

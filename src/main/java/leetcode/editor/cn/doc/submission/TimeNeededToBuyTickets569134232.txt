@@ -1,0 +1,32 @@
+class Solution {
+    public int timeRequiredToBuy(int[] tickets, int k) {
+        int[][] dp = new int[tickets.length][2];
+        for (int i = 0; i < tickets.length; i++) {
+            dp[i][0] = tickets[i];
+            dp[i][1] = i;
+        }
+        Arrays.sort(dp, (a, b) -> a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);
+        int count = 0;
+        int max = 0;
+        for (int i = 0; i < tickets.length; i++) {
+            if (i > 0 && dp[i][0] == dp[i - 1][0] && dp[i][1] != k) {
+                continue;
+            }
+            count += (dp[i][0] - max) * (tickets.length - i);
+            if (dp[i][1] == k) {
+                break;
+            }
+            max = Math.max(max, dp[i][0]);
+        }
+        return count;
+    }
+}
+
+//total_testcases:65
+//total_correct:9
+//input_formatted:[84,49,5,24,70,77,87,8]
+3
+//expected_output:154
+//code_output:157
+//last_testcase:[84,49,5,24,70,77,87,8]
+3

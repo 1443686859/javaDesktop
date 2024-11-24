@@ -1,0 +1,50 @@
+class Solution {
+    int mod = 1_000_000_007;
+    int[][] memo;
+    public int countOfPairs(int[] nums) {
+        int max = 0;
+        int[] pre = new int[nums.length];
+        int index= 0;
+        int min = nums[0];
+        for (int i : nums) {
+            max = Math.max(max, i);
+            min = Math.min(min, i);
+            pre[index++] = min;
+        }
+        memo = new int[nums.length][max + 1];
+        for (int[] m : memo) {
+            Arrays.fill(m, -1);
+        }
+        return 0;
+//        return dfs(0,nums.length - 1,nums, pre);
+    }
+    public int dfs(int pre, int index, int[] nums, int[] a) {
+        if (index < 0) {
+            return 1;
+        }
+        if (memo[index][pre] != -1) {
+            return memo[index][pre];
+        }
+        int result = 0;
+        if (index == nums.length - 1) {
+            for (int i = 0; i <= nums[index]; i++) {
+                result = (result + dfs(i, index - 1, nums, a)) % mod;
+            }
+        } else {
+            int max = pre - Math.max(0, nums[index + 1] - nums[index]);
+            int min = Math.max(0, nums[index] - a[index]);
+            for (int i = min; i <= max; i++) {
+                result = (result + dfs(i, index - 1, nums, a)) % mod;
+            }
+        }
+        memo[index][pre] = result;
+        return result;
+    }
+}
+
+//total_testcases:801
+//total_correct:372
+//input_formatted:[2,3,2]
+//expected_output:4
+//code_output:0
+//last_testcase:[2,3,2]

@@ -1,0 +1,24 @@
+     class Solution {
+    public int numFriendRequests(int[] ages) {
+        Arrays.sort(ages);
+        int ans = 0;
+        int left = 0;
+        int right = 0;
+        for (int age : ages){
+            if (age < 15) {
+                continue;
+            }
+            while (ages[left] <= 0.5 * age + 7) {
+                left++;
+            }
+            while (right + 1 < ages.length && ages[right + 1] <= age) {
+                right++;
+            }
+            ans += right - left;
+        }
+        return ans;
+    }
+}
+
+//runtime:12 ms
+//memory:41.3 MB

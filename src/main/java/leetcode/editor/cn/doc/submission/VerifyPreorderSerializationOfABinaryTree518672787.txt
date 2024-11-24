@@ -1,0 +1,28 @@
+class Solution {
+    public boolean isValidSerialization(String preorder) {
+        Deque<String> deque = new ArrayDeque<>();
+        String[] orders = preorder.split(",");
+        for (int i = 0; i < orders.length; i++) {
+            String c = orders[i];
+            if (c.equals("#") && !deque.isEmpty() && deque.peekLast().equals("#")) {
+                deque.pollLast();
+                deque.pollLast();
+            }
+            deque.addLast(c);
+        }
+        while (!deque.isEmpty() && deque.size() >= 3 &&deque.peekLast().equals("#")) {
+            deque.pollLast();
+            deque.pollLast();
+            deque.pollLast();
+            deque.addLast("#");
+        }
+        return deque.size() == 1 && deque.peekLast().equals("#");
+    }
+}
+
+//total_testcases:152
+//total_correct:116
+//input_formatted:"1,#,#,#,#"
+//expected_output:false
+//code_output:true
+//last_testcase:"1,#,#,#,#"

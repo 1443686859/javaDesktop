@@ -1,0 +1,13 @@
+class Solution {
+    public int distributeCandies(int[] candyType) {
+        int n = candyType.length;
+        Set<Integer> set = new HashSet<>();
+        for (int i : candyType) {
+            set.add(i);
+        }
+        return Math.min(n / 2, set.size());
+    }
+}
+
+//runtime:33 ms
+//memory:44.5 MB

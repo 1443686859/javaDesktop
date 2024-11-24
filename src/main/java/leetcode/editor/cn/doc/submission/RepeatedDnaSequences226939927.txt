@@ -1,0 +1,36 @@
+class Solution {
+    private static final BiFunction<Integer, Integer, Integer> SUM = Integer::sum;
+    // MASK_MAP[i] 记录字符 i + 'A' 对应的位掩码。
+    private static final int[] MASK_MAP = new int[26];
+
+    static {
+        MASK_MAP['A' - 'A'] = 0;
+        MASK_MAP['G' - 'A'] = 1;
+        MASK_MAP['C' - 'A'] = 2;
+        MASK_MAP['T' - 'A'] = 3;
+    }
+
+    public List<String> findRepeatedDnaSequences(String s) {
+        if (s.length() < 10) {
+            return Collections.emptyList();
+        }
+        char[] str = s.toCharArray();
+        int n = str.length, mask = 0;
+        for (int i = 0; i < 9; i++) {
+            mask = mask << 2 | MASK_MAP[str[i] - 'A'];
+        }
+        List<String> repeated = new ArrayList<>(n);
+        int[] cntMap = new int[1 << 20];
+        for (int i = 9; i < n; i++) {
+            mask = mask << 2 | MASK_MAP[str[i] - 'A'];
+            if (++cntMap[mask] == 2) {
+                repeated.add(new String(str, i - 9, 10));
+            }
+            mask &= (1 << 18) - 1; // 消除 mask 二进制的高两位。
+        }
+        return repeated; //*********************************
+    }
+}
+
+//runtime:9 ms
+//memory:43.2 MB

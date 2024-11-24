@@ -1,0 +1,29 @@
+class Solution {
+    public int punishmentNumber(int n) {
+        int result = 0;
+        for (int i = 1; i <= n; i++) {
+            if (check(String.valueOf(i * i).toCharArray(), 0, i)) {
+                result += i * i;
+            }
+        }
+        return result;
+    }
+    public boolean check(char[] array, int index, int target) {
+        if (index == array.length) {
+            return target == 0;
+        }
+        int temp = 0;
+        boolean result = false;
+        for (int i = index; i < array.length; i++) {
+            temp = temp * 10 + (array[i] - '0');
+            result |= check(array, i + 1, target - temp);
+            if (result) {
+                return result;
+            }
+        }
+        return result;
+    }
+}
+
+//runtime:21 ms
+//memory:42.1 MB

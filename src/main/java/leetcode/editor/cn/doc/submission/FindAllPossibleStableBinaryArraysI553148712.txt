@@ -1,0 +1,37 @@
+class Solution {
+        int l;
+    public int numberOfStableArrays(int zero, int one, int limit) {
+        this.l = limit;
+        return dfs(0, zero, one, -1, -1);
+    }
+    public int dfs(int index, int z, int o, int oIndex, int zIndex) {
+        if (z <= 0 && o <= 0) {
+            return 1;
+        }
+        if (z < 0 || o < 0) {
+            return 0;
+        }
+        int result = 0;
+        if (index - oIndex < l + 1 && index - zIndex < l + 1) {
+            result += dfs(index + 1, z, o - 1, index, zIndex) ;
+            result +=  dfs(index + 1, z - 1, o, oIndex, index);
+        } else if (index - zIndex == l + 1 && index - oIndex < l + 1) {
+            result +=  dfs(index + 1, z - 1, o, oIndex, index);
+        } else if (index - oIndex == l + 1 && index - zIndex <l + 1) {
+            result += dfs(index + 1, z, o - 1, index, zIndex) ;
+        }
+        return result;
+    }
+}
+
+//runtime:N/A
+//memory:N/A
+//total_testcases:670
+//total_correct:517
+//input_formatted:13
+20
+93
+//expected_output:573166440
+//code_output:
+//runtime_error:
+//last_testcase:13 20 93

@@ -1,0 +1,31 @@
+class Solution {
+    public int waysToReachStair(int k) {
+        int n = 32 - Integer.numberOfLeadingZeros(k);
+        int max = 1 << n;
+        int ans = 1 == k ? 1 : 0;
+        while (n + 1 >= (max - k)) {
+            ans += c(n + 1, (max - k));
+            max <<= 1;
+            n++;
+        }
+        return ans;
+    }
+    public int c(int n, int k) {
+        return n >= k ? f(n) / f(n - k) / f(k) :0;
+    }
+    public int f(int n) {
+        int ans = 1;
+        while (n >= 1) {
+            ans *= n;
+            n--;
+        }
+        return ans;
+    }
+}
+
+//total_testcases:600
+//total_correct:250
+//input_formatted:2
+//expected_output:4
+//code_output:3
+//last_testcase:2

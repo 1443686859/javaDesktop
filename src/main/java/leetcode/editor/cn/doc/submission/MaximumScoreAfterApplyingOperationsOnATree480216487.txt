@@ -1,0 +1,36 @@
+class Solution {
+    public long maximumScoreAfterOperations(int[][] edges, int[] values) {
+        int n = values.length;
+        List<Integer>[] grap = new List[n];
+        Arrays.setAll(grap, e -> new ArrayList<>());
+        for (int[] edge : edges) {
+            grap[edge[0]].add(edge[1]);
+        }
+        long sum = 0;
+        for (int i : values) {
+            sum += i;
+        }
+        return sum - dfs(grap, values, -1, 0);
+    }
+    public long dfs(List<Integer>[] grap, int[] value, int pa, int current) {
+        if (grap[current].isEmpty()) {
+            return value[current];
+        }
+        long son = 0;
+        for (int i : grap[current]) {
+            if (i != pa) {
+                son += dfs(grap, value, current, i);
+            }
+        }
+        return Math.min(son, value[current]);
+    }
+}
+
+//total_testcases:821
+//total_correct:166
+//input_formatted:[[2,0],[4,1],[5,3],[4,6],[2,4],[5,2],[5,7]]
+[12,12,7,9,2,11,12,25]
+//expected_output:83
+//code_output:78
+//last_testcase:[[2,0],[4,1],[5,3],[4,6],[2,4],[5,2],[5,7]]
+[12,12,7,9,2,11,12,25]

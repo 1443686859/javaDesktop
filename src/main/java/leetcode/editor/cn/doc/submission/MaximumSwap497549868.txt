@@ -1,0 +1,35 @@
+class Solution {
+    public int maximumSwap(int num) {
+        List<Integer> result = new ArrayList<>();
+        while (num != 0) {
+            result.add(num % 10);
+            num /= 10;
+        }
+        for (int i = result.size() - 1; i >= 0; i--) {
+            int maxIndex = i;
+            for (int j = i - 1; j >= 0; j--) {
+               if (result.get(maxIndex) <= result.get(j)) {
+                   maxIndex = j;
+               }
+            }
+            if (maxIndex != i) {
+                int temp = result.get(i);
+                result.set(i, result.get(maxIndex));
+                result.set(maxIndex, temp);
+                break;
+            }
+        }
+        int ans = 0;
+        for (int i = result.size() - 1; i >= 0; i--) {
+            ans = ans * 10 + result.get(i);
+        }
+        return ans;
+    }
+}
+
+//total_testcases:112
+//total_correct:102
+//input_formatted:98368
+//expected_output:98863
+//code_output:98368
+//last_testcase:98368

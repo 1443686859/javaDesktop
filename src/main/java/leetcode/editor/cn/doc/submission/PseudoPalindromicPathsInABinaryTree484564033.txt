@@ -1,0 +1,35 @@
+
+class Solution {
+    int result;
+    public int pseudoPalindromicPaths (TreeNode root) {
+        result = 0;
+        dfs(root, new int[10]);
+        return result / 2;
+    }
+    public void dfs(TreeNode root, int[] count) {
+        if (root == null) {
+            if (check(count)) {
+                result++;
+            }
+            return ;
+        }
+        count[root.val]++;
+        dfs(root.left, count);
+        dfs(root.right, count);
+        count[root.val]--;
+    }
+    public boolean check(int[] count) {
+        int current = 0;
+        for (int i : count) {
+            current += (i & 1);
+        }
+        return current <= 1;
+    }
+}
+
+//total_testcases:56
+//total_correct:33
+//input_formatted:[1,9,1,null,1,null,1,null,null,7,null,null,4]
+//expected_output:1
+//code_output:2
+//last_testcase:[1,9,1,null,1,null,1,null,null,7,null,null,4]

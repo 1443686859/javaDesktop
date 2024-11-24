@@ -1,0 +1,66 @@
+> [1599. 经营摩天轮的最大利润](https://leetcode.cn/problems/maximum-profit-of-operating-a-centennial-wheel/description/)
+
+[TOC]
+
+# 思路
+
+比较不喜欢这种说明含糊不清的题目，大元旦的给我们添堵。明明能说明白的条件，非要隐藏起来，也不是说这样不行，考察我们细心程度是吧，非要元旦给我们搞这个不适合吧？
+
+隐藏条件：
+
+1. 真实的摩天轮，它就是不停的转，无论有没有人都转，注意处理 0 游客的可能性；
+
+2. 可以凑数，例如 下标0 有 10人，那么 下标1 的时候还没轮到他们，这是他们是在排队的 下标0 和 下标1 的人是可以凑一起坐；
+
+# 贪心
+
+维护变量 `time` 代表转动的次数，那么成本就是 `cost = time * runningCost`；
+维护变量 `customer` 代表当前有多少等在上摩天轮的游客数量；
+
+枚举 `customers[i]` 那么当前 `下标i` 可以看做第几轮转动前的状态，那么更新 `customer += customers[i]` 得到当前等待的游客数量，由于存在大量游客（大于等于4）的可能，那么我们就可以直接得出，当前的等待游客如果 “尽量凑4人” 需要转多少轮，也就是更新 `time += customer // 4 ` ，假设预计完成的轮次 `time` 大于当前 `下标i` 那么很明显，我们可以等后面游客过来补充 “填数”，如此形成循环。这个循环停止，代表当前游客不能再凑齐 4 人了，而且必须启动转一下，那么直接计算转一下把 “剩余游客” 接上。最后外循环判断还有没有下一轮游客过来即可；
+
+整个过程记录其最大利润并记录这个例如出现时的 `time` 即为答案；
+
+只跑一遍 $O(n)$ 算法；
+
+## 2ms 细节
+
+这个方法不是最快的方法，但可以变成最快，里面的计算如果直接用除法、乘法和余法会非常慢，可以直接位运算加速，4倍的加速。。。
+
+* []
+
+```Java
+class Solution {
+    public int minOperationsMaxProfit(int[] customers, int boardingCost, int runningCost) {
+        if (boardingCost * 4 <= runningCost) return -1;
+        int customer = 0, time = 0, income = 0, bestRes = 0, bestTime = -1;
+        
+        for (int i = 0; i < customers.length; ) {
+            // 计算当前轮次前是否有新的游客加入，如果之前存在游客，尽量凑 4 人
+            for (; i < customers.length && i <= time; i++) {
+                customer += customers[i];
+                income += (customer >> 2 << 2) * boardingCost;
+                time += customer >> 2;
+                customer &= 3;
+            }
+            // 上轮循环跳出证明当前出现无游客凑够 4 人的情况，所以先核算之前满载 4 人的最优情况下利润是否创新高
+            if (bestRes < income - runningCost * time) {
+                bestRes = income - runningCost * time;
+                bestTime = time;
+            }
+            // 到这里证明游客少于 4 人，且必须转动，那么就直接计算并判断
+            income += boardingCost * customer;
+            customer = 0;
+            time++;
+            if (bestRes < income - runningCost * time) {
+                bestRes = income - runningCost * time;
+                bestTime = time;
+            }
+        }
+
+        return bestTime;
+    }
+}
+```
+
+![image.png](https://pic.leetcode.cn/1704092108-YpMiVU-image.png)

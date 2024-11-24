@@ -1,0 +1,32 @@
+class Solution {
+    public int distMoney(int money, int children) {
+        int res = money % 8;
+        int count = money / 8;
+        if (money < children) {
+            return - 1;
+        }
+        if (count == children) {
+            if (res == 0) {
+            return count;
+            } else {
+                return count - 1;
+            }
+
+        }
+        if (count > children) {            
+           return children - 1;
+        }
+        int countAns = children - count;
+        if (countAns == 1 && res == 4) {
+            return count - 1;
+        }
+        while (res < countAns) {
+            res += 8;
+            count--;
+            countAns++;
+        }
+        return count;
+    }
+}
+//runtime:1 ms
+//memory:40.7 MB

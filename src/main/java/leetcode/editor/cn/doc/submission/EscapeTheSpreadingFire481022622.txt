@@ -1,0 +1,117 @@
+class Solution {
+        int[][] direction = new int[][]{
+                {1,0}, {0,1},{-1,0},{0,-1}
+        };
+    int MAX = 1000000000;
+    public int maximumMinutes(int[][] grid) {
+        int min1 = getMin(new int[]{0, 0}, grid);
+        int min2 = getMin(new int[]{grid.length - 1, grid[0].length - 1}, grid);
+        if (min2 == MAX || min1 == MAX) {
+            return MAX;
+        }
+        int right = Math.min(min1, min2);
+        int left = 0;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (check(grid, new int[2], mid)) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return left - 1;
+    }
+    public int getMin(int[] start, int[][] grid) {
+        int min = 0;
+        Deque<int[]> current =  new ArrayDeque<>();
+        current.add(start);
+        int m = grid.length;
+        int n = grid[0].length;
+        boolean[][] visited = new boolean[m][n];
+        while (!current.isEmpty()) {
+            int size = current.size();
+            for (int i = 0; i < size; i++) {
+                int[] now = current.pollFirst();
+                visited[now[0]][now[1]] = true;
+                if (grid[now[0]][now[1]] == 1) {
+                    return min;
+                }
+                for (int[] d : direction) {
+                    int x = now[0] + d[0];
+                    int y = now[1] + d[1];
+                    if (x >= grid.length || x < 0 || y >= grid[0].length || y <0 || grid[x][y] == 2 || visited[x][y]) {
+                        continue;
+                    }
+                    current.addLast(new int[]{x, y});
+                }
+            }
+            min++;
+        }
+        return MAX;
+    }
+
+    public boolean check(int[][] grid, int[] start, int time) {
+        Deque<int[]> current =  new ArrayDeque<>();
+
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] temp = new int[m][n];
+        for (int i = 0 ;i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    current.add(new int[]{i, j});
+                }
+                temp[i][j] = grid[i][j];
+            }
+        }
+        for (int i = 0; i <= time; i++) {
+            extracted(current, temp);
+        }
+        Deque<int[]> p = new ArrayDeque<>();
+        p.add(start);
+        while (!p.isEmpty()) {
+            extracted(current, temp);
+            int size = p.size();
+            for (int j = 0; j < size; j++) {
+                int[] now = p.pollFirst();
+                if (now[0] == m - 1 && now[1] == n -1) {
+                    return true;
+                }
+                for (int[] d : direction) {
+                    int x = now[0] + d[0];
+                    int y = now[1] + d[1];
+                    if (x >= temp.length || x < 0 || y >= temp[0].length || y < 0 || temp[x][y] == 2 || temp[x][y] == 1) {
+                        continue;
+                    }
+                    p.addLast(new int[]{x, y});
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private void extracted(Deque<int[]> current, int[][] temp) {
+        int size = current.size();
+        for (int j = 0; j < size; j++) {
+            int[] now = current.pollFirst();
+            temp[now[0]][now[1]] = 1;
+            for (int[] d : direction) {
+                int x = now[0] + d[0];
+                int y = now[1] + d[1];
+                if (x >= temp.length || x < 0 || y >= temp[0].length || y <0 || temp[x][y] == 2 || temp[x][y] == 1) {
+                    continue;
+                }
+                current.addLast(new int[]{x, y});
+            }
+        }
+    }
+
+}
+
+//total_testcases:55
+//total_correct:11
+//input_formatted:[[0,2,0,0,1],[0,2,0,2,2],[0,2,0,0,0],[0,0,2,2,0],[0,0,0,0,0]]
+//expected_output:0
+//code_output:-1
+//last_testcase:[[0,2,0,0,1],[0,2,0,2,2],[0,2,0,0,0],[0,0,2,2,0],[0,0,0,0,0]]

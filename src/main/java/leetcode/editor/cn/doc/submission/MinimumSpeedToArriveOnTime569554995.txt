@@ -1,0 +1,45 @@
+class Solution {
+    public int minSpeedOnTime(int[] dist, double hour) {
+        int max = 0;
+        for (int i : dist) {
+            max = Math.max(max, i);
+        }
+        if (dist.length - 1 + 1d * dist[dist.length - 1] / max > hour) {
+            return -1;
+        }
+        int left = 1;
+        int right = max;
+        while (left <= right)  {
+            int mid = (left + right) / 2;
+            if (check(dist, mid, hour)) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return right + 1;
+    }
+    public boolean check(int[] dist, int speed, double hour) {
+        double sum = 0;
+        for (int i = 0; i < dist.length; i++) {
+            if (i != dist.length - 1) {
+                sum += 1d * dist[i] / speed;
+            } else {
+                sum += (double) ((dist[i] + speed - 1) / speed);
+            }
+            if (sum > hour) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+//total_testcases:66
+//total_correct:21
+//input_formatted:[1,1,100000]
+2.01
+//expected_output:10000000
+//code_output:-1
+//last_testcase:[1,1,100000]
+2.01

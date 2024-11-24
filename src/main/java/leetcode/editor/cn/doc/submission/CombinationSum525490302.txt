@@ -1,0 +1,25 @@
+class Solution {
+        List<List<Integer>> result;
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        result = new ArrayList<>();
+        dfs(new ArrayList<>(), candidates, target, 0);
+        return result;
+    }
+    public void dfs(List<Integer> temp, int[] candidates, int rest, int start) {
+        if (rest == 0) {
+            result.add(new ArrayList<>(temp));
+            return;
+        }
+        if (start >= candidates.length || candidates[start] > rest) {
+            return;
+        }
+        temp.add(candidates[start]);
+        dfs(temp, candidates, rest - candidates[start], start);
+        temp.remove(temp.size() - 1);
+        dfs(temp, candidates, rest, start + 1);
+    }
+}
+
+//runtime:2 ms
+//memory:43.7 MB

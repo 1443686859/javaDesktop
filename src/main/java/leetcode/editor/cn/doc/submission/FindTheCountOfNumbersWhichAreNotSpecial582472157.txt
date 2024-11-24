@@ -1,0 +1,21 @@
+class Solution {
+    public int nonSpecialCount(int l, int r) {
+        int count = 0;
+        for (int i = l; i <= r; i++) {
+            int j = (int)Math.sqrt(i);
+            if (j * j == i && (i & 1) == 0) {
+                count++;
+            }
+        }
+        return r - l - count + 1;
+    }
+}
+
+//total_testcases:855
+//total_correct:254
+//input_formatted:1
+9
+//expected_output:7
+//code_output:8
+//last_testcase:1
+9

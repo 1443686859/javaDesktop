@@ -1,0 +1,58 @@
+class FrequencyTracker {
+    Map<Integer, Integer> map;
+    Map<Integer, Integer> countMap;
+    public FrequencyTracker() {
+        map = new HashMap<>();
+        countMap = new HashMap<>();
+    }
+
+    public void add(int number) {
+        int oldF = map.getOrDefault(number, 0);
+        if (oldF != 0) {
+            countMap.put(oldF, countMap.get(oldF) - 1);
+            if (countMap.get(oldF) == 0) {
+                countMap.remove(oldF);
+            }
+        }
+        map.put(number, map.getOrDefault(number, 0) + 1);
+        countMap.put(oldF + 1, countMap.getOrDefault(oldF + 1, 0) + 1);
+    }
+
+    public void deleteOne(int number) {
+
+        if (map.containsKey(number)) {
+            int oldF = map.getOrDefault(number, 0);
+            map.put(number, map.get(number) - 1);
+            if (map.get(number) == 0) {
+                map.remove(number);
+            }
+            countMap.put(oldF, countMap.get(oldF) - 1);
+            if (countMap.get(oldF) == 0) {
+                countMap.remove(oldF);
+            }
+            if (oldF > 1) {
+                countMap.put(oldF - 1, countMap.getOrDefault(oldF + 1, 0) + 1);
+            }
+        }
+
+    }
+
+    public boolean hasFrequency(int frequency) {
+        return countMap.containsKey(frequency);
+    }
+}
+
+/**
+ * Your FrequencyTracker object will be instantiated and called as such:
+ * FrequencyTracker obj = new FrequencyTracker();
+ * obj.add(number);
+ * obj.deleteOne(number);
+ * boolean param_3 = obj.hasFrequency(frequency);
+ */
+
+//runtime_error:java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "java.util.Map.get(Object)" is null
+  at line 12, FrequencyTracker.add
+  at line 65, __Driver__.__helperSelectMethod__
+  at line 92, __Driver__.__helper__
+  at line 113, __Driver__.main
+//last_testcase:["FrequencyTracker","hasFrequency","add","hasFrequency","hasFrequency","add","add","add","deleteOne","deleteOne","hasFrequency","add","hasFrequency","hasFrequency"] [[],[1],[3],[1],[1],[6],[2],[6],[6],[6],[2],[2],[2],[1]]

@@ -1,0 +1,53 @@
+class Solution {
+        int[][] memo;
+        int mod = 1_000_000_007;
+    public int specialPerm(int[] nums) {
+        int n = nums.length;
+        memo = new int[n][(1 << n) - 1];
+        for (int[] m : memo) {
+            Arrays.fill(m, -1);
+        }
+        int result = 0;
+        for (int i = 0; i < n; i++) {
+            int base = get(nums, i, 1 << i);
+            if (base != -1) {
+                result = (result + base) % mod;
+            }
+        }
+        return result;
+    }
+    public int get(int[] nums, int pre, int mask) {
+        if (mask == (1 << nums.length) - 1) {
+            return 1;
+        }
+        if (memo[pre][mask] != - 1) {
+            return memo[pre][mask];
+        }
+        int count = 0;
+        int result = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if ((mask & (1 << i)) == 0 && (nums[i] % nums[pre] == 0 || nums[pre] % nums[i] == 0)) {
+                int base = get(nums, i, mask | 1 << i);
+                if (base != -1) {
+                    result = (result + base) % mod;
+                    count++;
+                }
+            }
+        }
+        if (count == 0) {
+            return -1;
+        }
+        memo[pre][mask] = result;
+        return result;
+    }
+}
+
+//runtime:N/A
+//memory:N/A
+//total_testcases:590
+//total_correct:587
+//input_formatted:[1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8191]
+//expected_output:958003200
+//code_output:
+//runtime_error:
+//last_testcase:[1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8191]

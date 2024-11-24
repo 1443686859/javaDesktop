@@ -1,0 +1,29 @@
+class Solution {
+    public int getWinner(int[] arr, int k) {
+        int n = arr.length;
+        int max = 0;
+        ArrayDeque<Integer> deque = new ArrayDeque<>();
+        int[] ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            while (!deque.isEmpty() && arr[deque.peekLast()] < arr[i]) {
+                int index = deque.removeLast();
+                ans[index] = i - index - 1 + (index == 0 ? 0 : 1);
+                if (ans[index] >= k) {
+                    return arr[index];
+                }
+            }
+            deque.addLast(i);
+            max = Math.max(max, arr[i]);
+        }
+        return max;
+    }
+}
+
+//total_testcases:185
+//total_correct:164
+//input_formatted:[1,25,68,42,35,70]
+2
+//expected_output:68
+//code_output:42
+//last_testcase:[1,25,68,42,35,70]
+2

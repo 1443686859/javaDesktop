@@ -1,0 +1,28 @@
+class Solution {
+    public int numFriendRequests(int[] ages) {
+        Arrays.sort(ages);
+        int count = 0;
+        int left = 0;
+        int c = 1;
+        for (int i = 1; i < ages.length; i++) {
+            if (ages[i] != ages[i - 1]) {
+                count += (c - 1) * c;
+                c = 1;
+            } else {
+                c++;
+            }
+            while (ages[left] <= ages[i] / 2 + 7 && left < i) {
+                left++;
+            }
+            count += i - left - c + 1;
+        }
+        return count + (c - 1) * c;
+    }
+}
+
+//total_testcases:89
+//total_correct:52
+//input_formatted:[73,106,39,6,26,15,30,100,71,35,46,112,6,60,110]
+//expected_output:29
+//code_output:30
+//last_testcase:[73,106,39,6,26,15,30,100,71,35,46,112,6,60,110]

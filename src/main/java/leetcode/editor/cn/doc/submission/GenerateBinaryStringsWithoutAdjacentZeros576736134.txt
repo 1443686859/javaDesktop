@@ -1,0 +1,25 @@
+class Solution {
+    int max;
+    List<String> result;
+    public List<String> validStrings(int n) {
+        max = n;
+        result = new ArrayList<>();
+        dfs(n, n + 1, 0);
+        return result;
+    }
+    public void dfs(int count, int pre, long temp) {
+        if (count == 0) {
+            result.add(String.format("%0" + max +"d", temp));
+            return;
+        }
+        if (pre - count != 2) {
+            dfs(count - 1, pre,temp * 10);
+        }
+        dfs(count - 1, count, temp * 10 + 1);
+
+    }
+
+}
+
+//runtime:33 ms
+//memory:45.4 MB

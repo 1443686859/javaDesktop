@@ -1,0 +1,23 @@
+class Solution {
+    public int findPeakElement(int[] nums) {
+        Deque<int[]> deque = new ArrayDeque<>();
+        for (int i = 0; i <= nums.length; i++) {
+            int target = i == nums.length ? Integer.MIN_VALUE : nums[i];
+            while (!deque.isEmpty() && nums[deque.peek()[1]] > target) {
+                int[] current = deque.poll();
+                if (current[0] < nums[current[1]]) {
+                    return current[1];
+                }
+            }
+            deque.push(new int[]{i == 0 ? Integer.MIN_VALUE : nums[i - 1],i});
+        }
+        return - 1;
+    }
+}
+
+//total_testcases:66
+//total_correct:65
+//input_formatted:[-2147483648]
+//expected_output:0
+//code_output:-1
+//last_testcase:[-2147483648]

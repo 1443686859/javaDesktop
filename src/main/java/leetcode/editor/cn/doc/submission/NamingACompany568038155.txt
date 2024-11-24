@@ -1,0 +1,42 @@
+class Solution {
+    public long distinctNames(String[] ideas) {
+        Set<String> set = new HashSet<>();
+        int index = 0;
+        int total = 0;
+        for (String idea : ideas) {
+            set.add(idea);
+            total |= 1 << (idea.charAt(0) - 1);
+        }
+        int n = ideas.length;
+        int[][] sum = new int[26][26];
+        int[] count = new int[26];
+        for (String s : ideas) {
+            for (int i = 0; i < 26; i++)   {
+                char c = (char) ('a' + i);
+                if (((1 << i) & total) != 0 && !set.contains(c + s.substring(1))) {
+                    sum[s.charAt(0) - 'a'][i]++;
+                    count[index] |= 1 << i;
+                }
+            }
+            index++;
+        }
+        index = 0;
+        long result = 0;
+        for (String s : ideas) {
+            int i = s.charAt(0) - 'a';
+            for (int j = 0; j < 26; j++) {
+                if ((count[i] | (1 << j)) != 0) {
+                    result += sum[i][j] == 0 || sum[j][i] == 0 ? 0 : sum[j][i];
+                }
+            }
+            index++;
+        }
+        return result;
+    }
+}
+
+//runtime_error:java.lang.ArrayIndexOutOfBoundsException: Index 26 out of bounds for length 26
+  at line 18, Solution.distinctNames
+  at line 56, __DriverSolution__.__helper__
+  at line 86, __Driver__.main
+//last_testcase:["sfuzder","spklurny","kvdolme","kbbdklkpgk","za","mdbsmnjiu","pzydbfwiw","lvvyshmd","ow","ssipb","jucpsquexm","ffuzder","uftruik","ringlxh","jz","sjlxouiv","csdbtsvg","openygbaix","dcn","r","hwql","ok","y","sze","ttptd","atxp","ejfpsea","vjfpsea","lj","drmvufbt","zxambug","ozpxq","qzydbfwiw","lqxik","bjo","rrmvufbt","jvl","rzxaaa","nmfydhawa","shlwkf","rcl","hhn","yrmcsc","yieuzizaeh","nrmvufbt","rinsldgdpp","wqg","tyhkgqcu","rsdbtsvg","zvehtqiqxa","jtz","mjaguebiy","fztbpozhf","zzpxq","ue","foktqxiqe","ztf","dn","lxambug","kinsldgdpp","jhn","k","i","qxtava","roktqxiqe","hr","bwzw","mot","cadj","x","bcep","u","kzydbfwiw","ahku","ijo"]

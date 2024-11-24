@@ -1,0 +1,39 @@
+class Solution {
+    public long minimumTime(int[] time, int totalTrips) {
+        long right = Long.MAX_VALUE;
+        long sum = 0;
+        for (int i : time) {
+            right = Math.min(right, (long) i * totalTrips);
+            sum += i;
+        }
+        long left = (sum + totalTrips - 1) / totalTrips;
+        while (left <= right)  {
+            long mid = left + (right - left) / 2;
+            if (check(mid, time, totalTrips)) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return right + 1;
+    }
+    public boolean check(long target, int[] time, int totalTrips) {
+        long count = 0;
+        for (int i : time) {
+            count += target / i;
+            if (count >= totalTrips) {
+                return true;
+            }
+        }
+       return false;
+    }
+}
+
+//total_testcases:124
+//total_correct:119
+//input_formatted:[9,3,10,5]
+2
+//expected_output:5
+//code_output:7
+//last_testcase:[9,3,10,5]
+2

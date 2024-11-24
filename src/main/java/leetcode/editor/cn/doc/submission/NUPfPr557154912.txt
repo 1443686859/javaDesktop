@@ -1,0 +1,40 @@
+class Solution {
+        int[] n;
+    public boolean canPartition(int[] nums) {
+        int sum = 0;
+        n = nums;
+        for (int i : nums) {
+            sum += i;
+        }
+        if ((sum & 1) == 1) {
+            return false;
+        }
+        return dfs(sum / 2, 0, new boolean[nums.length]);
+    }
+    public boolean dfs(int rest, int index, boolean[] visited) {
+        if (rest == 0) {
+            return true;
+        }
+        if (index == visited.length) {
+            return false;
+        }
+
+            if (rest >= n[index] && !visited[index]) {
+                boolean result = dfs(rest, index + 1, visited);
+                visited[index] = true;
+                if (result || dfs(rest - n[index], index + 1, visited)) {
+                    return true;
+                }
+                visited[index] = false;
+
+        }
+        return false;
+    }
+}
+
+//total_testcases:117
+//total_correct:35
+//input_formatted:[14,9,8,4,3,2]
+//expected_output:true
+//code_output:false
+//last_testcase:[14,9,8,4,3,2]

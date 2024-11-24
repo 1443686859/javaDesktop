@@ -1,0 +1,18 @@
+class Solution {
+    public long maxKelements(int[] nums, int k) {
+               PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> b - a);
+        for (int i : nums) {
+            queue.add(i);
+        }
+        long result = 0;
+        while (k > 0) {
+            int current = queue.poll();
+            result += current;
+            queue.add((current + 2)/ 3);
+            k--;
+        }
+        return result; 
+    }
+}
+//runtime:114 ms
+//memory:59.1 MB

@@ -1,0 +1,34 @@
+class Solution {
+    public boolean closeStrings(String word1, String word2) {
+        if (word1.length() != word2.length()) {
+            return false;
+        }
+        int[] count = new int[26];
+        int[] count1 = new int[26];
+        getCount(word1, count);
+        getCount(word2, count1);
+        Arrays.sort(count1);
+        Arrays.sort(count);
+        for (int i = 0; i < 26; i++) {
+            if (count1[i] != count[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private void getCount(String word, int[] count) {
+        for (int i = 0; i < word.length(); i++) {
+            count[word.charAt(i) - 'a']++;
+        }
+    }
+
+}
+
+//total_testcases:153
+//total_correct:131
+//input_formatted:"uau"
+"ssx"
+//expected_output:false
+//code_output:true
+//last_testcase:"uau"
+"ssx"

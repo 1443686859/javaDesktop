@@ -47,7 +47,7 @@ package leetcode.editor.cn;
 // 
 // Related Topics 数学 动态规划 组合数学 👍 312 👎 0
 
-import com.sun.javaws.jnl.RContentDesc;
+
 
 public class P458PoorPigs{
     //leetcode submit region begin(Prohibit modification and deletion)

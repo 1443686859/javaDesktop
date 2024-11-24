@@ -1,0 +1,32 @@
+class Solution {
+    public int longestAwesome(String s) {
+        int n = s.length();
+        Map<Integer, Integer> indexMap = new HashMap<>();
+        indexMap.put(0, - 1);
+        int base = 0;
+        int max = 1;
+        for (int i = 0; i < n;i++) {
+            int index = s.charAt(i) - '0';
+            base ^= (1 << index);
+            for (int j = 0; j < 10; j++) {
+                if ((base & (1 << j)) != 0 && indexMap.containsKey((base - (1 << j)))) {
+                    max = Math.max(max, i - indexMap.get((base - (1 << j))));
+                }
+            }
+            if (!indexMap.containsKey(base)) {
+                indexMap.put(base, i);
+            } else {
+                max = Math.max(max, i - indexMap.get(base));
+            }
+
+        }
+        return max;
+    }
+}
+
+//total_testcases:153
+//total_correct:129
+//input_formatted:"185801630663498"
+//expected_output:5
+//code_output:3
+//last_testcase:"185801630663498"

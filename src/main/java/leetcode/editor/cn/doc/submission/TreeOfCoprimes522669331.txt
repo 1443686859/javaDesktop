@@ -1,0 +1,66 @@
+class Solution {
+        boolean[][] array;
+    public int[] getCoprimes(int[] nums, int[][] edges) {
+        int n = nums.length;
+        if (n == 1) {
+            return new int[]{-1};
+        }
+        generate();
+        List<Integer>[] grap = new List[n];
+        Arrays.setAll(grap, e -> new ArrayList<>());
+        for (int[] edge : edges) {
+            grap[edge[0]].add(edge[1]);
+            grap[edge[1]].add(edge[0]);
+        }
+        int[] index = new int[51];
+        Arrays.fill(index, -1);
+        int[] result = new int[n];
+        Arrays.fill(result, -1);
+        int[] temp = new int[51];
+        Arrays.fill(temp, -1);
+        temp[nums[0]] = 0;
+        index[nums[0]] = 0;
+        dfs(grap, nums, -1, 0,  index, 0, result, new int[51]);
+        return result;
+    }
+    public void dfs(List<Integer>[] grap, int[] nums, int parent, int current, int[] index, int currentIndex, int[] result, int[] temp) {
+        for (int i = 1; i < 51; i++) {
+            if (array[nums[current]][i] && index[i] != -1 && (result[current] == - 1 || index[i] > index[result[i]])) {
+                result[current] = temp[i];
+            }
+        }
+        for (int i : grap[current]) {
+            if (parent != i) {
+                int oldIndex = index[nums[i]];
+                int oldTemp = temp[nums[i]];
+                index[nums[i]] = currentIndex;
+                temp[nums[i]] = i;
+                dfs(grap, nums, current, i, index, currentIndex + 1, result, temp);
+                index[nums[i]] = oldIndex;
+                temp[nums[i]] = oldTemp;
+            }
+        }
+    }
+
+    public void generate() {
+        array = new boolean[51][51];
+        Arrays.fill(array[1], true);
+        for (int i = 2; i <= 50; i++) {
+            array[i][1] = true;
+            for (int j = 2; j <= 50; j++) {
+                array[i][j] = gcd(i, j) == 1;
+            }
+        }
+    }
+    public int gcd(int a, int b) {
+        return a % b == 0 ? b : gcd(b, a % b);
+    }
+}
+
+//runtime_error:java.lang.ArrayIndexOutOfBoundsException: Index -1 out of bounds for length 51
+  at line 28, Solution.dfs
+  at line 38, Solution.dfs
+  at line 23, Solution.getCoprimes
+  at line 56, __DriverSolution__.__helper__
+  at line 89, __Driver__.main
+//last_testcase:[9,16,30,23,33,35,9,47,39,46,16,38,5,49,21,44,17,1,6,37,49,15,23,46,38,9,27,3,24,1,14,17,12,23,43,38,12,4,8,17,11,18,26,22,49,14,9] [[17,0],[30,17],[41,30],[10,30],[13,10],[7,13],[6,7],[45,10],[2,10],[14,2],[40,14],[28,40],[29,40],[8,29],[15,29],[26,15],[23,40],[19,23],[34,19],[18,23],[42,18],[5,42],[32,5],[16,32],[35,14],[25,35],[43,25],[3,43],[36,25],[38,36],[27,38],[24,36],[31,24],[11,31],[39,24],[12,39],[20,12],[22,12],[21,39],[1,21],[33,1],[37,1],[44,37],[9,44],[46,2],[4,46]]

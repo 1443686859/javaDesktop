@@ -1,0 +1,62 @@
+class Solution {
+    public int minimumAddedInteger(int[] nums1, int[] nums2) {
+        if (nums2.length == 1) {
+            int result = Integer.MAX_VALUE;
+            for (int i = 0; i < nums1.length; i++) {
+                result= Math.min(result, nums2[0] - nums1[i]);
+            }
+            return result;
+        }
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        int result = Integer.MAX_VALUE;
+        for (int i = 0; i < nums1.length; i++) {
+            for (int j = i + 1; j < nums1.length; j++) {
+                int index = 1;
+                int pre = 0;
+                int start = -1;
+                boolean used = false;
+                for (int z = 1; z < nums2.length; z++) {
+                    int temp = nums2[z] - nums2[z - 1];
+                    int count = 0;
+                    while (index < nums1.length && (index == i || index == j) && count < 2) {
+                        if (index != i && index != j) {
+                            count++;
+                        }
+                        index++;
+                    }
+                    count = 0;
+                    while (pre < index && (pre == i || pre == j) && count < 1) {
+                        if (pre != i && pre != j) {
+                            count++;
+                        }
+                        pre++;
+                    }
+                    if (index == nums1.length || temp != nums1[index] - nums1[pre]) {
+                        used = true;
+                        break;
+                    }
+                    if (start == -1) {
+                        start = pre;
+                    }
+                    index++;
+                    pre++;
+                }
+                if (!used) {
+                    result = Math.min(result, nums2[0] - nums1[start]);
+                }
+
+            }
+        }
+        return result;
+    }
+}
+
+//total_testcases:560
+//total_correct:443
+//input_formatted:[4,20,16,12,8]
+[14,18,10]
+//expected_output:-2
+//code_output:6
+//last_testcase:[4,20,16,12,8]
+[14,18,10]

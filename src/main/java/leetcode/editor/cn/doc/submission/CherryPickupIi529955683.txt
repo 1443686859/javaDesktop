@@ -1,0 +1,44 @@
+class Solution {
+    public int cherryPickup(int[][] grid) {
+        int n = grid.length;
+        int[][][] memo = new int[n + 1][grid[0].length][grid[0].length];
+        for (int[][] m : memo) {
+            for (int[] temp : m) {
+                Arrays.fill(temp, -1);
+            }
+        }
+        int result = 0;
+        for (int i = 0; i < grid[0].length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                result = Math.max(dfs(n - 1, i, j, memo, grid) , result);
+            }
+        }
+        return result;
+    }
+    public int dfs(int t, int j, int k, int[][][] memo, int[][] grid) {
+        if (j < 0 || k < 0 || j >= grid[0].length || k >= grid[0].length) {
+            return Integer.MIN_VALUE;
+        }
+        if (t == 0) {
+            return grid[0][0] + grid[0][grid[0].length - 1];
+        }
+        if (memo[t][j][k] != -1) {
+            return memo[t][j][k];
+        }
+        int result = 0;
+        for (int i = Math.max(0, j - 1); i <= Math.min(j + 1, grid[0].length - 1); i++) {
+            for (int z = Math.max(0, k - 1); z <= Math.min(k + 1, grid[0].length - 1); z++) {
+                result = Math.max(dfs(t - 1, i, z, memo, grid) + grid[t][j] + (j != k ? grid[t][k] : 0), result);
+            }
+        }
+        memo[t][j][k] = result;
+        return result;
+    }
+}
+
+//total_testcases:59
+//total_correct:17
+//input_formatted:[[9,3,1,2],[9,9,2,2],[8,4,8,3],[9,2,7,7]]
+//expected_output:54
+//code_output:61
+//last_testcase:[[9,3,1,2],[9,9,2,2],[8,4,8,3],[9,2,7,7]]

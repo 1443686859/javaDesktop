@@ -1,0 +1,26 @@
+class Solution {
+    public int countBattleships(char[][] board) {
+        int n = board.length;
+        int m = board[0].length;
+        int result = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (board[i][j] == 'X') {
+                    if (i > 0 && board[i - 1][j] == '.') {
+                        result++;
+                    } else if (i == 0) {
+                        result ++;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}
+
+//total_testcases:27
+//total_correct:13
+//input_formatted:[["X","X","X"]]
+//expected_output:1
+//code_output:3
+//last_testcase:[["X","X","X"]]

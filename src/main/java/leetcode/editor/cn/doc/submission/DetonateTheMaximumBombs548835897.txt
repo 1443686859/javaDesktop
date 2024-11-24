@@ -1,0 +1,31 @@
+class Solution {
+    public int maximumDetonation(int[][] bombs) {
+        int result = 1;
+        for (int i = 0; i < bombs.length; i++) {
+            result = Math.max(result, dfs(i, new boolean[bombs.length], bombs));
+        }
+        return result;
+    }
+    public int dfs(int start, boolean[] used, int[][] bombs) {
+        int count = 1;
+        used[start] = true;
+        for (int i = 0; i < bombs.length; i++) {
+            if (!used[i] && check(bombs[start], bombs[i])) {
+                count += dfs(i, used, bombs);
+            }
+        }
+        return count;
+    }
+    public boolean check(int[] start, int[] bom) {
+        int x = Math.abs(start[0] - bom[0]);
+        int y = Math.abs(start[1] - bom[1]);
+        return x * x + y * y <= start[2] * start[2];
+    }
+}
+
+//total_testcases:164
+//total_correct:153
+//input_formatted:[[1,1,100000],[100000,100000,1]]
+//expected_output:1
+//code_output:2
+//last_testcase:[[1,1,100000],[100000,100000,1]]

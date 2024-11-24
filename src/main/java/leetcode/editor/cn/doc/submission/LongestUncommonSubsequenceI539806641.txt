@@ -1,0 +1,21 @@
+class Solution {
+    public int findLUSlength(String a, String b) {
+        if (a.length() != b.length()) {
+            return Math.max(a.length(), b.length());
+        }
+        int index = 0;
+        while (index < a.length() && a.charAt(index) == b.charAt(index)) {
+            index++;
+        }
+        return a.length() - index == 0 ? - 1 : a.length() - index;
+    }
+}
+
+//total_testcases:41
+//total_correct:40
+//input_formatted:"aaaabcd"
+"aaaaacd"
+//expected_output:7
+//code_output:3
+//last_testcase:"aaaabcd"
+"aaaaacd"

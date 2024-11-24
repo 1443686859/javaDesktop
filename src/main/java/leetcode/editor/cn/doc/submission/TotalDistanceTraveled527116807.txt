@@ -1,0 +1,28 @@
+class Solution {
+    public int distanceTraveled(int mainTank, int additionalTank) {
+        int add = mainTank / 5;
+        int base = mainTank * 10;
+        while (additionalTank > 0 && add > 0) {
+            if (additionalTank > add) {
+                base += add * 10;
+                additionalTank -= add;
+                add = add / 5;
+            } else {
+                additionalTank = 0;
+                add = additionalTank / 5;
+                base += additionalTank * 10;
+            }
+        }
+
+        return base;
+    }
+}
+
+//total_testcases:10002
+//total_correct:3157
+//input_formatted:5
+1
+//expected_output:60
+//code_output:50
+//last_testcase:5
+1

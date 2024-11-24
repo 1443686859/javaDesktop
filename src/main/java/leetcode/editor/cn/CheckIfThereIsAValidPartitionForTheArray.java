@@ -54,21 +54,20 @@ public class CheckIfThereIsAValidPartitionForTheArray{
 class Solution {
     public boolean validPartition(int[] nums) {
         int n = nums.length;
-        boolean[] result  = new boolean[n + 1];
+        boolean[] result = new boolean[n + 1];
         result[0] = true;
         result[1] = false;
-        for (int i = 2; i < n; i++) {
-            int pre = nums[i - 2];
-            int current = nums[i - 1];
-            int after = nums[i];
-            if (pre == current) {
-                result[i] = result[i - 2];
+        for (int i = 1; i < n; i++) {
+            if (nums[i] == nums[i - 1]) {
+                result[i + 1] |= result[i - 1];
             }
-            if (pre == current && current == after) {
-                result[i + 1] = result[i - 2];
-            }
-            if (current - pre == 1 && after - current == 1) {
-                result[i + 1] = result[i - 2];
+            if (i >= 2) {
+                if (nums[i] == nums[i - 1]  && nums[i - 1] == nums[i - 2]) {
+                    result[i + 1] |= result[i - 2];
+                }
+                if (nums[i] - nums[i - 1] == 1 && nums[i - 1] - nums[i - 2] == 1) {
+                    result[i + 1] |= result[i - 2];
+                }
             }
         }
         return result[n];

@@ -1,0 +1,25 @@
+class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int n = gas.length;
+        int[] sum = new int[n + 1];
+        int min = Integer.MAX_VALUE;
+        int result = -1;
+        for (int i = 0; i < n; i++)    {
+            sum[i + 1] = sum[i] + gas[i] - cost[i];
+            if (result == -1 || sum[result] > sum[i + 1]) {
+                result = i + 1;
+                min = sum[i + 1];
+            }
+        }
+        return sum[n] < 0 ? - 1 : result;
+    }
+}
+
+//total_testcases:39
+//total_correct:34
+//input_formatted:[3,1,1]
+[1,2,2]
+//expected_output:0
+//code_output:3
+//last_testcase:[3,1,1]
+[1,2,2]

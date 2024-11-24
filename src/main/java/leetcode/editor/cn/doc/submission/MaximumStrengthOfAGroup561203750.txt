@@ -1,0 +1,26 @@
+class Solution {
+    public long maxStrength(int[] nums) {
+        long result = 1;
+        Arrays.sort(nums);
+        int i = nums.length - 1;
+        for (;i >= 0; i--) {
+            if (nums[i] < 0) {
+                break;
+            }
+            result *= nums[i] != 0 ? nums[i] : 1;
+        }
+        i -= (i + 1) % 2;
+        for (; i >= 0; i--) {
+            result *= nums[i];
+        }
+        return result;
+
+    }
+}
+
+//total_testcases:2012
+//total_correct:1920
+//input_formatted:[0,-1]
+//expected_output:0
+//code_output:1
+//last_testcase:[0,-1]

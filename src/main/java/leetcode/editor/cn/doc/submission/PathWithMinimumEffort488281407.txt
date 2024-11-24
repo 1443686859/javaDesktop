@@ -1,0 +1,45 @@
+class Solution {
+
+    int[][] directions = new int[][]{{0,1}, {0, -1}, {-1, 0}, {1, 0}};
+
+
+    public int minimumEffortPath(int[][] heights) {
+        int right = 99999;
+        int left = 0;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            boolean[][] used = new boolean[heights.length][heights[0].length];
+            if (dfs(mid, heights, 0, 0, used)) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return right + 1;
+    }
+    public boolean dfs(int max, int[][] heights, int i, int j, boolean[][] used) {
+        if (i == heights.length - 1 && j == heights[0].length - 1) {
+            return true;
+        }
+        used[i][j] = true;
+        for (int z = 0; z < 4; z++) {
+            int x = i + directions[z][0];
+            int y = j + directions[z][1];
+            if (x <0 || y < 0 || x >= heights.length || y >= heights[0].length || used[x][y]|| Math.abs(heights[i][j] - heights[x][y]) > max) {
+                continue;
+            }
+            used[x][y] = true;
+            if (dfs(max, heights, x, y, used)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+//total_testcases:75
+//total_correct:43
+//input_formatted:[[1,1000000]]
+//expected_output:999999
+//code_output:100000
+//last_testcase:[[1,1000000]]

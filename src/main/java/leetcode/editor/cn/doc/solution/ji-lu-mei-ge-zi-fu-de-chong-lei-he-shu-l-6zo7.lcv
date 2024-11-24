@@ -1,0 +1,50 @@
+> Problem: [1657. 确定两个字符串是否接近](https://leetcode.cn/problems/determine-if-two-strings-are-close/description/)
+
+[TOC]
+
+# 思路
+
+这里我用数组记录每个字符出现的个数
+
+此题可以转换为，求word1 和 word2的字符种类是否相同，且所有字符出现的个数集合，是否相等
+
+# Code
+
+* []
+
+```Java
+class Solution {
+    public boolean closeStrings(String word1, String word2) {
+        int m = word1.length(), n = word2.length();
+        if (m != n) {
+            return false;
+        }
+
+        int[] arr1 = new int[26];
+        int[] arr2 = new int[26];
+        for (int i = 0; i < n; i++) {
+            char d1 = word1.charAt(i);
+            char d2 = word2.charAt(i);
+            arr1[d1 - 'a']++;
+            arr2[d2 - 'a']++;
+        }
+
+        for (int i = 0; i < 26; i++) {
+            if ((arr1[i] == 0 && arr2[i] != 0) || (arr1[i] != 0 && arr2[i] == 0)) {
+                return false;
+            }
+        }
+
+        Arrays.sort(arr1);
+        Arrays.sort(arr2);
+        for (int i = 25; i >= 0; i--) {
+            if (arr1[i] != arr2[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+```
+

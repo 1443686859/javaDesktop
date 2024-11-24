@@ -1,0 +1,45 @@
+class Solution {
+    public int medianOfUniquenessArray(int[] nums) {
+        int n = nums.length;
+        int sum = (n + 1) * n / 4;
+        int left = 1;
+        int right = n;
+        int result = 0;
+        while (left <= right) {
+            int mid =  (left + right) / 2;
+            if (check(nums, mid) >= sum) {
+                result = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return result;
+    }
+    public int check(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int left = 0;
+        int right = 0;
+        int count = 0;
+        while (right < nums.length) {
+            map.put(nums[right], map.getOrDefault(nums[right], 0) + 1);
+            while (map.size() > target) {
+                map.put(nums[left], map.get(nums[left]) - 1);
+                if (map.get(nums[left]) == 0) {
+                    map.remove(nums[left]);
+                }
+                left++;
+            }
+            count += right - left + 1;
+            right++;
+        }
+        return count;
+    }
+}
+
+//total_testcases:792
+//total_correct:757
+//input_formatted:[91,64,76,18,61,55,46,93,65,99]
+//expected_output:4
+//code_output:3
+//last_testcase:[91,64,76,18,61,55,46,93,65,99]

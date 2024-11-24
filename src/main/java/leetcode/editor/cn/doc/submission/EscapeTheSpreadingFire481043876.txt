@@ -1,0 +1,168 @@
+class Solution {
+        int[][] direction = new int[][]{
+                {1,0}, {0,1},{-1,0},{0,-1}
+        };
+    int MAX = 1000000000;
+    public int maximumMinutes(int[][] grid) {
+        int min1 = getMin(new int[]{0, 0}, grid);
+        int min2 = getMin(new int[]{grid.length - 1, grid[0].length - 1}, grid);
+        boolean arrive = isArrive(grid, new int[2], new int[]{grid.length - 1, grid[0].length - 1});
+        if (arrive) {
+            return -1;
+        }
+        if (min2 == MAX || min1 == MAX) {
+            return MAX;
+        }
+        int right = Math.min(min1, min2);
+        int left = 0;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (check(grid, new int[2], mid)) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return left - 1;
+    }
+    public int getMin(int[] start, int[][] grid) {
+        int min = 0;
+        Deque<int[]> current =  new ArrayDeque<>();
+        current.add(start);
+        int m = grid.length;
+        int n = grid[0].length;
+        boolean[][] visited = new boolean[m][n];
+        while (!current.isEmpty()) {
+            int size = current.size();
+            for (int i = 0; i < size; i++) {
+                int[] now = current.pollFirst();
+                visited[now[0]][now[1]] = true;
+                if (grid[now[0]][now[1]] == 1) {
+                    return min;
+                }
+                for (int[] d : direction) {
+                    int x = now[0] + d[0];
+                    int y = now[1] + d[1];
+                    if (x >= grid.length || x < 0 || y >= grid[0].length || y <0 || grid[x][y] == 2 || visited[x][y]) {
+                        continue;
+                    }
+                    current.addLast(new int[]{x, y});
+                }
+            }
+            min++;
+        }
+        return MAX;
+    }
+    
+    public boolean isArrive(int[][] grid, int[] start, int[] end) {
+        Deque<int[]> current =  new ArrayDeque<>();
+        current.add(start);
+        int m = grid.length;
+        int n = grid[0].length;
+        boolean[][] visited = new boolean[m][n];
+        while (!current.isEmpty()) {
+            int size = current.size();
+            for (int i = 0; i < size; i++) {
+                int[] now = current.pollFirst();
+                visited[now[0]][now[1]] = true;
+                if (now[0] == end[0] && now[0] == end[1]) {
+                    return true;
+                }
+                for (int[] d : direction) {
+                    int x = now[0] + d[0];
+                    int y = now[1] + d[1];
+                    if (x >= grid.length || x < 0 || y >= grid[0].length || y <0 || grid[x][y] == 2 | grid[x][y] == 1 || visited[x][y]) {
+                        continue;
+                    }
+                    current.addLast(new int[]{x, y});
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean check(int[][] grid, int[] start, int time) {
+        Set<Integer> current = new HashSet<>();
+
+        int m = grid.length;
+        int n = grid[0].length;
+        int end = grid.length * grid[0].length - 1;
+        int[][] temp = new int[m][n];
+        for (int i = 0 ;i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    current.add(i * grid[0].length + j);
+                }
+                temp[i][j] = grid[i][j];
+            }
+        }
+
+        for (int i = 0; i < time; i++) {
+           current = extracted(current, temp, 1);
+        }
+        Set<Integer> p = new HashSet<>();
+        p.add(0);
+        temp[0][0] = -1;
+        while (!p.isEmpty()) {
+            Set<Integer> result = extracted(current, temp, 1);
+            Set<Integer> pResult = new HashSet<>();
+            for (int now : p) {
+                int nx = now / temp[0].length;
+                int ny = now %  temp[0].length;
+                for (int[] d : direction) {
+                    int x = nx + d[0];
+                    int y = ny + d[1];
+                    if (x >= temp.length || x < 0 || y >= temp[0].length || y < 0 || temp[x][y] == 2) {
+                        continue;
+                    }
+                    temp[x][y] = -1;
+                    pResult.add(x * temp[0].length +  y);
+                }
+            }
+            if (result.contains(end) && pResult.contains(end)) {
+                return true;
+            }
+            p.clear();
+            for (int r : pResult) {
+                if (!result.contains(r) || temp[r / temp[0].length][r % temp[0].length] == 0) {
+                    p.add(r);
+                }
+            }
+            if (p.contains(end)) {
+                return true;
+            }
+            if (result.contains(end)) {
+                return false;
+            }
+            current = result;
+        }
+
+        return false;
+    }
+
+    private Set<Integer> extracted(Set<Integer> current, int[][] temp, int value) {
+        Set<Integer> next = new HashSet<>();
+        for (int now : current) {
+            int nx = now / temp[0].length;
+            int ny = now %  temp[0].length;
+            for (int[] d : direction) {
+                int x = nx + d[0];
+                int y = ny + d[1];
+                if (x >= temp.length || x < 0 || y >= temp[0].length || y <0 || temp[x][y] != 0) {
+                    continue;
+                }
+                temp[x][y] = value;
+                next.add(x * temp[0].length +  y);
+            }
+        }
+        return next;
+    }
+
+}
+
+//total_testcases:55
+//total_correct:47
+//input_formatted:[[0,0,0],[2,2,0],[1,2,0]]
+//expected_output:1000000000
+//code_output:-1
+//last_testcase:[[0,0,0],[2,2,0],[1,2,0]]

@@ -1,0 +1,21 @@
+class Solution {
+    public int[] canSeePersonsCount(int[] heights) {
+        Deque<Integer> deque = new ArrayDeque<>();
+        int n = heights.length;
+        int[] ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            boolean pop = false;
+            while (!deque.isEmpty() && heights[deque.peek()] < heights[i]) {
+                ans[deque.poll()] ++;
+            }
+            if (!deque.isEmpty()) {
+                ans[deque.peek()]++;
+            }
+            deque.push(i);
+        }
+        return ans;
+    }
+}
+
+//runtime:26 ms
+//memory:57.3 MB

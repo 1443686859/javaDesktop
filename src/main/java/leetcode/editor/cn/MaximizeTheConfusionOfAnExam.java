@@ -54,7 +54,11 @@
 // Related Topics 字符串 二分查找 前缀和 滑动窗口 👍 143 👎 0
 
 package leetcode.editor.cn; //如果你的算法题是中文的，后缀就是cn，如果是英文的就是en
- /**
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
  * @author  YourName
  * @date 2022-03-29 21:39:03
  */
@@ -64,21 +68,44 @@ public class MaximizeTheConfusionOfAnExam{
    }
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
-    public int maxConsecutiveAnswers(String answerKey, int k) {
-        return Math.max(max(answerKey, k, 'T'), max(answerKey, k, 'F'));
-    }
-    public int max(String answerKey, int k, char ch) {
+    public int maxConsecutiveAnswers1(String answerKey, int k) {
         int n = answerKey.length();
+        int fCount = 0;
+        int tCount = 0;
+        int[] f = new int[n + 1];
+        int[] t = new int[n + 1];
+        f[0] = -1;
+        t[0] = - 1;
+
         int ans = 0;
-        for (int left = 0, right = 0, sum = 0; right < n; right++) {
-            sum += answerKey.charAt(right) != ch ? 1 : 0;
-            while (sum > k) {
-                sum -= answerKey.charAt(left++) != ch ? 1 : 0;
+        for (int i = 0; i < n; i++) {
+            if (answerKey.charAt(i) == 'F') {
+                fCount++;
+                f[fCount] = i;
+            } else {
+                tCount++;
+                t[tCount] = i;
             }
-            ans = Math.max(ans, right - left + 1);
+            ans = Math.max(ans, Math.max(i - t[Math.max(tCount - k, 0)], i - f[Math.max(fCount - k, 0)]));
         }
         return ans;
     }
+    public int maxConsecutiveAnswers(String answerKey, int k) {
+        char[] c = answerKey.toCharArray();
+        int n = answerKey.length();
+        int ans = 0;
+        int[] count = new int[2];
+        for (int left = 0, right = 0; right < n;) {
+            count[c[right++] >> 1 & 1]++;
+            while (count[0] > k && count[1] > k) {
+                count[c[left++] >> 1 & 1]--;
+            }
+            ans = Math.max(ans, right - left);
+        }
+        return ans;
+    }
+
+
 }
 //leetcode submit region end(Prohibit modification and deletion)
 

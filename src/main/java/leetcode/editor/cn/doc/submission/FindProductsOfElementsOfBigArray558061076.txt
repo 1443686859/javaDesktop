@@ -1,0 +1,73 @@
+class Solution {
+    public int[] findProductsOfElements(long[][] queries) {
+        int[] result = new int[queries.length];
+        int index = 0;
+        for (long[] query : queries) {
+            long[] pre = find(query[0]);
+            long[] after = find(query[1] + 1);
+            result[index++] = (int)fastPow(2L, after[2] - pre[2], query[2]);
+        }
+        return result;
+    }
+    private long[] find(long target) {
+        long right = 2 * target;
+        long left = 1;
+        long[] result = new long[3];
+        while (left <= right) {
+            long mid = (right + left) / 2;
+            long[] temp = countDigitOne(mid, 1);
+            if (temp[0] >= target) {
+                result = new long[]{mid, temp[0],temp[1]};
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        if (result[1] > target) {
+            int start = 64 - Long.numberOfLeadingZeros(result[0]) - 1;
+            while (result[1] > target) {
+                if ((result[0] & (1L << (start))) != 0) {
+                    result[1]--;
+                    result[2] -= start;
+                }
+                start--;
+            }
+        }
+        return result;
+    }
+    private long[] countDigitOne(long num, int x) {
+        long res = 0;
+        int i = x - 1;
+        long sum = 0;
+        for (long n = num >> i; n > 0; n >>= x, i += x) {
+            res += (n / 2) << i;
+            sum += ((n / 2) << i) * i;
+            if (n % 2 > 0) {
+                long mask = (1L << i) - 1;
+                res += (num & mask) + 1;
+                sum += ((num & mask) + 1) * i;
+            }
+        }
+        return new long[]{res, sum};
+    }
+
+
+    public long fastPow(long base, long index, long mod) {
+        long result = 1;
+        while (index != 0) {
+            if ((index & 1) != 0) {
+                result = (result * base) % mod;
+            }
+            index >>= 1;
+            base = (base * base) % mod;
+        }
+        return result;
+    }
+}
+
+//total_testcases:758
+//total_correct:754
+//input_formatted:[[9,9,1]]
+//expected_output:[0]
+//code_output:[1]
+//last_testcase:[[9,9,1]]

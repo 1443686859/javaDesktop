@@ -1,0 +1,43 @@
+class Solution {
+    public int minimumMountainRemovals(int[] nums) {
+        int n = nums.length;
+        int[] pre = new int[n];
+        Deque<Integer> deque = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            while (!deque.isEmpty() && nums[deque.peekLast()] >= nums[i]) {
+                deque.pollLast();
+            }
+            if (!deque.isEmpty()) {
+                pre[i] = pre[deque.peekLast()] + (i - 1 - deque.peekLast());
+            } else {
+                pre[i] = i;
+            }
+            deque.addLast(i);
+        }
+        int[] after = new int[n];
+        deque.clear();
+        for (int i = n - 1; i >= 0; i--) {
+            while (!deque.isEmpty() && nums[deque.peekLast()] >= nums[i]) {
+                deque.pollLast();
+            }
+            if (!deque.isEmpty()) {
+                after[i] = after[deque.peekLast()] + (deque.peekLast() - 1 - i);
+            } else {
+                after[i] = n - 1 - i;
+            }
+            deque.addLast(i);
+        }
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < n; i++) {
+            min = Math.min(min, pre[i] + after[i]);
+        }
+        return min;
+    }
+}
+
+//total_testcases:90
+//total_correct:16
+//input_formatted:[23,47,63,72,81,99,88,55,21,33,32]
+//expected_output:1
+//code_output:2
+//last_testcase:[23,47,63,72,81,99,88,55,21,33,32]

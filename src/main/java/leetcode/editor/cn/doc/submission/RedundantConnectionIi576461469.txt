@@ -1,0 +1,54 @@
+class Solution {
+    public int[] findRedundantDirectedConnection(int[][] edges) {
+        int[] p = new int[edges.length + 1];
+        List<Integer>[] in = new List[edges.length + 1];
+        Arrays.setAll(in, e -> new ArrayList<>());
+        for (int i = 0; i < edges.length + 1; i++) {
+            p[i] = i;
+        }
+        List<Integer> target = new ArrayList<>();
+        int index = -1;
+        int[] out = new int[edges.length + 1];
+        for (int[] e : edges) {
+            in[e[1]].add(e[0]);
+            if (in[e[1]].size() > 1) {
+                target = in[e[1]];
+                index = e[1];
+            }
+            out[e[0]]++;
+        }
+        if (target.size() != 0) {
+            for (int i = target.size() - 1; i >= 0; i--) {
+                if (out[target.get(i)] + in[target.get(i)].size() > 1) {
+                    return new int[]{target.get(i), index};
+                }
+            }
+        } else {
+            for (int[] e : edges) {
+                if (findP(p, e[0]) == findP(p, e[1])) {
+                    return e;
+                }
+                merge(p, e[0], e[1]);
+            }
+        }
+
+        return null;
+    }
+    public int findP(int[] p, int i) {
+        if (p[i] != i) {
+            p[i] = findP(p, p[i]);
+        }
+        return p[i];
+    }
+    public void merge(int[] p, int i, int j) {
+        int pJ = findP(p, j);
+        p[pJ] = findP(p, i);
+    }
+}
+
+//total_testcases:56
+//total_correct:54
+//input_formatted:[[4,2],[1,5],[5,2],[5,3],[2,4]]
+//expected_output:[4,2]
+//code_output:[5,2]
+//last_testcase:[[4,2],[1,5],[5,2],[5,3],[2,4]]

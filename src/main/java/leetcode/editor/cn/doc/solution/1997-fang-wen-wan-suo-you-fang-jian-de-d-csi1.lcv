@@ -1,0 +1,56 @@
+### 方法，动态规划
+
+**解题思路**
+
+根据题意，$\textit{nextVisit}[i]$ 的取值范围是 $[0,i]$，意味着当**首次到达**（次数为 $1$，是奇数）房间 $i$ 时会回退到房间 $\textit{nextVisit}[i]$。而**只有访问过某房间偶数次时才会到达下一个房间**，进而推断出到达 $i$ 时，$[0,i)$ 的房间都已经被访问过偶数次。
+
+定义 $f[i]$ 表示从奇数次到达房间 $i$ 到奇数次到达房间 $i+1$ 所需要的天数，以下用 $\textit{to}_i$ 代表 $\textit{nextVisit}[i]$。回退到房间 $\textit{to}$ 时是奇数次访问，又需要花费 $f[\textit{to}_i]$ 才会到达房间 $\textit{to}_i + 1$，从 $i$ 访问 $\textit{to}_i$ 和 $i+1$ 又分别需要花费一天，所以有转移方程:
+
+$$
+f[i] = \sum_{j=\textit{to}_i}^{i-1}f[j] + 2
+$$
+
+这样做时间复杂度是 $O(n^2)$，考虑到求和可以用**前缀和**预处理达到 $O(1)$ 转移。定义 $s[i] = \sum_{j=0}^{i-1}f[j]$，则 $f[i] = s[i] - s[\textit{to}_i] + 2$，于是有 $f[i - 1] = s[i - 1] - s[\textit{to}_{i - 1}] + 2$。又有 $s[i] = s[i - 1] + f[i - 1]$，则 $s[i] = 2 \times s[i - 1] - s[\textit{to}_{i - 1}] + 2$。
+
+定义 $\textit{dp}[i]$ 表示从 $0$ 号房间出发首次到 $i+1$ 号房间的日期编号。由于访问完 $i+1$ 号房间的天数相当于访问完 $0$ 号房间的天数，加上访问完 $1$ 号房间的天数，加上访问完 $2$ 号房间的天数，……，加上访问完 $i-1$ 号房间的天数，再加上访问第 $i$ 号房间的 $1$ 天，此外题目从第 $0$ 天开始编号，因此整体上需要减一，所以访问完 $i+1$ 号房间时的日期编号 $\textit{dp}[i]$ 即为
+
+$$
+\textit{dp}[i] = f[0] + f[1] + \cdots + f[i - 1] + 1 - 1= s[i] + 1 - 1 = s[i]
+$$
+
+经化简有转移方程:
+
+$$
+\textit{dp}[i] = 2 \times \textit{dp}[i - 1] - \textit{dp}[\textit{to}_{i - 1}] + 2
+$$
+
+$\textit{dp}[n-1]$ 就是第一次到达 $n$ 号房间的日期编号。
+
+[参考](https://leetcode.cn/problems/first-day-where-you-have-been-in-all-the-rooms/solutions/2710218/fang-wen-wan-suo-you-fang-jian-de-di-yi-p7fc2/) | [参考1](https://leetcode.cn/problems/first-day-where-you-have-been-in-all-the-rooms/solutions/979221/qian-zhui-he-you-hua-dp-by-endlesscheng-j10b/)
+
+### 代码
+
+* []
+
+```Java
+class Solution {
+    public int firstDayBeenInAllRooms(int[] nextVisit) {
+        int mod = 1000000007;
+        int n = nextVisit.length;
+        int[] dp = new int[n];
+        for (int i = 1; i < n; i++) {
+            int to = nextVisit[i - 1];//避免负数
+            dp[i] = (dp[i - 1] - dp[to] + 2 + mod) % mod; 
+            dp[i] = (dp[i] + dp[i - 1]) % mod;
+        }
+        return dp[n - 1]; //题目保证n >= 2
+    }
+}
+```
+
+**复杂度分析**
+
+- 时间复杂度：$O(n)$，其中 $n$ 为数组的长度。
+
+- 空间复杂度：$O(C = n_{max})$，其中 $n$ 为申请 $\textit{dp}$ 数组的长度。
+

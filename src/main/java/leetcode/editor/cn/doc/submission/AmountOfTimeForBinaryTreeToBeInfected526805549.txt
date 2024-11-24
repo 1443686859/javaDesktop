@@ -1,0 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    Map<Integer, TreeNode> parentMap;
+    Map<Integer, int[]> childMap;
+    public int amountOfTime(TreeNode root, int start) {
+        parentMap = new HashMap<>();
+        childMap = new HashMap<>();
+        dfs(root, new TreeNode(0));
+        int max = 0;
+        int count = 0;
+        TreeNode childVal = null;
+        while (parentMap.containsKey(start)) {
+            int[] child = childMap.get(root.val);
+            TreeNode parent = parentMap.get(start);
+            int tempMax = childVal == null ? Math.max(child[0], child[1]) : (childVal == parent.left ? child[1] : child[0]);
+            max = Math.max(max, count + tempMax);
+            childVal = parent;
+            start = parent.val;
+            count ++;
+        }
+        return max;
+    }
+    public int dfs(TreeNode root, TreeNode parent) {
+        if (root == null) {
+            return 0;
+        }
+        parentMap.put(root.val, parent);
+        int left = dfs(root.left, root);
+        int right = dfs(root.right, root);
+        int[] result = new int[]{left, right};
+        childMap.put(root.val, result);
+        return 1 + Math.max(left, right);
+    }
+}
+
+//total_testcases:80
+//total_correct:41
+//input_formatted:[1,2,null,3,null,4,null,5]
+2
+//expected_output:3
+//code_output:5
+//last_testcase:[1,2,null,3,null,4,null,5]
+2

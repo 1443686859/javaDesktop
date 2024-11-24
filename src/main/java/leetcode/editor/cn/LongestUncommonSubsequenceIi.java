@@ -39,6 +39,8 @@
 package leetcode.editor.cn; //如果你的算法题是中文的，后缀就是cn，如果是英文的就是en
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author  YourName
@@ -50,45 +52,34 @@ public class LongestUncommonSubsequenceIi{
    }
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
+
     public int findLUSlength(String[] strs) {
         Arrays.sort(strs, (a, b) -> {
             return b.length() - a.length();
         });
-        int result = -1;
-        for (int i = 0; i < strs.length - 1; i++) {
-            boolean flag = false;
+        for (int i = 0; i < strs.length; i++) {
+            boolean flag = true;
             for (int j = 0; j < strs.length; j++) {
-                if (i == j) {
-                    continue;
-                }
-                if (check(strs[j], strs[i])) {
-                    flag = true;
+                if (i != j && check(strs[i], strs[j])) {
+                    flag = false;
                     break;
                 }
             }
-            if (!flag) {
-                result = Math.max(result, strs[i].length());
+            if (flag) {
+                return strs[i].length();
             }
-
         }
 
-        return result;
+        return -1;
     }
     public boolean check(String pre, String after) {
-        int startIndex1 = 0;
-        int startIndex2 = 0;
-        while (startIndex1 < pre.length() && startIndex2 < after.length()) {
-            if (pre.charAt(startIndex1) != after.charAt(startIndex2)) {
-                startIndex2++;
-            } else {
-                startIndex2++;
-                startIndex1++;
-            }
-        }
-        if (startIndex1 == pre.length()) {
-            return true;
-        }
-        return false;
+       int index = 0;
+       for (char c : after.toCharArray()) {
+           if (pre.charAt(index) == c && ++index == pre.length()) {
+               return true;
+           }
+       }
+       return false;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)

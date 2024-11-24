@@ -1,0 +1,40 @@
+class Solution {
+    public int minFlips(int[][] grid) {
+        int count = 0;
+        for (int i = 0; i < (grid.length + 1)/ 2; i++) {
+            for (int j = 0; j < (grid[i].length + 1) / 2; j++) {
+                int ni = grid.length - 1 - i;
+                int nj = grid[i].length - 1 - j;
+                int max = 0;
+                int temp = grid[i][j];
+                if (ni != i) {
+                    max += 2;
+                    temp += grid[ni][j];
+                }
+                if (nj != j) {
+                    max += 2;
+                    temp += grid[i][nj];
+                }
+                if (max == 4) {
+                    temp += grid[ni][nj];
+                }
+                if (temp == max && max == 4 || temp == 0) {
+                    continue;
+                }
+                if (ni == i && nj == j) {
+                    count += grid[i][j];
+                    continue;
+                }
+                count += max == 4 ? Math.min(temp , max - temp) : temp;
+            }
+        }
+        return count ;
+    }
+}
+
+//total_testcases:661
+//total_correct:395
+//input_formatted:[[1],[1],[1],[0]]
+//expected_output:1
+//code_output:3
+//last_testcase:[[1],[1],[1],[0]]

@@ -1,0 +1,35 @@
+class Solution {
+    public int findLUSlength(String a, String b) {
+        boolean[] preA = new boolean[26];
+        for (int i = 0; i < a.length(); i++) {
+            preA[a.charAt(i) - 'a'] = true;
+        }
+        boolean[] preB = new boolean[26];
+        for (int i = 0; i < b.length(); i++) {
+            preB[b.charAt(i) - 'a'] = true;
+        }
+        int result = - 1;
+        for (int i = 0; i < a.length(); i++) {
+            if (!preB[a.charAt(i) - 'a']) {
+                result = Math.max(a.length() - i, result);
+                break;
+            }
+        }
+        for (int i = 0; i < b.length(); i++) {
+            if (!preA[b.charAt(i) - 'a']) {
+                result = Math.max(result, b.length() - i);
+                break;
+            }
+        }
+        return result;
+    }
+}
+
+//total_testcases:41
+//total_correct:25
+//input_formatted:"aefawfawfawfaw"
+"aefawfeawfwafwaef"
+//expected_output:17
+//code_output:-1
+//last_testcase:"aefawfawfawfaw"
+"aefawfeawfwafwaef"

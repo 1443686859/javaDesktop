@@ -1,0 +1,36 @@
+> Problem: [1997. 访问完所有房间的第一天](https://leetcode.cn/problems/first-day-where-you-have-been-in-all-the-rooms/description/)
+
+本题我感觉考察的更多的是思维，我们需要特别注意的是题中的隐含条件：0 <= nextVisit[i] <= i，这个条件非常重要，是做出本题的关键。因为该条件限制了我们访问房间的顺序，一定是0，1，2...n-1这样的顺序。记need[i]表示到达第i号房间所需天数，根据该条件还可以得出的结论有
+need[1] = 2,
+$need[i] = need[i - 1] + 2,nextVisit[i] == i$
+$need[i] = need[i] - need[nextVisit[i]] + need[i] + 2,nextVisit[i] != i$
+最后need[n - 1]就是答案
+
+# Code
+
+* []
+
+```Java
+class Solution {
+    public int firstDayBeenInAllRooms(int[] nextVisit) {
+        int MOD = 1_000_000_007;
+        int n = nextVisit.length;
+        long need[] = new long[n + 1];
+        //need[i]表示从第0天到i号房间需要的天数
+        need[0] = 0;
+        need[1] = 2;
+
+        long res = need[1];
+        for(int i = 1; i < n; i ++){
+            if(nextVisit[i] == i){
+                need[i + 1] = need[i] + 2 % MOD;
+            }else{
+                need[i + 1] = (need[i] - need[nextVisit[i]] + 2 + need[i] + MOD) % MOD;
+            }
+        }
+
+        return (int)need[n - 1];
+    }
+}
+```
+

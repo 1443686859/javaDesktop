@@ -1,0 +1,38 @@
+class Solution {
+    public int maximumXorProduct(long a, long b, int n) {
+        if (a < b) {
+            long temp = b;
+            b = a;
+            a = temp;
+        }
+        int mask = (1 << n) - 1;
+        long ax = a & ~mask;
+        long bx = b & ~mask;
+        a &= mask;
+        b &= mask;
+
+        long left = a ^ b;
+        long one = left ^ mask;
+        ax |= one;
+        bx |= one;
+        if (ax == bx && left > 0) {
+            int highBit = 63 - Long.numberOfLeadingZeros(left);
+            left ^= 1 << highBit;
+            ax |= 1 << highBit;
+        }
+        bx |= left;
+        int MOD = 1_000_000_007;
+        return (int)(ax % MOD * (bx % MOD) % MOD);
+    }
+}
+
+//total_testcases:863
+//total_correct:709
+//input_formatted:570713374625622
+553376364476768
+35
+//expected_output:4832893
+//code_output:692103549
+//last_testcase:570713374625622
+553376364476768
+35

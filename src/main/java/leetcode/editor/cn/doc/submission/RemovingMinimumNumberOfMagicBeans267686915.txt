@@ -1,0 +1,45 @@
+class Solution {
+ long max = Integer.MAX_VALUE;
+    public long minimumRemoval(int[] beans) {
+        cycle(beans, 0, 0);
+        return max;
+    }
+    public void cycle(int[] beans, int currentIndex, int currentResult) {
+        if (currentIndex == beans.length) {
+            if (check(beans)) {
+                max = Math.min(max, currentResult);
+            }
+            return ;
+        }
+           if (currentResult > max) {
+            return;
+        }
+        int currentMax = beans[currentIndex];
+        for (int i = 0; i <= currentMax; i++) {
+            beans[currentIndex] -= i;
+            cycle(beans, currentIndex + 1, currentResult + i);
+            beans[currentIndex] += i;
+        }
+        return;
+    }
+    public boolean check(int[] beans) {
+        Map<Integer, Integer> countMap = new HashMap<>();
+        for (int i = 0; i < beans.length; i++) {
+            countMap.put(beans[i], countMap.getOrDefault(beans[i], 0) + 1);
+        }
+        if (countMap.containsKey(0)) {
+            return countMap.keySet().size() <= 2;
+        } else {
+            return countMap.keySet().size() == 1;
+        }
+    }
+}
+//runtime:N/A
+//memory:N/A
+//total_testcases:64
+//total_correct:6
+//input_formatted:[66,90,47,25,92,90,76,85,22,3]
+//expected_output:200
+//code_output:
+//runtime_error:
+//last_testcase:[66,90,47,25,92,90,76,85,22,3]

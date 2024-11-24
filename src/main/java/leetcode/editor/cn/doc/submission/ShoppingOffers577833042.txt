@@ -1,0 +1,77 @@
+class Solution {
+        Map<String, Integer>[] map;
+        List<List<Integer>> s;
+    public int shoppingOffers(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
+        int n = needs.size();
+        map = new Map[n];
+        Arrays.setAll(map, k -> new HashMap<>());
+        s = special;
+        return dfs(price, needs, s.size() - 1);
+    }
+    String generateKey(List<Integer> needs) {
+        StringBuilder key = new StringBuilder();
+        for (int i : needs) {
+            key.append(String.format("%02d", i));
+        }
+        return key.toString();
+    }
+    int getCount(List<Integer> result, List<Integer> need) {
+        int max = Integer.MAX_VALUE;
+        for (int i = 0; i < need.size(); i++) {
+            if (result.get(i) != 0) {
+                max = Math.min(need.get(i) / result.get(i), max);
+            }
+
+        }
+        return max;
+    }
+    List<Integer> sub(List<Integer> count, List<Integer> need, int sub) {
+        List<Integer> result= new ArrayList<>();
+        for (int i = 0; i < need.size(); i++) {
+            result.add(need.get(i) - sub * count.get(i));
+        }
+        return result;
+    }
+    int getNeedResult(List<Integer> result, List<Integer> need) {
+        int max = 0;
+        for (int i = 0; i < need.size(); i++) {
+            max += result.get(i) * need.get(i);
+        }
+        return max;
+    }
+    int dfs(List<Integer> price, List<Integer> needs, int index) {
+        int max = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+        for (int i : needs) {
+            max = Math.max(max, i);
+            min = Math.min(min, i);
+        }
+        if (max == 0 && min == 0) {
+            return 0;
+        }
+        if (min < 0) {
+            return Integer.MAX_VALUE / 2;
+        }
+        if (index == -1) {
+            return  getNeedResult(price, needs);
+        }
+        if (map[index].containsKey(generateKey(needs))) {
+            return map[index].get(generateKey(needs));
+        }
+        List<Integer> special = s.get(index);
+            int count = getCount(special, needs);
+            int base = getNeedResult(price, needs);
+            for (int j = 0; j <= count;j ++) {
+                base = Math.min(base, special.get(special.size() - 1) * j + dfs(price, sub(special, needs, j), index - 1));
+            }
+            map[index].put(generateKey(needs), base);
+        return base;
+    }
+}
+
+//runtime_error:java.lang.ArrayIndexOutOfBoundsException: Index 7 out of bounds for length 6
+  at line 58, Solution.dfs
+  at line 9, Solution.shoppingOffers
+  at line 56, __DriverSolution__.__helper__
+  at line 92, __Driver__.main
+//last_testcase:[2,6,7,10,2,4] [[0,3,1,4,4,3,12],[3,3,3,3,4,5,25],[4,6,0,2,1,1,5],[1,3,0,4,4,2,6],[0,3,1,0,5,0,2],[0,3,1,3,4,4,24],[6,0,1,3,4,2,19],[5,1,4,5,3,4,22]] [0,4,5,0,0,6]

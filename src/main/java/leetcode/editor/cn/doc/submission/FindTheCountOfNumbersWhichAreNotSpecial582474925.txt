@@ -1,0 +1,33 @@
+class Solution {
+    public int nonSpecialCount(int l, int r) {
+        int count = 0;
+        for (int i = l; i <= r; i++) {
+            int j = (int)Math.sqrt(i);
+            if (i == 1) {
+                continue;
+            }
+            if (j * j == i) {
+                boolean used = false;
+                for (int z = 2; z <= Math.sqrt(j); z++) {
+                    if (j % z == 0) {
+                        used = true;
+                        break;
+                    }
+                }
+                count += used ? 0 : 1;
+            }
+        }
+        return r - l - count + 1;
+    }
+}
+
+//runtime:N/A
+//memory:N/A
+//total_testcases:855
+//total_correct:704
+//input_formatted:3602634
+440140577
+//expected_output:436535876
+//code_output:
+//runtime_error:
+//last_testcase:3602634 440140577

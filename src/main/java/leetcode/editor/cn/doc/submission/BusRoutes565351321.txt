@@ -1,0 +1,55 @@
+class Solution {
+    public int numBusesToDestination(int[][] routes, int source, int target) {
+        Map<Integer, Set<Integer>> map = new HashMap<>();
+        int max = 0;
+        for (int i = 0; i < routes.length; i++) {
+            for (int j = 0; j < routes[i].length; j++) {
+                Set<Integer> defaultSet = map.getOrDefault(routes[i][j], new HashSet<>());
+                defaultSet.add(i);
+                map.put(routes[i][j], defaultSet);
+                max = Math.max(max, routes[i][j]);
+            }
+        }
+        boolean[] visited = new boolean[routes.length];
+        Deque<Integer> queue = new ArrayDeque<>();
+        boolean isEnd = false;
+        for (Integer start : map.getOrDefault(source, new HashSet<>())) {
+            queue.addLast(start);
+        }
+        int result = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            Set<Integer> set = new HashSet<>();
+            for (int i = 0; i < size; i++) {
+                int current = queue.pollFirst();
+                visited[current] = true;
+                for (int j : routes[current]) {
+                    if (j == target) {
+                        isEnd = true;
+                    }
+                    for (int t : map.getOrDefault(j, new HashSet<>())) {
+                        if (!visited[t] && set.add(t)) {
+                            queue.addLast(t);
+                        }
+                    }
+                }
+            }
+            result++;
+            if (isEnd) {
+                break;
+            }
+        }
+        return isEnd ? result : -1;
+    }
+}
+
+//total_testcases:54
+//total_correct:50
+//input_formatted:[[1,7],[3,5]]
+5
+5
+//expected_output:0
+//code_output:1
+//last_testcase:[[1,7],[3,5]]
+5
+5

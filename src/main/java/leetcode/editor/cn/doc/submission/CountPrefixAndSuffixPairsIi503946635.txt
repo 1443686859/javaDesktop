@@ -1,0 +1,54 @@
+class Solution {
+    public long countPrefixSuffixPairs(String[] words) {
+
+        Map<String, Integer> count = new HashMap<>();
+        Set<Integer> set = new HashSet<>();
+        long result = 0;
+        int max = 0;
+        int min = Integer.MAX_VALUE;
+        for (String word : words) {
+            int[] next = getNext(word);
+            result += get(next, count, word, set, max, min);
+            count.put(word, count.getOrDefault(word, 0) + 1);
+            max = Math.max(max, word.length());
+            min = Math.min(min, word.length());
+            set.add(word.length());
+        }
+        return result;
+    }
+    public long get(int[] next, Map<String, Integer> count, String current, Set<Integer> set, int max, int min) {
+        int n = Math.min(next[next.length - 1], max);
+        long result = 0;
+        result += count.getOrDefault(current, 0);
+        while (n >= min) {
+            while (!set.contains(n)) {
+                n = next[n - 1];
+            }
+            result += count.getOrDefault(current.substring(0, n), 0);
+            n = next[n - 1];
+        }
+        return result;
+    }
+    public int[] getNext(String word) {
+        int n = word.length();
+        int[] result = new int[n];
+        int index = 0;
+        for (int i = 1; i < n; i++) {
+            while (index > 0 && word.charAt(i) != word.charAt(index)) {
+                index = result[index - 1];
+            }
+            if (word.charAt(i) == word.charAt(index)) {
+                index++;
+            }
+            result[i] = index;
+        }
+        return result;
+    }
+}
+
+//runtime_error:java.lang.ArrayIndexOutOfBoundsException: Index -1 out of bounds for length 4
+  at line 25, Solution.get
+  at line 11, Solution.countPrefixSuffixPairs
+  at line 56, __DriverSolution__.__helper__
+  at line 86, __Driver__.main
+//last_testcase:["bcba","c","caccb","a","caca","aaaa","cbbac","cbc","ccb","a","bbb","cb","babcc","cbb","a","abc","ba","aaab","ab","baa","cbac"]

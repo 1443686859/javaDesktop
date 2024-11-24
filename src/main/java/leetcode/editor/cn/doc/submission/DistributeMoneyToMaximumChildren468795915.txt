@@ -1,0 +1,28 @@
+class Solution {
+    public int distMoney(int money, int children) {
+        if (money < children) {
+            return -1;
+        }
+        if (money >= children * 8) {
+            return children * 8 == money ? children : (children - 1);
+        }
+        int res = money % 8;
+        int result = money / 8;
+        if ((res == 4 && children - result == 1)) {
+            result--;
+        } else {
+        if (res < children - result) {
+            result -= (children - result - res + 8) / 8;
+        }}
+        return result;
+    }
+}
+
+//total_testcases:3802
+//total_correct:3796
+//input_formatted:24
+18
+//expected_output:0
+//code_output:1
+//last_testcase:24
+18

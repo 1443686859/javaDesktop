@@ -1,0 +1,18 @@
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        for (int i = 1; i <= amount; i++) {
+            int result = Integer.MAX_VALUE;
+            for (int j = 0; j < coins.length; j++) {
+                int index = i - coins[j];
+                if (index >= 0 && dp[index] != Integer.MAX_VALUE) {
+                    result = Math.min(result, dp[index] + 1);
+                }
+            }
+            dp[i] = result;
+        }
+        return dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
+    }
+}
+//runtime:12 ms
+//memory:41.2 MB

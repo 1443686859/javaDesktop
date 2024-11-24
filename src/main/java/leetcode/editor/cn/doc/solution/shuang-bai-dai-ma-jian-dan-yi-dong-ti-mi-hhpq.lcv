@@ -1,0 +1,47 @@
+![image.png](https://pic.leetcode.cn/1682845634-IffoEw-image.png)
+
+# 解题思路
+
+- 题目的描述有点抽象，用简单的话来说就是，遍历arr数组并在mat数组中进行标记，如果此时的某行或某列被完全标记，返回最后一个使某行或某列被完全标记的arr中的元素的下标。
+- 首先，我们需要先把矩阵中所有的数字及其在矩阵中的位置存储到一个哈希表中，键是数字，值是一个二元组，表示数字在矩阵中的行和列。这样，我们就可以在遍历数组的过程中，快速地找到一个数字在矩阵中的位置。
+- 接下来，我们定义两个数组 row 和 col，分别用来记录数组中每个数字所在的行和列出现的次数。每次遍历到一个数字，我们就可以根据它在矩阵中的位置，把 row 和 col 中对应的位置加1。如果发现某个数字所在的行或列已经出现了矩阵的长度次数，就说明这个数字已经被完全包含在矩阵中了，可以返回它在原数组中的下标了。
+- 较为难理解的地方：
+
+* 
+
+```
+if (row[it.first] == n || col[it.second] == m) return i;
+```
+
+为什么此处的行数要等于列数，列数要等于行数？
+- 是因为此时既然要判断是否有某行被完全标记，那么我们行其实是在横向走动，也就是说向右移动，而向右移动结束的标志就是列数，列数也同理。
+
+# 时间复杂度
+
+- 时间复杂度是 O(mn)，其中 m 和 n 分别是矩阵的行数和列数。
+
+# 代码实现
+
+* 
+
+```
+class Solution {
+public:
+    int firstCompleteIndex(vector<int>& arr, vector<vector<int>>& mat) {
+       unordered_map<int, pair<int, int>> hash;
+       int m = mat.size(), n = mat[0].size();
+       for (int i = 0; i < m; ++i) {
+           for (int j = 0; j < n; ++j) hash[mat[i][j]] = {i ,j};
+       }
+        
+       vector<int> row(m), col(n);
+       for (int i = 0; i < arr.size(); ++i) {
+           auto it = hash[arr[i]];
+           ++row[it.first], ++col[it.second];
+           if (row[it.first] == n || col[it.second] == m) return i;
+       } 
+       return -1;
+    }
+};
+```
+

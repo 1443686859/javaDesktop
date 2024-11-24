@@ -1,0 +1,27 @@
+class Solution {
+    public int findWinningPlayer(int[] skills, int k) {
+        int count = 0;
+        int index = 0;
+        for (int i = 1; i < skills.length; i++) {
+            if (skills[i] > skills[index]) {
+                index = i;
+                count = 1;
+            } else {
+                count++;
+                if (count == k) {
+                    break;
+                }
+            }
+        }
+        return index;
+    }
+}
+
+//total_testcases:684
+//total_correct:666
+//input_formatted:[4,18,17,20,15,12,8,5]
+1
+//expected_output:1
+//code_output:3
+//last_testcase:[4,18,17,20,15,12,8,5]
+1

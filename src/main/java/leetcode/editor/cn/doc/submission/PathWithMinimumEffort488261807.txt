@@ -1,0 +1,43 @@
+class Solution {
+    int[][] heights;
+    int result ;
+    int[][] directions = new int[][]{{0,1}, {0, -1}, {-1, 0}, {1, 0}};
+
+    boolean[][] used;
+    public int minimumEffortPath(int[][] height) {
+        heights = height;
+        result = Integer.MAX_VALUE;
+        used  = new boolean[height.length][height[0].length];
+        dfs(new int[]{-1, -1}, 0, 0);
+        return result;
+    }
+    public void dfs(int[] pre, int current, int currentResult) {
+        int y = current % heights[0].length;
+        int x = current / heights[0].length;
+        if (current == heights[0].length * heights.length - 1) {
+            result = Math.min(result, pre[0] == -1 ? 0 :  Math.max(Math.abs(pre[1] - heights[x][y]), currentResult));
+            return ;
+        }
+       for (int i = 0; i < 4; i++) {
+            int nx = x + directions[i][0];
+            int ny = y + directions[i][1];
+            if (nx * heights[0].length + ny == pre[0] || nx < 0 || ny < 0 || nx >= heights.length || ny >= heights[0].length||
+            used[nx][ny]) {
+             continue;
+            }
+            used[nx][ny] = true;
+            dfs(new int[]{current, heights[x][y]}, nx * heights[0].length + ny, Math.max(currentResult, Math.abs(heights[nx][ny] - heights[x][y])));
+            used[nx][ny] = false;
+       }
+    }
+}
+
+//runtime:N/A
+//memory:N/A
+//total_testcases:75
+//total_correct:8
+//input_formatted:[[8,3,2,5,2,10,7,1,8,9],[1,4,9,1,10,2,4,10,3,5],[4,10,10,3,6,1,3,9,8,8],[4,4,6,10,10,10,2,10,8,8],[9,10,2,4,1,2,2,6,5,7],[2,9,2,6,1,4,7,6,10,9],[8,8,2,10,8,2,3,9,5,3],[2,10,9,3,5,1,7,4,5,6],[2,3,9,2,5,10,2,7,1,8],[9,10,4,10,7,4,9,3,1,6]]
+//expected_output:5
+//code_output:
+//runtime_error:
+//last_testcase:[[8,3,2,5,2,10,7,1,8,9],[1,4,9,1,10,2,4,10,3,5],[4,10,10,3,6,1,3,9,8,8],[4,4,6,10,10,10,2,10,8,8],[9,10,2,4,1,2,2,6,5,7],[2,9,2,6,1,4,7,6,10,9],[8,8,2,10,8,2,3,9,5,3],[2,10,9,3,5,1,7,4,5,6],[2,3,9,2,5,10,2,7,1,8],[9,10,4,10,7,4,9,3,1,6]]

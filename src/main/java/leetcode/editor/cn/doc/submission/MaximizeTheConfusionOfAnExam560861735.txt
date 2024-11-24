@@ -1,0 +1,36 @@
+class Solution {
+    public int maxConsecutiveAnswers(String answerKey, int k) {
+        int n = answerKey.length();
+        int fCount = 0;
+        int tCount = 0;
+        Map<Integer, Integer> fMap = new HashMap<>();
+        Map<Integer, Integer> tMap = new HashMap<>();
+        fMap.put(0, - 1);
+        tMap.put(0, -1);
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            if (answerKey.charAt(i) == 'F') {
+                fCount++;
+                int index = Math.max(tCount - k, 0);
+                ans = Math.max(ans, i - tMap.get(index));
+                fMap.put(fCount, i);
+            } else {
+                tCount++;
+                int index = Math.max(fCount - k, 0);
+                ans = Math.max(ans, i - fMap.get(index));
+                tMap.put(tCount, i);
+            }
+        }
+        return ans;
+    }
+
+}
+
+//total_testcases:93
+//total_correct:86
+//input_formatted:"TTTTTFTFFT"
+2
+//expected_output:8
+//code_output:7
+//last_testcase:"TTTTTFTFFT"
+2

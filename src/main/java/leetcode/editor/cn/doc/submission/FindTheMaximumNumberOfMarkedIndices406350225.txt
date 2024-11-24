@@ -1,0 +1,36 @@
+class Solution {
+    public int maxNumOfMarkedIndices(int[] nums) {
+        Arrays.sort(nums);
+        int result = 0;
+        int n = nums.length;
+        boolean[] used = new boolean[n];
+        for (int i = n - 1; i >= 0; i--) {
+            if (used[i]) {
+                break;
+            }
+            int target = nums[i] / 2;
+            int right = i - 1;
+            int left = 0;
+            while (left <= right) {
+                int mid = (left + right) / 2;
+                if (nums[mid] < target) {
+                    left ++;
+                } else {
+                    right --;
+                }
+            }
+           if (right + 1 < n && nums[right + 1] <= target && !used[right + 1]) {
+                used[right + 1] = true;
+                used[i] = true;
+                result += 2;
+            }
+        }
+        return result;
+    }
+}
+//total_testcases:63
+//total_correct:5
+//input_formatted:[1,78,27,48,14,86,79,68,77,20,57,21,18,67,5,51,70,85,47,56,22,79,41,8,39,81,59,74,14,45,49,15,10,28,16,77,22,65,8,36,79,94,44,80,72,8,96,78,39,92,69,55,9,44,26,76,40,77,16,69,40,64,12,48,66,7,59,10]
+//expected_output:64
+//code_output:14
+//last_testcase:[1,78,27,48,14,86,79,68,77,20,57,21,18,67,5,51,70,85,47,56,22,79,41,8,39,81,59,74,14,45,49,15,10,28,16,77,22,65,8,36,79,94,44,80,72,8,96,78,39,92,69,55,9,44,26,76,40,77,16,69,40,64,12,48,66,7,59,10]

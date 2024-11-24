@@ -1,0 +1,61 @@
+class FrequencyTracker {
+    Map<Integer, Integer> map;
+    Map<Integer, Integer> countMap;
+    public FrequencyTracker() {
+        map = new HashMap<>();
+        countMap = new HashMap<>();
+    }
+
+    public void add(int number) {
+        int oldF = countMap.getOrDefault(map.getOrDefault(number, 0), 0);
+        if (oldF != 0) {
+            countMap.merge(oldF, -1, Integer::sum);
+            if (countMap.get(oldF) == 0) {
+                countMap.remove(oldF);
+            }
+        }
+        map.merge(number, 1, Integer::sum);
+        countMap.merge(oldF + 1, 1, Integer::sum);
+    }
+
+    public void deleteOne(int number) {
+
+
+        if (map.containsKey(number)) {
+            int oldF = countMap.getOrDefault(map.getOrDefault(number, 0), 0);
+            map.put(number, map.get(number) - 1);
+            if (map.get(number) == 0) {
+                map.remove(number);
+            }
+            countMap.merge(oldF, -1, Integer::sum);
+            if (countMap.get(oldF) == 0) {
+                countMap.remove(oldF);
+            }
+            if (oldF > 1) {
+                countMap.merge(oldF - 1, 1, Integer::sum);
+            }
+        }
+
+    }
+
+    public boolean hasFrequency(int frequency) {
+        return countMap.containsKey(frequency);
+    }
+}
+
+/**
+ * Your FrequencyTracker object will be instantiated and called as such:
+ * FrequencyTracker obj = new FrequencyTracker();
+ * obj.add(number);
+ * obj.deleteOne(number);
+ * boolean param_3 = obj.hasFrequency(frequency);
+ */
+
+//total_testcases:1118
+//total_correct:507
+//input_formatted:["FrequencyTracker","deleteOne","add","add","add","hasFrequency","add","add","hasFrequency","add"]
+[[],[7],[30],[45],[46],[1],[10],[45],[2],[10]]
+//expected_output:[null,null,null,null,null,true,null,null,true,null]
+//code_output:[null,null,null,null,null,true,null,null,false,null]
+//last_testcase:["FrequencyTracker","deleteOne","add","add","add","hasFrequency","add","add","hasFrequency","add"]
+[[],[7],[30],[45],[46],[1],[10],[45],[2],[10]]

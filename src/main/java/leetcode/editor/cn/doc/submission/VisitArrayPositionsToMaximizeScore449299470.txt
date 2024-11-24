@@ -1,0 +1,20 @@
+class Solution {
+    public long maxScore(int[] nums, int x) {
+        long[][] ans = new long[nums.length][2];
+        ans[0][0]= (nums[0] & 1) == 0 ? nums[0] : nums[0] - x;
+        ans[0][1] = (nums[0] & 1) != 0 ? nums[0] : nums[0] - x;
+        int n = nums.length;
+        for (int i = 1; i < n;i ++) {
+            ans[i][0] = ans[i - 1][0];
+            ans[i][1]  =ans[i - 1][1];
+            if ((nums[i] & 1) == 0) {
+                ans[i][0] = Math.max(ans[i - 1][0] + nums[i], ans[i - 1][1] + nums[i] - x);
+            } else {
+                ans[i][1] = Math.max(ans[i - 1][0] - x, ans[i - 1][1]) + nums[i];
+            }
+        }
+        return Math.max(ans[n - 1][0], ans[n - 1][1]);
+    }
+}
+//runtime:25 ms
+//memory:57 MB

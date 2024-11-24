@@ -1,0 +1,69 @@
+class Solution {
+    public int maximumScore1(int[] nums, int k) {
+        int n = nums.length;
+        int[] pre = new int[n];
+        Deque<Integer> deque = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            while (!deque.isEmpty() && nums[deque.peekLast()] >= nums[i]) {
+                deque.removeLast();
+            }
+            pre[i] = deque.isEmpty() ? -1 : deque.peekLast();
+            deque.addLast(i);
+        }
+        int[] after = new int[n];
+        deque.clear();
+        for (int i = n - 1; i >= 0; i--) {
+            while (!deque.isEmpty() && nums[deque.peekLast()] >= nums[i]) {
+                deque.removeLast();
+            }
+            after[i] = deque.isEmpty() ? n : deque.peekLast();
+            deque.addLast(i);
+        }
+
+        int result = 0;
+        int index = -1;
+        for (int i = 0; i < n; i++) {
+            if (pre[i] <= k && after[i] >= k) {
+                if (nums[i] * (after[i] - pre[i] - 1) > result) {
+                    index = i;
+                }
+                result = Math.max(result, nums[i] * (after[i] - pre[i] - 1));
+            }
+        }
+        return result;
+    }
+
+    public int maximumScore(int[] nums, int k) {
+        PriorityQueue<Integer> left = new PriorityQueue<>();
+        PriorityQueue<Integer> right = new PriorityQueue<>();
+        int n = nums.length;
+        int max = nums[k];
+        int maxLeft = -1;
+        int maxRight = -1;
+        left.add(nums[k]);
+        for (int i = 0; i <= k; i++) {
+            right.clear();
+            left.add(nums[k - i]);
+            for (int j = 1; j < n - k; j++) {
+                right.add(nums[k + j]);
+                int current = (k + j - k + i + 1) * Math.min(left.peek(), right.peek());
+                if (current > max) {
+                    max = current;
+                    maxLeft = k - i;
+                    maxRight = k + j;
+                }
+            }
+        }
+        return max;
+    }
+}
+
+
+//total_testcases:73
+//total_correct:39
+//input_formatted:[6569,9667,3148,7698,1622,2194,793,9041,1670,1872]
+5
+//expected_output:9732
+//code_output:7930
+//last_testcase:[6569,9667,3148,7698,1622,2194,793,9041,1670,1872]
+5

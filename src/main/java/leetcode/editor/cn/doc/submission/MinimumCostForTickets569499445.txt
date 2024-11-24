@@ -1,0 +1,25 @@
+class Solution {
+    public int mincostTickets(int[] days, int[] costs) {
+        int[] dp = new int[days.length + 1];
+        for (int i = 0; i < days.length; i++) {
+            dp[i + 1] = dp[i] + Math.min(Math.min(costs[1], costs[2]), costs[0]);
+            for (int j = i - 1; j >= 0 && days[i]- days[j] + 1 < 30; j--) {
+                if (days[i] - days[j] + 1 <= 7) {
+                    dp[i + 1] = Math.min(dp[i + 1],dp[j] + costs[1]);
+                } else {
+                    dp[i + 1] = Math.min(dp[i + 1],dp[j] + costs[2]);
+                }
+            }
+        }
+        return dp[days.length];
+    }
+}
+
+//total_testcases:70
+//total_correct:57
+//input_formatted:[1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,20,21,24,25,27,28,29,30,31,34,37,38,39,41,43,44,45,47,48,49,54,57,60,62,63,66,69,70,72,74,76,78,80,81,82,83,84,85,88,89,91,93,94,97,99]
+[9,38,134]
+//expected_output:423
+//code_output:432
+//last_testcase:[1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,20,21,24,25,27,28,29,30,31,34,37,38,39,41,43,44,45,47,48,49,54,57,60,62,63,66,69,70,72,74,76,78,80,81,82,83,84,85,88,89,91,93,94,97,99]
+[9,38,134]

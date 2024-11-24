@@ -44,17 +44,15 @@ class Solution {
         int total = 0;
         int n = customers.length;
         for (int i = 0; i < n; i++) {
-            total -= customers[i] * (grumpy[i] - 1);
+            total += customers[i] * (grumpy[i] ^ 1);
         }
+        int maxIncrease = 0;
         int increase = 0;
-        for (int i = 0; i < X; i++) {
-            // grumpy[i] = 1 表示老板生气, 在total中没添加, 连续x分钟时老板控制住了，此时添加
-            increase += customers[i] * grumpy[i];
-        }
-        int maxIncrease = increase;
-        for (int i = X; i < n; i++) {
-            increase += -customers[i - X] * grumpy[i - X] + customers[i] * grumpy[i];
-            // 比较最大increase
+        for (int i = 0; i < n; i++) {
+            if (i >= X) {
+                increase -= (customers[i - X] * (grumpy[i - X]));
+            }
+            increase += (customers[i] * grumpy[i]);
             maxIncrease = Math.max(increase, maxIncrease);
         }
         return total + maxIncrease;

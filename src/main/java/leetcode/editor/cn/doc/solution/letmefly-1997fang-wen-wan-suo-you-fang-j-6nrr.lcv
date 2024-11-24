@@ -1,0 +1,64 @@
+> Problem: [1997. 访问完所有房间的第一天](https://leetcode.cn/problems/first-day-where-you-have-been-in-all-the-rooms/description/)
+
+[TOC]
+
+## 解题方法：动态规划(DP)
+
+题目中明确说明了```0 <= nextVisit[i] <= i```，也就是说每个房间第一次访问都会“往前回退”到```nextVisit[i]```而不会访问新的房间，而第二次访问则会访问到“相邻的下一个房间”。
+
+因此我们可以使用一个```firstVisit```数组，其中```firstVisit[i]```代表房间```i```第一次被访问时的天数。
+
+<font title="さて">那么</font>，由房间<code>i</code>访问到房间<code>i + 1</code>需要多久呢？
+
++ 首先需要花费一天访问到```nextVisit[i]```这个房间（记为```j```）
++ 接着需要花费```firstVisit[i] - firstVisit[j]```天再一次地由```j```访问到```i```
++ 最后再花费一天由```i```访问到```i + 1```
+
+因此首次访问到房间```i + 1```的天数为```firstVisit[i] + 1 + (firstVisit[i] - firstVisit[j]) + 1 = 2 * firstVisit[i] - firstVisit[j] + 2```。
+
+从房间```1```开始往后遍历到最后一间房间，则```firstVisit.back()```记为答案。
+
+### 时空复杂度
+
++ 时间复杂度$O(len(nextVisit))$
++ 空间复杂度$O(len(nextVisit))$。其实不难发现```nextVisit```数组中每个值只会用到一次，因此若将```firstVisit```保存在```nextVisit```数组中则可以以$O(1)$的空间复杂度实现。
+
+### AC代码
+
+#### C++
+
+* cpp
+
+```cpp
+typedef long long ll;
+const ll MOD = 1e9 + 7;
+class Solution {
+public:
+    int firstDayBeenInAllRooms(vector<int>& nextVisit) {
+        vector<ll> firstVisit(nextVisit.size());
+        for (int i = 1; i < nextVisit.size(); i++) {
+            firstVisit[i] = (firstVisit[i - 1] * 2 - firstVisit[nextVisit[i - 1]] + 2 + MOD) % MOD;  // 记得先加个MOD再对MOD取模，否则可能是负结果。
+        }
+        return firstVisit.back();
+    }
+};
+```
+
+#### Python
+
+* python
+
+```python
+from typing import List
+
+class Solution:
+    def firstDayBeenInAllRooms(self, nextVisit: List[int]) -> int:
+        firstVisit = [0] * len(nextVisit)
+        for i in range(1, len(nextVisit)):
+            firstVisit[i] = (firstVisit[i - 1] * 2 - firstVisit[nextVisit[i - 1]] + 2 + 1_000_000_007) % 1_000_000_007
+        return firstVisit[-1]
+```
+
+> 同步发文于CSDN和我的[个人博客](https://blog.letmefly.xyz/)，原创不易，转载经作者同意后请附上[原文链接](https://blog.letmefly.xyz/2024/03/28/LeetCode%201997.%E8%AE%BF%E9%97%AE%E5%AE%8C%E6%89%80%E6%9C%89%E6%88%BF%E9%97%B4%E7%9A%84%E7%AC%AC%E4%B8%80%E5%A4%A9/)哦~
+> Tisfy：[https://letmefly.blog.csdn.net/article/details/137119523](https://letmefly.blog.csdn.net/article/details/137119523)
+

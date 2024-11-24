@@ -1,0 +1,32 @@
+class Solution {
+    public long maximumScoreAfterOperations(int[][] edges, int[] values) {
+        int n = values.length;
+        List<Integer>[] grap = new List[n];
+        Arrays.setAll(grap, e -> new ArrayList<>());
+        grap[0].add(-1);
+        for (int[] edge : edges) {
+            grap[edge[0]].add(edge[1]);
+            grap[edge[1]].add(edge[0]);
+        }
+        long sum = 0;
+        for (int i : values) {
+            sum += i;
+        }
+        return sum - dfs(grap, values, -1, 0);
+    }
+    public long dfs(List<Integer>[] grap, int[] value, int pa, int current) {
+        if (grap[current].size() == 1) {
+            return value[current];
+        }
+        long son = 0;
+        for (int i : grap[current]) {
+            if (i != pa) {
+                son += dfs(grap, value, current, i);
+            }
+        }
+        return Math.min(son, value[current]);
+    }
+}
+
+//runtime:23 ms
+//memory:55.4 MB

@@ -1,0 +1,30 @@
+class Solution {
+    public long countAlternatingSubarrays(int[] nums) {
+        long sum = 0;
+        int n = nums.length;
+        List<Integer> list = new ArrayList<>();
+        for (int i = 1; i < n; i++) {
+            if (nums[i - 1] == nums[i]) {
+                sum ++;
+                list.add(i);
+            }
+        }
+        int pre = -1;
+        list.add(n);
+        for (int i : list) {
+            if (i - pre > 1) {
+                int count = i - pre - 1;
+                sum += count * (count + 1) / 2;
+            }
+            pre = i;
+        }
+        return sum;
+    }
+}
+
+//total_testcases:789
+//total_correct:126
+//input_formatted:[1,0,1,0,1,0,1,0,1,0,0,1,0,1,0,1]
+//expected_output:76
+//code_output:71
+//last_testcase:[1,0,1,0,1,0,1,0,1,0,0,1,0,1,0,1]
